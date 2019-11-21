@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>A scrollable tbody implementation</title>
+	<style>
+		.fixed_headers {
+			width: 200px;
+			table-layout: fixed;
+			border-collapse: collapse;
+		}
+		.fixed_headers th {
+			text-decoration: underline;
+		}
+		.fixed_headers th,
+		.fixed_headers td {
+			padding: 5px;
+			text-align: left;
+		}
+		.fixed_headers td:nth-child(1),
+		.fixed_headers th:nth-child(1) {
+			min-width: 100px;
+		}
+		.fixed_headers td:nth-child(2),
+		.fixed_headers th:nth-child(2) {
+			min-width: 100px;
+		}
+		
+		}
+		.fixed_headers thead {
+			background-color: #333333;
+			color: #fdfdfd;
+		}
+		.fixed_headers thead tr {
+			display: block;
+			position: relative;
+		}
+		.fixed_headers tbody {
+			display: block;
+			overflow: auto;
+			width: 100%;
+			height: 300px;
+		}
+		.fixed_headers tbody tr:nth-child(even) {
+			background-color: #dddddd;
+		}
+		.old_ie_wrapper {
+			height: 300px;
+			width: 200px;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+		.old_ie_wrapper tbody {
+			height: auto;
+		}
+	</style>
+</head>
+<body>
+
+<!-- IE < 10 does not like giving a tbody a height.  The workaround here applies the scrolling to a wrapped <div>. -->
+<!--[if lte IE 9]>
+<div class="old_ie_wrapper">
+<!--<![endif]-->
+
+<table class="fixed_headers">
+	<thead>
+		<tr>
+			<th>Roll</th>
+			<th>Mark</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>5001</td>
+			<td>23</td>
+		</tr>
+		<tr>
+			<td>5002</td>
+			<td>23</td>
+		</tr>
+		<tr>
+			<td>5004</td>
+			<td>11</td>
+		</tr>
+		<tr>
+			<td>5005</td>
+			<td>23</td>
+		</tr>
+		<tr>
+			<td>5006</td>
+			<td>20</td>
+		</tr>
+		<tr>
+			<td>5007</td>
+			<td>21</td>
+		</tr>
+		<tr>
+			<td>5008</td>
+			<td>23</td>
+		</tr>
+		<tr>
+			<td>5009</td>
+			<td>24</td>
+		</tr>
+		<tr>
+			<td>5010</td>
+			<td>15</td>
+		</tr>
+		<tr>
+			<td>5011</td>
+			<td>08</td>
+		</tr>
+		<tr>
+			<td>5012</td>
+			<td>16</td>
+		</tr>
+		<tr>
+			<td>5017</td>
+			<td>00</td>
+		</tr>
+		<tr>
+			<td>5018</td>
+			<td>18</td>
+		</tr>
+		<tr>
+			<td>5019</td>
+			<td>24</td>
+		</tr>
+		<tr>
+			<td>5020</td>
+			<td>12</td>
+		</tr>
+		<tr>
+			<td>5021</td>
+			<td>19</td>
+		</tr>
+		<tr>
+			<td>5022</td>
+			<td>20</td>
+		</tr>
+	</tbody>
+</table>
+
+<!--[if lte IE 9]>
+</div>
+<!--<![endif]-->
+
+
+</body></html>
