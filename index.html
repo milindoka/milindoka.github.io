@@ -5,21 +5,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-* {
-    box-sizing: border-box;
+
+#para1 {
+  text-align: center;
+  color: red;
 }
 
 
-.table a
-{
-    display:block;
-    text-decoration:none;
-    text-align: center;
-}
+
 td {
   background-color: #D6EEEE;
   padding: 2px;
+  text-align: center;
+  width:10%;
 }
+
+tr { height: 20px; }
 
 
 body {
@@ -35,28 +36,6 @@ header {
     color: white;
 }
 
-/* Create two columns/boxes that floats next to each other */
-nav {
-    float: left;
-    width: 30%;
-    height: 300px; /* only for demonstration, should be removed */
-    background: #ccc;
-    padding: 20px;
-}
-
-/* Style the list inside the menu */
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-article {
-    float: left;
-    padding: 20px;
-    width: 70%;
-    background-color: #f1f1f1;
-    height: 300px; /* only for demonstration, should be removed */
-}
 
 /* Clear floats after the columns */
 section:after {
@@ -73,29 +52,6 @@ footer {
     color: white;
 }
 
-/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
-@media (max-width: 600px) {
-    nav, article {
-        width: 100%;
-        height: auto;
-    }
-}
-
-
-
-.button {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-}
-
 </style>
 </head>
 <body>
@@ -106,104 +62,96 @@ footer {
 </header>
 
 
-<section>
-  <table width="100%" border="1" class="table">
-    <tr>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-    </tr>
-    
-      <tr>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-    </tr>
-    
-      <tr>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-    </tr>
-    
-      <tr>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-    </tr>
-      <tr>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-    </tr>
-    
-      <tr>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a></td>
-        <td><a href="#">Link 1</a</td>
-        <td><a href="#">Link 1</a</td>
-    </tr>
-    
-</table>
 
-  
+<section>
+  <table width="100%" border="1">
+    <tr>
+        <td><a href="https://sourceforge.net/projects/collegetimetable/">CTT</a></td>
+        <td><a href="u1.html">Marks </a></td>
+        <td><a href="https://origamiusa.org/diagrams/8-petal-flower">Flower</a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+       
+    </tr>
+    
+      <tr>
+       
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+    </tr>
+    
+      <tr>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+       
+    </tr>
+    
+      <tr>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        
+    </tr>
+      <tr>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+         <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        
+    </tr>
+    
+      <tr>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a</td>
+        <td><a href="#"> </a></td>
+       
+    </tr>
+</table>
 </section>
 
 <footer>
-  <p>Footer</p>
+  <h1 id="para1">✾ ✾ ✾</h1>
 </footer>
 
 </body>
