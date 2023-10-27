@@ -1,0 +1,156 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<style>
+
+@media print {
+            @page {
+                size: a4;  /* Set to auto for automatic mode */
+                margin-top: 0;   /* Set margins to 0 */
+                margin-bottom:0;
+                margin-right:1cm;
+            }
+            /* Specify the styles to hide headers and footers */
+            body {
+                margin: 0;
+            }
+            header,
+            footer {
+                display: none;
+            }
+        }
+
+
+
+
+/* 
+ @media print {
+@page{
+    height:297mm;
+        width:210mm;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 0px;
+margin-bottom: 0px;
+}
+}
+*/
+
+/*
+@media print {
+  html, body {
+    height:100%;
+    margin: 0 !important; 
+    padding: 0 !important;
+    overflow: hidden;
+  }
+}
+*/
+
+html,body{
+        height:297mm;
+        width:210mm;
+       margin:1cm;
+    }
+    
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  vertical-align: middle;
+  text-align:center;
+}
+
+tr {
+ height : 25px;
+ }
+
+}    
+</style>
+</head>
+<body> 
+
+<table id="myTable" style="width:100%">
+  <tr >
+      <td width="70px">Roll</td>
+      <td width="30px">Mrk</td>
+      <td width="70px">Roll</td>
+      <td width="30px">Mrk</td>
+      <td width="70px">Roll</td>
+      <td width="30px">Mrk</td>
+      <td width="70px">Roll</td>
+      <td width="30px">Mrk</td>
+  </tr>
+</table>
+
+
+<script>
+///generate roll array
+//var arr = [];
+//    for (var i = 0; i <160; i++) 
+//    {  arr.push(i.toString()+" : 05");  }
+
+
+////////
+//var arr = JSON.parse(localStorage.arr);
+//
+window.addEventListener('load', createTable);
+
+function createTable()
+{ 
+sessionString=sessionStorage.getItem("myArray");
+var arr = JSON.parse(sessionString);
+//window.alert(arr[0]);
+rn = 40;
+//cn = 8;
+index=0;
+
+ for(var r=0;r<rn;r++)
+  {
+   var x=document.getElementById('myTable').insertRow(r+1);
+
+            var  entry=arr[r].split(':');
+      //    window.alert(entry[0]);
+              var y=  x.insertCell(0);
+              y.innerHTML=entry[0];  ///roll number
+             
+              y=  x.insertCell(1);
+              y.innerHTML=entry[1];  ///marks
+
+             index=40+r;
+             
+              entry=arr[index].split(":");
+              y=  x.insertCell(2);
+              y.innerHTML=entry[0];  ///roll number
+             
+              y=  x.insertCell(3);
+              y.innerHTML=entry[1];  ///marks
+              
+              index=40*2+r;
+             
+              entry=arr[index].split(":");
+              y=  x.insertCell(4);
+              y.innerHTML=entry[0];  ///roll number
+             
+              y=  x.insertCell(5);
+              y.innerHTML=entry[1];  ///marks
+              
+              index=40*3+r;
+             
+             entry=arr[index].split(":");
+              y=  x.insertCell(6);
+              y.innerHTML=entry[0];  ///roll number
+             
+              y=  x.insertCell(7);
+              y.innerHTML=entry[1];  ///marks
+              index++;
+              
+ }
+}
+</script>
+
+
+
+</body>
+</html>
+
+

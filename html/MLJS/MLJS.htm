@@ -1,0 +1,514 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+<script src="jquery-3-7-1.js"></script>  
+<script>   
+ var topindex=0;   ///centre line index
+var start='M03001';
+var end='M03010';
+
+let animrunning=0;
+ var arr = [];
+ 
+tempstart=start;
+////  fill roll array
+for(jj=0;jj<160;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+
+var len=arr.length;        
+
+ for (var i = 0; i < len; i++) 
+  {  arr[i]=arr[i]+' : ';
+     // window.alert(arr[i]);
+    }
+    
+ window.addEventListener('load', InitRoll);
+//InitRoll();
+  
+      //  $(child5).promise().done(newval);
+    // will be called when all the animations on the queue finish
+ 
+$(document).ready(function(){  
+    
+$("#button1").click(function(){ 
+ 
+  if(animrunning==1) return;   
+  animrunning=1;
+  //  if(topindex>=len-4 )   return;
+   //animrunning=true;
+    document.getElementById("child12").style.visibility = "hidden";
+    document.getElementById("child13").style.visibility = "hidden";
+    document.getElementById("child14").style.visibility = "hidden";
+     
+        $("#child2").animate({top: '100px',opacity:0.0});  
+        $("#child3").animate({top: '150px',opacity:0.4});  
+        $("#child4").animate({top: '200px',opacity:1.0});  
+        $("#child5").animate({top: '250px',opacity:0.4});  
+         topindex=(topindex+1)%len;  
+        $(child5).promise().done(newval);
+    });  
+//---------------    
+$("#button2").click(function(){ 
+ 
+  if(animrunning==1) return;   
+  animrunning=1;
+  //  if(topindex>=len-4 )   return;
+   //animrunning=true;
+    document.getElementById("child12").style.visibility = "hidden";
+    document.getElementById("child13").style.visibility = "hidden";
+    document.getElementById("child14").style.visibility = "hidden";
+     
+         $("#child1").animate({top: '150px',opacity:0.4});  
+        $("#child2").animate({top: '200px',opacity:1.0});  
+        $("#child3").animate({top: '250px',opacity:0.4});  
+        $("#child4").animate({top: '300px',opacity:0.0});  
+         topindex=(topindex-1)%len;  
+         if(topindex==-1) topindex=len-1;
+        $(child4).promise().done(newval);
+    });  
+//-------------    
+});  
+
+
+function newval() {         document.getElementById("child1").style.visibility = "hidden";
+					   document.getElementById("child2").style.visibility = "hidden";
+					   document.getElementById("child3").style.visibility = "hidden";
+ 					   document.getElementById("child4").style.visibility = "hidden";
+					   document.getElementById("child5").style.visibility = "hidden";
+					   
+                                           prev1=topindex-1; prev2=topindex-2;                                  
+                                          if(topindex==0) {prev1=len-1; prev2=len-2;}
+                                          if(topindex==1) {prev2=len-2;}
+           
+                                          document.getElementById("child1").innerHTML = arr[prev2]; 
+                                          document.getElementById("child2").innerHTML = arr[prev1]; 
+                                          document.getElementById("child3").innerHTML = arr[topindex]; 
+                                          document.getElementById("child4").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child5").innerHTML = arr[(topindex+2)%len];    
+                                          
+                                          document.getElementById("child11").innerHTML = arr[prev2]; 
+                                          document.getElementById("child12").innerHTML = arr[prev1]; 
+                                          document.getElementById("child13").innerHTML = arr[topindex]; 
+                                          document.getElementById("child14").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child15").innerHTML = arr[(topindex+2)%len];                      
+                 
+                                           
+                                   resetAnim();
+                                }
+
+
+function resetAnim()
+{
+  document.getElementById("child12").style.opacity=0.4;
+  document.getElementById("child13").style.opacity=1.0;
+  document.getElementById("child14").style.opacity=0.4;
+  
+  
+  document.getElementById("child12").style.visibility = "visible";
+  document.getElementById("child13").style.visibility = "visible";
+  document.getElementById("child14").style.visibility = "visible";
+ 
+ $("#child2").animate({top: '150px',opacity:0.4});  
+ $("#child3").animate({top: '200px',opacity:1.0});  
+ $("#child4").animate({top: '250px',opacity:0.4});  
+ $("#child5").animate({top: '300px',opacity:0});  
+ $(child5).promise().done(setVisible);
+}
+
+function setVisible()
+{
+     document.getElementById("child2").style.visibility = "visible";
+     document.getElementById("child3").style.visibility = "visible";				     
+     document.getElementById("child4").style.visibility = "visible";
+     document.getElementById("child5").style.visibility = "visible";
+      
+     document.getElementById("child12").style.visibility = "hidden";	
+     document.getElementById("child13").style.visibility = "hidden";
+     document.getElementById("child14").style.visibility = "hidden";
+     animrunning=0;
+}
+
+function onbtn(kee)
+{  if(animrunning) return;
+   result = arr[topindex].indexOf(":");
+       left = arr[topindex].substring(result);
+   
+   if(kee=='D')   //  Back space action : overwrite content with  roll number +':' + one sapce
+   { arr[topindex]=arr[topindex].substring(0,result+2);     
+      document.getElementById("child3").innerHTML = arr[topindex];                                              
+    flash();
+    return;
+    }
+   
+      
+      
+       if(kee=='AB' || kee=='100') {   arr[topindex]=arr[topindex].substring(0,result+2)+kee;     
+                                     document.getElementById("child3").innerHTML = arr[topindex];                                                            
+                                   const button1 = document.getElementById('button1').click();
+
+                                   return;
+                                   }
+   
+   if(left.length==2) {  
+                                      arr[topindex]=arr[topindex]+kee;     
+                           
+                                        document.getElementById("child3").innerHTML = arr[topindex];         
+                                       flash();
+                                               
+                                     return;
+                                   }
+   if(left.length==3)  
+   { arr[topindex]=arr[topindex]+kee;     
+      document.getElementById("child3").innerHTML = arr[topindex];                                              
+      const button1 = document.getElementById('button1').click();
+      }
+
+   if(left.length>3)  
+   { arr[topindex]=arr[topindex].substring(0,result+2)+kee;     
+      document.getElementById("child3").innerHTML = arr[topindex];                                              
+    flash();
+    }
+
+}
+
+/// this micro 1px left-right animation is required to flush first digit from browser buffer
+///without this animation first digit display is delayed sometimes till second digit is entered.
+/// animation forces browser to display first digit it immediately.
+function flash()
+{
+ $(document).ready(function() {
+                                       $('#child3').animate({
+                       			left : "199px"
+  					}, 1)
+				$('#child3').animate({
+                       			left: "200px"
+  					}, 1)
+						
+					});
+}
+
+function InitRoll()
+{
+                                          ///initialise roll number display
+  //                        window.alert('s');                
+                          len=arr.length;
+                                          document.getElementById("child1").innerHTML = arr[len-2]; 
+                                          document.getElementById("child2").innerHTML = arr[len-1]; 
+                                          document.getElementById("child3").innerHTML = arr[topindex]; 
+                                          document.getElementById("child4").innerHTML = arr[topindex+1]; 
+                                          document.getElementById("child5").innerHTML = arr[topindex+2];    
+//window.alert('e');
+                                        
+                                          document.getElementById("child11").innerHTML = arr[len-2]; 
+                                          document.getElementById("child12").innerHTML = arr[len-1]; 
+                                          document.getElementById("child13").innerHTML = arr[topindex]; 
+                                          document.getElementById("child14").innerHTML = arr[topindex+1]; 
+                                          document.getElementById("child15").innerHTML = arr[topindex+2];                      
+flash();
+}
+
+///
+function nextChar(c) {
+    return String.fromCharCode(c.charCodeAt(0) + 1);
+}
+
+function isDigit(val) {
+  return String(+val).charAt(0) == val;
+}
+
+function IncrementAlphanumeric(roll)
+{ an = roll.split("");
+  i = an.length - 1;
+
+ while (true)
+        {  // if(an[i]<'0' || an[i]>'9') return new String(an);
+             if (!isDigit(an[i]))  { window.alert("!digit"); return an.join("");}
+
+            if (i <0)   { window.alert("Maxed out number"); return;}
+             
+//             an[i]++;
+
+            if (an[i] == '9')
+            {
+                an[i] = '0';
+                i--;
+                continue;
+            }
+          an[i]=nextChar(an[i]);
+
+            return an.join("");
+        }
+}
+
+function  OnNewRoll()
+{
+start=document.getElementById("firstRoll").value;
+end=document.getElementById("lastRoll").value;
+
+//window.alert("new");
+topindex=0;
+ arr=[];  /// intialize basic roll array
+tempstart=start;
+////  fill roll array
+for(jj=0;jj<160;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+
+len=arr.length;        
+
+ for (var i = 0; i < len; i++) 
+  {  arr[i]=arr[i]+' : ';
+     // window.alert(arr[i]);
+    }
+InitRoll();  ///refresh browser with modified roll array
+// const button1 = document.getElementById('button1').click();
+
+}
+function OnPrint()
+{ // window.location.href = "Print.htm";
+totalroll=arr.length;
+brr = arr.slice();
+if(totalroll<160) { shortfall=160-totalroll; 
+                               for(i=0;i<shortfall;i++) brr.push("  :  ") ;
+                             }
+                        
+
+
+
+sessionStorage.setItem("myArray", JSON.stringify(brr));
+
+ //window.open("Print.htm");
+window.location.href = "Print.htm";
+}
+
+</script>
+<style>
+
+
+:root
+{ font-size:24px;
+}
+
+.c1 {
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:100px;
+  left:200px;
+  opacity:0.0;
+}
+
+.c2 {
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:150px;
+  left:200px;
+ opacity: 0.4;  
+}
+.c3{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:200px;
+  left:200px;
+opacity:1.0;  
+}
+
+.c4{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:250px;
+  left:200px;
+  opacity:0.4;
+}
+
+.c5{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:300px;
+  left:200px;
+  opacity:0.0;
+}
+
+
+.c12 {
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:150px;
+  left:200px;
+ opacity: 0.4;  
+ visibility:hidden;
+}
+.c13{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:200px;
+  left:200px;
+opacity:1.0;  
+visibility:hidden;
+}
+
+.c14{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:250px;
+  left:200px;
+  opacity:0.4;
+visibility:hidden;
+}
+
+
+.grid-container {
+  position:absolute;
+  display: grid;
+  height:220px;
+  width: 390px;
+  top:300px;
+  left:100px;
+  gap: 10px;
+  grid-template-columns: 90px 90px 90px 90px;
+  background-color: #bae6e3;
+  padding: 10px;
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.up
+{ position:absolute;
+  height: 45px;
+  width: 30px;
+  font-size : 30px;
+  top:150px;
+  left:100px;
+}
+
+.dn
+{ position:absolute;
+  height: 45px;
+  width: 30px;
+ font-size : 30px;
+  top:240px;
+  left:100px;
+}
+
+input
+{
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.stdbutton
+{ 
+  height: 35px;
+  width: 110px;
+ font-size : 20px;
+}
+
+.header-grid {
+  position:absolute;
+  display: grid;
+  height:390px;
+  width: 590px;
+  top:110px;
+  left: 520px;
+  gap: 20px;
+  grid-template-columns: auto  auto auto auto;
+  background-color: #bae6e3;
+  padding: 20px;
+  font-size:20px
+}
+
+.boxed {
+ position:absolute;
+ top:30px;
+ left: 50px;
+  background-color: lightgrey;
+  width: 980px;
+  height: 410px;
+  border: 8px solid green;
+  padding: 50px;
+  margin: 20px;
+}
+.caption-box {
+  position: absolute;
+  top: 20px;
+  left:70px;
+  height: 25px;
+  width:220px;
+  background-color:  #bae6e3; 
+  font-size:20px;
+ text-align: center;
+}
+ </style>
+</head>  
+<body>  
+<div class="caption-box">Marklist-JS-V-1.0</div><!-- added this -->
+<div class="boxed">
+</div>
+<button class=up id="button1">&#129129;</button>  
+<button class=dn id="button2">&#129131;</button>  
+
+<!-- Main 5-cell display for roll animation -->
+
+<div class=c1 id="child1">9 :</div>
+<div class=c2  id="child2">10 :</div>
+ <div class=c3 id="child3">1 : </div>
+<div class=c4  id="child4">2 :</div>
+<div class=c5  id="child5">3 :</div>
+
+<!-- Duplicate hidden cells  to support continuous infinite animation  -->
+
+<div class=c1 id="child11">9 :</div>
+<div class=c12  id="child12">10 :</div>
+ <div class=c13 id="child13">1 :</div>
+<div class=c14  id="child14">2 :</div>
+<div class=c5  id="child15">3 :</div>
+
+<!-- style="user-select: none" disables highlighting text on double click or accicdental dragging on all grid item buttons -->
+
+<div class="grid-container"  style="user-select: none">     
+  <div class="grid-item"  id="btn1" onclick="onbtn('1')">1</div>
+  <div class="grid-item"  id="btn2" onclick="onbtn('2')">2</div>
+  <div class="grid-item"  id="btn3" onclick="onbtn('3')">3</div>  
+    <div class="grid-item"  id="btnDel" onclick="onbtn('D')">Del</div>
+    <div class="grid-item"  id="btn4" onclick="onbtn('4')">4</div>
+<div class="grid-item"  id="btn5" onclick="onbtn('5')">5</div>
+  <div class="grid-item"  id="btn6" onclick="onbtn('6')">6</div>  
+  <div class="grid-item"  id="btn4" onclick="onbtn('4')">New</div>
+  <div class="grid-item"  id="btn7" onclick="onbtn('7')">7</div>
+    <div class="grid-item"  id="btn8" onclick="onbtn('8')">8</div>
+  <div class="grid-item"  id="btn9" onclick="onbtn('9')">9</div>  
+    <div class="grid-item"  id="btn4" onclick="onbtn('4')">Open</div>
+    <div class="grid-item"  id="btn0" onclick="onbtn('0')">0</div>  
+     <div class="grid-item"  id="btnAB" onclick="onbtn('AB')">AB</div>  
+  <div class="grid-item"  id="btn100" onclick="onbtn('100')">100</div>  
+<div class="grid-item"  id="btn4" onclick="onbtn('4')">Save</div>
+</div>
+
+<div class="header-grid"  style="user-select: none; text-align:justify ;align-items:center">    
+
+<div>First Roll  : </div> <div> <input type="text" id="firstRoll" value="M03001"   size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+<div>Last  Roll :  </div> <div><input type="text" id="lastRoll" value="M03010"  size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+ <div>Class :  </div> <div><input type="text" id="class" value="FY"   size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+  <div>Division :  </div> <div><input type="text" id="division" value="A"   size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+   <div>Subject :  </div> <div><input type="text" id="subject" value="MAT"   size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+   <div>Max Marks :  </div> <div><input type="text" id="max" value="100"   size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+<div>Exam :  </div> <div><input type="text" id="Examination" value="T-1"   size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+<div>Examiner :  </div> <div><input type="text" id="Examiner" value="MO"   size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+<div>Date :  </div> <div><input type="text" id="date" value="01/01/2023"   size="10" maxlength="10" style='font-size: 20px;' autocomplete="off"></div>
+<div><button  class="stdbutton"  onclick="OnNewRoll()" >New</button> </div>
+<div style="justify-self:end"> <button class="stdbutton"  onclick="OnPrint()">Print</button></div>
+
+</div>  <!---- header-grid class end-->
+
+
+</body>  
+</html>  
+
