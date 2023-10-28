@@ -1,0 +1,290 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset=utf-8 /> 
+<title>Create a table</title> 
+<style type="text/css"> 
+body {margin: 30px;} 
+
+table.roll { border: 2px solid black;
+                border-collapse: collapse;
+                min-width : 180px;
+}
+table.roll td { border: 2px solid black;
+                border-collapse: collapse;
+                min-width : 180px;}
+table.roll tr { line-height: 50px;
+                text-align : center;
+                }
+
+                
+#myTable{
+              background-color : lightgray;
+              margin-left : auto;
+              margin-right : auto;
+              font-size : 24px
+
+}
+
+table.head td{min-width : 300px;
+
+}
+
+table.head {
+border : none;
+}
+
+
+#headerTable{
+              border : 2px solid black;
+              font-size : 20px;
+              margin-left : auto;
+              margin-right : auto;
+                
+}
+
+
+
+input,
+center
+{ font-size : 20px; }
+
+
+#fixed {
+  position: fixed;
+    top:  15px;
+    left:  15px;
+    padding : 3px;
+    font-size : 22px;
+    border : 2px solid blue;
+    color : red;
+    background-color : lightgreen;
+    width : 130px;
+    text-align : center;
+}
+
+#print {
+  position: fixed;
+    top:  70px;
+    left:  15px;
+    padding : 3px;
+    font-size : 22px;
+    border : 2px solid blue;
+    color : black;
+    background-color : lightgray;
+    text-align : center;
+    width : 140px;
+}
+
+
+</style>  
+</head><body  onload="createTable()"> 
+<div id="fixed">Total : 00</div>
+<button id="print" onclick="OnPrintBatch()">Print</button>
+<center>College Index Number &ensp;<input type="text" size="12" value="J-31.04.005" id="collegeindex"></center>
+<center>Maharashtra State Board of Secondary & Higher Secondary Education</center>
+<center><input type="text" size="40" value="Mumbai Divisional Board, Vashi,Navi Mumbai - 400703" id="board"></center>
+<center><input type="text" size="22" value=" " id="oralpract"></center>
+<center>ORAL EXAM/PROJECT</center>
+<center>Form No. 3A</center>
+<br>
+<table id="headerTable" class="head"  style="user-select: none"> 
+<tr> 
+<td>School/College/Center : &ensp;<input type="text" size="16" value="SIWS College" id="school"></td>
+<td> </td> 
+<td>Batch No : &ensp;<input type="text" size="5" value="01" id="batchno"></td>
+</tr>
+
+<tr>  <td>Subject : &ensp;<input type="text" size="12" value="Mathematics" id="subject"></td>
+<td>Subject No : &ensp;<input type="text" size="5" value="40" id="subjectno"></td> 
+<td>Medium : &ensp;<input type="text" size="10" value="English" id="medium"></td>
+</tr>
+
+<tr> 
+<td>Seat Nos From : &ensp;<input type="text" size="18" value="M03157010-M03157090" id="seatno">
+<button id="refresh" style="font-size: 20px;" onclick="OnRefresh()">🔁</button></td>
+<td>Date : &ensp;<input type="text" size="9" value=" " id="det"></td> 
+<td>Time : &ensp;<input type="text" size="12" value="1 pm" id="tyme"></td>
+</tr>
+
+<tr> 
+<td>Extra Seat Nos : &ensp;<input type="text" size="23" value=" " id="extra"></td>
+<td> </td> 
+<td> </td>
+</tr>
+</table>
+
+<br>
+
+<table id="myTable" class="roll" border="1"  style="user-select: none"> 
+</table>
+<p>Footer</p>
+<script>
+
+const fixedposcounter = document.getElementById("fixed");
+
+ roll=[]; color=[]; counter=0;
+  var start='M03157010';  var end='M03157090';
+//let animrunning=0;
+tempstart=start;
+////  fill roll array
+for(jj=0;jj<150;jj++)  {roll.push(tempstart); color.push('white'); if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+
+var len=roll.length;        
+
+//window.addEventListener('load', createTable()); 
+ 
+function createTable()
+ {
+ len = roll.length;
+ index=0;
+ for(var r=0;r<100;r++)
+  {
+  if(index>=len) return;
+   var x=document.getElementById('myTable').insertRow(r);
+   
+   for(var c=0;c<6;c++)  
+    {if(index>=len) return;
+     var y=  x.insertCell(c);
+     y.addEventListener("mousedown", setBackgroundColor);
+     y.innerHTML=roll[index]; 
+     y.style.backgroundColor=color[index];
+     index++;
+    }
+   }
+}
+ 
+function setBackgroundColor() {
+    if(this.style.backgroundColor=='yellow') { this.style.backgroundColor = 'white' ; this.style.fontSize='24px'; counter--;}
+    else { if(counter>=32) return;
+               this.style.backgroundColor = 'yellow'; this.style.fontSize="25px"; counter++; 
+               }
+  
+   fixedposcounter.innerText = "Total : " + ('0' + counter).slice(-2);
+
+}
+
+function nextChar(c) {
+    return String.fromCharCode(c.charCodeAt(0) + 1);
+}
+
+function isDigit(val) {
+  return String(+val).charAt(0) == val;
+}
+
+
+function IncrementAlphanumeric(anroll)
+{ an = anroll.split("");
+  i = an.length - 1;
+
+ while (true)
+        {  // if(an[i]<'0' || an[i]>'9') return new String(an);
+             if (!isDigit(an[i]))  { window.alert("!digit"); return an.join("");}
+
+            if (i <0)   { window.alert("Maxed out number"); return;}
+             
+//             an[i]++;
+
+            if (an[i] == '9')
+            {
+                an[i] = '0';
+                i--;
+                continue;
+            }
+          an[i]=nextChar(an[i]);
+
+            return an.join("");
+        }
+}
+
+function OnPrintBatch()
+{ // window.location.href = "Print.htm";
+crr=[];   ///selected seat number array
+limit=roll.length; ///traversal limit for table cells
+cc=0;
+var rowcount = document.getElementById("myTable").rows.length;
+for(r=0;r<rowcount;r++)
+    {var x = document.getElementById("myTable").rows[r].cells;  ///
+        for(c=0;c<6;c++)
+         { if(cc>=limit) break; 
+            if(x[c].style.backgroundColor=='yellow') crr.push(x[c].innerHTML); 
+            cc++;
+            }
+}
+       totalroll =crr.length;
+       if(totalroll<32) { shortfall=32-totalroll;       //// add empty rolls in the crr array to make 32
+                                    for(i=0;i<shortfall;i++) crr.push(" ") ;
+                                  }
+
+sessionStorage.setItem("batchArray", JSON.stringify(crr));
+collegeindex=document.getElementById("collegeindex").value;
+board=document.getElementById("board").value;
+oralpract=document.getElementById("oralpract").value;
+
+school=document.getElementById("school").value;
+batchno=document.getElementById("batchno").value;
+subject=document.getElementById("subject").value;
+subjectno=document.getElementById("subjectno").value;
+medium=document.getElementById("medium").value;
+seatno=document.getElementById("seatno").value;
+det=document.getElementById("det").value;
+tyme=document.getElementById("tyme").value;
+extra=document.getElementById("extra").value;
+
+sessionStorage.setItem("collegeindex", collegeindex);
+sessionStorage.setItem("board", board);
+sessionStorage.setItem("oralpract", oralpract);
+sessionStorage.setItem("school", school);
+sessionStorage.setItem("batchno", batchno);
+sessionStorage.setItem("subject", subject);
+sessionStorage.setItem("subjectno", subjectno);
+sessionStorage.setItem("medium", medium);
+sessionStorage.setItem("seatno", seatno);
+sessionStorage.setItem("det", det);
+sessionStorage.setItem("tyme", tyme);
+sessionStorage.setItem("extra", extra);
+
+
+ //open printBatch html file
+window.location.href = "PrintBatch.htm";
+}
+function  OnRefresh()
+{
+rollrange=document.getElementById("seatno").value;
+
+var fields = rollrange.split('-');
+
+var start = fields[0];
+var end = fields[1];
+roll=[]; ///initialize
+counter=0;  
+tempstart=start;
+////  fill roll array
+for(jj=0;jj<150;jj++)  {roll.push(tempstart); color.push('white'); if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+ fixedposcounter.innerText = "Total : " + ('0' + counter).slice(-2); // Reset counter display to 00 
+
+var len=roll.length;       
+document.getElementById("myTable").innerHTML = ""; 
+
+createTable();
+}
+
+const today = new Date();
+document.getElementById("det").value=formatDate(today);
+document.getElementById("oralpract").value='HSC-Oral-Feb-'+today.getFullYear();
+
+function formatDate(D){
+    var pad = function(num) {
+        var s = '0' + num;
+        return s.substr(s.length - 2);
+    }
+    var Result = pad(D.getDate())  + '-' + pad((D.getMonth() + 1)) + '-' + pad(D.getFullYear());
+    return Result;
+}
+
+</script>
+
+
+</body>
+</html>
+
