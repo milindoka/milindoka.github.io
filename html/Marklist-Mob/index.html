@@ -1,117 +1,97 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-        <!--=============== BOXICONS ===============-->
-        <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+.mobile-container {
+  max-width: 480px;a
+  margin: auto;
+  background-color: #555;
+  height: 500px;
+  color: white;
+  border-radius: 10px;
+}
 
-        <!--=============== CSS ===============-->
-        <link rel="stylesheet" href="assets/css/styles.css">
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  position: relative;
+}
 
-        <title>Responsive menu ui - Bedimcode</title>
-    </head>
-    <body>
-        <!--=============== NAV ===============-->
-        <nav class="nav" id="nav">
-            <div class="nav__menu container" id="nav-menu">
-                <div class="nav__shape"></div>
+.topnav #myLinks {
+  display: none;
+}
 
-                <div class="nav__close" id="nav-close">
-                    <i class='bx bx-x'></i>
-                </div>
-                
-                <div class="nav__data">
-                    <div class="nav__mask">
-                        <!-- Change your profile picture -->
-                        <img src="assets/img/perfil.png" alt="" class="nav__img">
-                    </div>
+.topnav a {
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
+}
 
-                    <span class="nav__greeting">Hi, I'm</span>
-                    <h1 class="nav__name">Bales <br> Vegas</h1>
-                </div>
+.topnav a.icon {
+  background: black;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
 
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="#home" class="nav__link active-link">
-                            <i class='bx bx-home' ></i> Home 
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#about" class="nav__link">
-                            <i class='bx bx-user'></i> About
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#portfolio" class="nav__link">
-                            <i class='bx bx-briefcase-alt-2'></i> Portfolio
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#skills" class="nav__link">
-                            <i class='bx bx-bookmark'></i> Skills
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#contact" class="nav__link">
-                            <i class='bx bx-message-square-detail'></i> Contact
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
 
-        <!--=============== MAIN ===============-->
-        <main class="main" id="main">
-            <!--=============== HEADER ===============-->
-            <header class="header" id="header">
-                <nav class="header__nav container">
-                    <a href="#" class="header__logo">
-                        Bales
-                    </a>
-    
-                    <!-- Toggle button -->
-                    <div class="header__toggle" id="header-toggle">
-                        <i class='bx bx-grid-alt'></i>
-                    </div>
-                </nav>
-            </header>
+.active {
+  background-color: #04AA6D;
+  color: white;
+}
+</style>
+</head>
+<body>
 
+<!-- Simulate a smartphone / tablet -->
+<div class="mobile-container">
 
-            <!-- When inserting your content into sections, remove the section__height class -->
-            <!--=============== HOME ===============-->
-            <section class="section section__height container" id="home">
-                <h1>HOME</h1>
-                
-            </section>
+<!-- Top Navigation Menu -->
+<div class="topnav">
+  <a href="#home" class="active">Logo</a>
+  <div id="myLinks">
+    <a href="#news">News</a>
+    <a href="#contact">Contact</a>
+    <a href="#about">About</a>
+  </div>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
 
-            <!--=============== ABOUT ===============-->
-            <section class="section section__height container" id="about">
-                <h1>ABOUT</h1>
-                
-            </section>
+<div style="padding-left:16px">
+  <h3>Vertical Mobile Navbar</h3>
+  <p>This example demonstrates how a navigation menu on a mobile/smart phone could look like.</p>
+  <p>Click on the hamburger menu (three bars) in the top right corner, to toggle the menu.</p>
+</div>
 
-            <!--=============== PORTFOLIO ===============-->
-            <section class="section section__height container" id="portfolio">
-                <h1>PORTFOLIO</h1>
-                
-            </section>
+<!-- End smartphone / tablet look -->
+</div>
 
-            <!--=============== SKILLS ===============-->
-            <section class="section section__height container" id="skills">
-                <h1>SKILLS</h1>
-                
-            </section>
+<script>
+function myFunction() {
+  var x = document.getElementById("myLinks");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
 
-            <!--=============== CONTACT ===============-->
-            <section class="section section__height container" id="contact">
-                <h1>CONTACT</h1>
-
-            </section>
-        </main>
-
-        <!--=============== MAIN JS ===============-->
-        <script src="assets/js/main.js"></script>
-    </body>
+</body>
 </html>
+
