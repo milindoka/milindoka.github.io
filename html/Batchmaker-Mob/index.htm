@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css"> 
+body {margin: 30px;} 
+
+table.roll { border: 2px solid black;
+                border-collapse: collapse;
+                font-size : 6vw;
+                width : 100%;
+}
+
+</style>
+
+</head>
+<body onload="createTable()">
+
+<table id="myTable"  class="roll" border="1"  style="user-select: none"> </table>
+<script>
+roll=[]; color=[]; counter=0;
+  var start='M03157010';  var end='M03157090';
+//let animrunning=0;
+tempstart=start;
+////  fill roll array
+for(jj=0;jj<150;jj++)  {roll.push(tempstart); color.push('white'); if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+
+var len=roll.length;        
+
+//window.addEventListener('load', createTable()); 
+ 
+function createTable()
+ {
+ len = roll.length;
+ index=0;
+ for(var r=0;r<100;r++)
+  {
+  if(index>=len) return;
+   var x=document.getElementById('myTable').insertRow(r);
+   
+   for(var c=0;c<1;c++)  
+    {if(index>=len) return;
+     var y=  x.insertCell(c);
+     //y.addEventListener("mousedown", setBackgroundColor);
+     y.innerHTML=roll[index]; 
+     y.style.backgroundColor=color[index];
+     index++;
+    }
+   }
+}
+
+
+function nextChar(c) {
+    return String.fromCharCode(c.charCodeAt(0) + 1);
+}
+
+function isDigit(val) {
+  return String(+val).charAt(0) == val;
+}
+
+
+function IncrementAlphanumeric(anroll)
+{ an = anroll.split("");
+  i = an.length - 1;
+
+ while (true)
+        {  // if(an[i]<'0' || an[i]>'9') return new String(an);
+             if (!isDigit(an[i]))  { window.alert("!digit"); return an.join("");}
+
+            if (i <0)   { window.alert("Maxed out number"); return;}
+             
+//             an[i]++;
+
+            if (an[i] == '9')
+            {
+                an[i] = '0';
+                i--;
+                continue;
+            }
+          an[i]=nextChar(an[i]);
+
+            return an.join("");
+        }
+}
+
+
+
+ </script>
+ 
+
+</body>
+</html>
+
