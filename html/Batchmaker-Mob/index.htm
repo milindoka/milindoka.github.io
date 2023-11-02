@@ -7,23 +7,46 @@ body {margin: 30px;}
 
 table.roll { border: 2px solid black;
                 border-collapse: collapse;
-                font-size : 6vw;
+                font-size : 22px;
                 width : 100%;
+                max-width : 480px;
+                margin-left: auto;
+                margin-right: auto;
 }
+
+table.roll tr { max-height: 40px;
+                text-align : center;
+              
+                }
+table.roll td
+{ padding-top: 10px;
+   padding-bottom: 10px; }
+
+th {
+  text-align:left;
+  position: sticky;
+  top: 0
+  }
 
 </style>
 
 </head>
 <body onload="createTable()">
 
-<table id="myTable"  class="roll" border="1"  style="user-select: none"> </table>
+<table id="myTable"  class="roll" border="1"  style="user-select: none"> 
+<thead>
+    <tr >
+      <th>Total</th>
+    </tr>
+  </thead>
+</table>
 <script>
-roll=[]; color=[]; counter=0;
-  var start='M03157010';  var end='M03157090';
+roll=[]; counter=0;
+  var start='M03157010';  
 //let animrunning=0;
 tempstart=start;
 ////  fill roll array
-for(jj=0;jj<150;jj++)  {roll.push(tempstart); color.push('white'); if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+for(jj=0;jj<200;jj++)  {roll.push(tempstart); tempstart=IncrementAlphanumeric(tempstart); }
 
 var len=roll.length;        
 
@@ -36,14 +59,14 @@ function createTable()
  for(var r=0;r<100;r++)
   {
   if(index>=len) return;
-   var x=document.getElementById('myTable').insertRow(r);
+   var x=document.getElementById('myTable').insertRow(r+1);
    
    for(var c=0;c<1;c++)  
     {if(index>=len) return;
      var y=  x.insertCell(c);
-     //y.addEventListener("mousedown", setBackgroundColor);
+     y.addEventListener("mousedown", setBackgroundColor);
      y.innerHTML=roll[index]; 
-     y.style.backgroundColor=color[index];
+     y.style.backgroundColor='white';
      index++;
     }
    }
@@ -83,6 +106,18 @@ function IncrementAlphanumeric(anroll)
         }
 }
 
+function setBackgroundColor() {
+    if(this.style.backgroundColor=='yellow') { this.style.backgroundColor = 'white' ; 
+                                                                              //this.style.fontSize='24px'; 
+                                                                              counter--;}
+    else { if(counter>=32) return;
+               this.style.backgroundColor = 'yellow'; 
+               //this.style.fontSize="25px"; 
+               counter++; 
+               }
+   //fixedposcounter.innerText = "Total : " + ('0' + counter).slice(-2);
+
+}
 
 
  </script>
