@@ -5,6 +5,17 @@
 <style type="text/css"> 
 body {margin: 30px;} 
 
+table.main { border: 2px solid black;
+                border-collapse: collapse;
+                font-size : 12px;
+                width : 100%;
+                max-width : 480px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom:8px;
+}
+
+
 table.roll { border: 2px solid black;
                 border-collapse: collapse;
                 font-size : 22px;
@@ -21,7 +32,8 @@ table.roll tr { max-height: 40px;
                 }
 table.roll td
 { padding-top: 10px;
-   padding-bottom: 10px; }
+   padding-bottom: 10px; 
+   }
 
 th {
   text-align:left;
@@ -33,7 +45,9 @@ th {
 
 </head>
 <body onload="createTable()">
-
+<table  class="main" border="1"  style="user-select: none"> 
+<tr><td>Batch No <input type="text" size="3" value="01" id="batchno"> &ensp;Date : <input type="text" size="8" value="01" id="date">&ensp;Time : <input type="text" size="10" value="01" id="time"></td></tr>
+</table>
 
 <table  class="roll" border="1"  style="user-select: none"> 
 <tr id="seatno"><td><img src = "print.svg" alt="Print"/></td><td contenteditable >MO3157010</td><td onclick="OnRefresh()"><img src = "refresh.svg" alt="Refresh"/></td></tr>
