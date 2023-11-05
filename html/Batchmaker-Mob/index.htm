@@ -15,6 +15,7 @@ table.main { border: 2px solid black;
                 margin-bottom:8px;
 }
 
+table.main td { padding-left : 3px;}
 
 table.roll { border: 2px solid black;
                 border-collapse: collapse;
@@ -23,16 +24,16 @@ table.roll { border: 2px solid black;
                 max-width : 480px;
                 margin-left: auto;
                 margin-right: auto;
-                margin-bottom:3px;
+                margin-bottom:8px;
 }
 
 table.roll tr { max-height: 40px;
-                text-align : center;
-              
                 }
 table.roll td
 { padding-top: 10px;
    padding-bottom: 10px; 
+   text-align : center;
+                
    }
 
 th {
@@ -52,7 +53,7 @@ th {
 </head>
 <body onload="createTable()">
 <table  class="main" border="1"  style="user-select: none"> 
-<tr><td class="even"><div>Batch <input type="text" size="3" value="01" id="batchno"></div><div>Date <input type="text" size="7" value="01" id="date"></div><div>Time <input type="text" size="10" value="01" id="time"></div></td></tr>
+<tr><td class="even" ><div>Batch <input type="text" size="3" value="01" id="batchno"></div><div>Date <input type="text" size="7" value="01" id="date"></div><div>Time <input type="text" size="10" value="01" id="time"></div></td></tr>
 </table>
 
 <table  class="roll" border="1"  style="user-select: none"> 
@@ -66,10 +67,18 @@ th {
     </tr>
   </thead>
 </table>
+
 <!-- long term preferences -->
 
-
-
+<table  class="main" border="1"  style="user-select: none"> 
+<tr><td >College Index No <input type="text" size="8" value="J-31.04.005" id="indexno"></td></tr>
+<tr><td>Board <input type="text" size="40" value="Mumbai Divisional Board, Vashi,Navi Mumbai - 400703" id="board"></td></tr>
+<tr><td>Oral /Practical <input type="text" size="22" value=" " id="oralpract"></td></tr>
+<tr><td>School/College/td : &ensp;<input type="text" size="16" value="SIWS College" id="school"></td>
+<tr><td>Subject : &ensp;<input type="text" size="12" value="Mathematics" id="subject"></td></tr>
+<tr><td>Subject No : &ensp;<input type="text" size="5" value="40" id="subjectno"></td></tr>
+<tr><td>Medium : &ensp;<input type="text" size="10" value="English" id="medium"></td></tr>
+</table>
 
 <script>
 const fixedposcounter = document.getElementById("fixed");
