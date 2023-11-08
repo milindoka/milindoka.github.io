@@ -55,11 +55,11 @@ table.roll th {
 </head>
 <body onload="createTable()">
 <table  class="main" border="1"  style="user-select: none"> 
-<tr><td class="even" ><div>Batch <input type="text" size="3" value="01" id="batchno"></div><div>Date <input type="text" size="7" value="01" id="det"></div><div>Time <input type="text" size="10" value="01" id="time"></div></td></tr>
+<tr><td class="even" ><div>Batch <input type="text" size="3" value="01" id="batchno"></div><div>Date <input type="text" size="7" value="01" id="det"></div><div>Time <input type="text" size="10" value="01" id="tyme"></div></td></tr>
 </table>
 
 <table  class="roll" border="1"  style="user-select: none"> 
-<tr id="seatno"><td><img src = "print.svg" alt="Print"/></td><td contenteditable >MO3157010</td><td onclick="OnRefresh()"><img src = "refresh.svg" alt="Refresh"/></td></tr>
+<tr  id="seatno"><td onclick="OnPrintBatch()"><img src = "print.svg" alt="Print"/></td><td contenteditable>MO3157010</td><td onclick="OnRefresh()"><img src = "refresh.svg" alt="Refresh"/></td></tr>
 </table>
 
 <table id="myTable"  class="roll" border="1"  style="user-select: none"> 
@@ -73,7 +73,7 @@ table.roll th {
 <!-- long term preferences -->
 
 <table  class="main" border="1"  style="user-select: none"> 
-<tr><td style="width : 30%">College Index No. </td><td><input type="text"  size="8" value="J-31.04.005" id="indexno"></td></tr>
+<tr><td style="width : 30%">College Index No. </td><td><input type="text"  size="8" value="J-31.04.005" id="collegeindex"></td></tr>
 <tr><td>Board </td><td><input type="text" size="22" value="Mumbai Divisional Board," id="board1"></td></tr>
 <tr><td></td><td><input type="text" size="22" value="Vashi,Navi Mumbai - 400703" id="board2"></td></tr>
 <tr><td>Oral /Practical </td><td><input type="text" size="22" value="Oral" id="oralpract"></td></tr>
@@ -81,6 +81,7 @@ table.roll th {
 <tr><td>Subject : &ensp;</td><td><input type="text" size="12" value="Mathematics" id="subject"></td></tr>
 <tr><td>Subject No : &ensp;</td><td><input type="text" size="5" value="40" id="subjectno"></td></tr>
 <tr><td>Medium : &ensp;</td><td><input type="text" size="10" value="English" id="medium"></td></tr>
+<tr><td>Extra : &ensp;</td><td><input type="text" size="10" value=" " id="extra"></td></tr>
 </table>
 
 <script>
@@ -154,7 +155,7 @@ function setBackgroundColor() {
     if(this.style.backgroundColor=='yellow') { this.style.backgroundColor = 'white' ; 
                                                                               //this.style.fontSize='24px'; 
                                                                               counter--;}
-    else { if(counter>=32) return;
+    else { if(counter>=30) return;
                this.style.backgroundColor = 'yellow'; 
                //this.style.fontSize="25px"; 
                counter++; 
@@ -213,6 +214,65 @@ function formatDate(D){
     return Result;
 }
 
+
+function OnPrintBatch()
+{ //window.alert("printbatch"); 
+
+crr=[];   ///selected seat number array
+limit=roll.length; ///traversal limit for table cells
+cc=0;
+var rowcount = document.getElementById("myTable").rows.length;
+for(r=0;r<rowcount;r++)
+    {var x = document.getElementById("myTable").rows[r].cells;  ///
+        for(c=0;c<1;c++)
+         { if(cc>=limit) break; 
+            if(x[c].style.backgroundColor=='yellow') crr.push(x[c].innerHTML); 
+            cc++;
+            }
+}
+       totalroll =crr.length;
+       if(totalroll<30) { shortfall=30-totalroll;       //// add empty rolls in the crr array to make 30
+                                    for(i=0;i<shortfall;i++) crr.push(" ") ;
+                                  }
+
+sessionStorage.setItem("batchArray", JSON.stringify(crr));
+collegeindex=document.getElementById("collegeindex").value;
+board1=document.getElementById("board1").value;
+board2=document.getElementById("board2").value;
+board=board1 + " " + board2;
+
+oralpract=document.getElementById("oralpract").value;
+school=document.getElementById("school").value;
+batchno=document.getElementById("batchno").value;
+
+subject=document.getElementById("subject").value;
+subjectno=document.getElementById("subjectno").value;
+medium=document.getElementById("medium").value;
+
+
+seatno=document.getElementById("seatno").value;
+det=document.getElementById("det").value;
+
+tyme=document.getElementById("tyme").value;
+extra=document.getElementById("extra").value;
+
+sessionStorage.setItem("collegeindex", collegeindex);
+sessionStorage.setItem("board", board);
+sessionStorage.setItem("oralpract", oralpract);
+sessionStorage.setItem("school", school);
+sessionStorage.setItem("batchno", batchno);
+sessionStorage.setItem("subject", subject);
+sessionStorage.setItem("subjectno", subjectno);
+sessionStorage.setItem("medium", medium);
+sessionStorage.setItem("seatno", seatno);
+sessionStorage.setItem("det", det);
+sessionStorage.setItem("tyme", tyme);
+sessionStorage.setItem("extra", extra);
+
+
+ //open printBatch html file
+window.location.href = "PrintBatch.htm";
+}
  </script>
  
 
