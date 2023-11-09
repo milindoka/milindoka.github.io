@@ -85,6 +85,7 @@ table.roll th {
 </table>
 
 <script>
+lines=32; // total lines in the print roll table
 const fixedposcounter = document.getElementById("fixed");
 roll=[]; counter=0;
   var start='M03157010';  
@@ -155,7 +156,7 @@ function setBackgroundColor() {
     if(this.style.backgroundColor=='yellow') { this.style.backgroundColor = 'white' ; 
                                                                               //this.style.fontSize='24px'; 
                                                                               counter--;}
-    else { if(counter>=30) return;
+    else { if(counter>=lines) return;
                this.style.backgroundColor = 'yellow'; 
                //this.style.fontSize="25px"; 
                counter++; 
@@ -231,7 +232,7 @@ for(r=0;r<rowcount;r++)
             }
 }
        totalroll =crr.length;
-       if(totalroll<30) { shortfall=30-totalroll;       //// add empty rolls in the crr array to make 30
+       if(totalroll<lines) { shortfall=lines-totalroll;       //// add empty rolls in the crr array to extend full table
                                     for(i=0;i<shortfall;i++) crr.push(" ") ;
                                   }
 
