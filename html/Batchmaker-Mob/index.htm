@@ -55,11 +55,11 @@ table.roll th {
 </head>
 <body onload="createTable()">
 <table  class="main" border="1"  style="user-select: none"> 
-<tr><td class="even" ><div>Batch <input type="text" size="3" value="01" id="batchno"></div><div>Date <input type="text" size="7" value="01" id="det"></div><div>Time <input type="text" size="10" value="01" id="tyme"></div></td></tr>
+<tr><td class="even" ><div>Batch <input type="text" size="2" value="01" id="batchno"></div><div>Date <input type="text" size="6" value="01" id="det"></div><div>Time <input type="text" size="10" value="01 PM TO 3PM" id="tyme"></div></td></tr>
 </table>
 
 <table  class="roll" border="1"  style="user-select: none"> 
-<tr  id="seatno"><td onclick="OnPrintBatch()"><img src = "print.svg" alt="Print"/></td><td contenteditable>MO3157010</td><td onclick="OnRefresh()"><img src = "refresh.svg" alt="Refresh"/></td></tr>
+<tr  id="seatno"><td onclick="OnPrintBatch()"><img src = "print.svg" alt="Print"/></td><td contenteditable>M03157010</td><td onclick="OnRefresh()"><img src = "refresh.svg" alt="Refresh"/></td></tr>
 </table>
 
 <table id="myTable"  class="roll" border="1"  style="user-select: none"> 
@@ -250,7 +250,7 @@ subjectno=document.getElementById("subjectno").value;
 medium=document.getElementById("medium").value;
 
 
-seatno=document.getElementById("seatno").value;
+seatno=start+"-"+crr[totalroll-1];
 det=document.getElementById("det").value;
 
 tyme=document.getElementById("tyme").value;
