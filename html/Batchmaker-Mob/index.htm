@@ -272,7 +272,11 @@ sessionStorage.setItem("extra", extra);
 
 
  //open printBatch html file
-window.location.href = "PrintBatch.htm";
+ if(oralpract.toUpperCase().includes("PRAC"))
+{window.location.href = "PrintBatchPractical.htm";}
+else
+{window.location.href = "PrintBatchOral.htm";}
+
 }
  </script>
  

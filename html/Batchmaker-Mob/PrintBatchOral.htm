@@ -1,0 +1,192 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<style>
+
+@media print {
+            @page {
+                size: a4;  /* Set to auto for automatic mode */
+                margin-top: 0;   /* Set margins to 0 */
+                margin-bottom:0;
+                margin-right:1cm;
+            }
+            /* Specify the styles to hide headers and footers */
+            body {
+                margin: 0;
+            }
+            header,
+            footer {
+                display: none;
+            }
+        }
+
+
+html,body{
+        height:29.7cm;
+        width:21cm;
+       margin:0.5cm;
+       margin-right : 0.5cm;
+        font-size: 15px;
+        font-family:"Times New Roman";
+
+    }
+    
+table.roll,td.roll {
+  border: 1px solid black;
+  border-collapse: collapse;
+  vertical-align: middle;
+  text-align:center;
+}
+
+tr.roll {
+ height : 27px;
+ }
+
+}    
+
+table.head td{width : 100px;
+font-size : 20px;
+border :none;
+}
+
+table.head {
+border : none;
+}
+
+table.head tr {
+border : none;
+}
+
+#headerTable{
+              border : none;
+              margin-left : auto;
+              margin-right : auto;
+                
+}
+
+</style>
+</head>
+<body> 
+
+<center id="collegeindex">College Index Number : J-31.04.005</center>
+<center>Maharashtra State Board of Secondary & Higher Secondary Education</center>
+<center id="board">Mumbai Divisional Board, Vashi,Navi Mumbai - 400703</center>
+<center id="oralpract">HSC - Oral-Feb-2023</center>
+<center>ORAL EXAM/PROJECT</center>
+<center>Form No. 3A</center>
+
+
+<table style="width: 100%;">
+  <tr>
+    <td id="school">School/College/Center : </td>
+    <td style="width: 45%;"></td>
+    <td id="batchno">Batch No : 01</td>
+  </tr>
+  <tr>
+    <td id="subject">Subject : Mathematics</td>
+    <td id="subjectno" style="width: 45%;" >Subject No : 40</td>
+    <td id="medium">Medium : English</td>
+  </tr>
+  <tr>
+    <td id="seatno">Seat No's From : M058153 - M058197</td>
+    <td id="det" style="width: 45%;">Date :</td>
+    <td id="tyme">Time :</td>
+  </tr>
+  <tr>
+    <td  id="extra">Extra Seat Nos</td>
+    <td style="width: 45%;"></td>
+    <td></td>
+  </tr>
+</table>
+<br>
+<table class="roll" id="myTable" style="width:100%">
+  <tr class="roll" >
+      <td class="roll" width="60px">Sr No</td>
+      <td class="roll" width="120px">Seat No</td>
+      <td class="roll" width="370px">Name of the Candidate</td>
+      <td class="roll" width="190px">Student's Signature</td>
+  </tr>
+</table>
+<br><br>
+<table style="width: 100%;">
+  <tr>
+    <td>Supervisor's/Teacher's Name</td>
+    <td style="width: 40%;">Conductor/Principal/Head Master Signature</td>
+  </tr>
+  <tr>
+    <td>Signature</td>
+    <td >And Stamp</td>
+    </tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+<tr><td colspan="2">Note : To be kept by Center/School/College Conductor for one year after the declaration of the result.</td></tr>
+</table>
+<script>
+
+window.addEventListener('load', createTable);
+
+function createTable()
+{
+collegeindex=sessionStorage.getItem("collegeindex");
+board=sessionStorage.getItem("board");
+oralpract=sessionStorage.getItem("oralpract");
+school=sessionStorage.getItem("school");
+batchno=sessionStorage.getItem("batchno");
+subject=sessionStorage.getItem("subject");
+subjectno=sessionStorage.getItem("subjectno");
+medium=sessionStorage.getItem("medium");
+seatno=sessionStorage.getItem("seatno");
+det=sessionStorage.getItem("det");
+tyme=sessionStorage.getItem("tyme");
+extra=sessionStorage.getItem("extra");
+
+// alert(collegeindex);
+document.getElementById("collegeindex").innerHTML="College Index Number  : " +collegeindex;
+document.getElementById("board").innerHTML=board;
+document.getElementById("oralpract").innerHTML=oralpract;
+document.getElementById("school").innerHTML="School/College/Center : " + school;
+document.getElementById("batchno").innerHTML="Batch No :" + batchno;
+document.getElementById("subject").innerHTML="Subject : " + subject;
+document.getElementById("subjectno").innerHTML="Subject No : " + subjectno;
+document.getElementById("medium").innerHTML="Medium : " + medium;
+document.getElementById("seatno").innerHTML="Seat No : " + seatno;
+document.getElementById("det").innerHTML="Date : " + det;
+document.getElementById("tyme").innerHTML="Time : " + tyme;
+document.getElementById("extra").innerHTML="Extra Seat Nos : " + extra;
+
+sessionString=sessionStorage.getItem("batchArray");
+var arr = JSON.parse(sessionString);
+//window.alert(arr[0]);
+rn = arr.length;
+//cn = 8;
+index=0;
+
+ for(var r=0;r<rn;r++)
+  {
+   var x=document.getElementById('myTable').insertRow(r+1);
+   x.className="roll";
+      //    window.alert(entry[0]);
+              var y=  x.insertCell(0);
+              y.className="roll";
+              y.innerHTML= ' '+(r+1);  ///Sr number
+              
+              y=  x.insertCell(1);
+              y.className="roll";
+              y.innerHTML=arr[r];  ///Seat Number
+;
+              y=  x.insertCell(2);
+              y.className="roll";
+              y.innerHTML= ' ';  ///blank row Name of candidate
+             
+              y=  x.insertCell(3);
+              y.className="roll";
+              y.innerHTML=' ';  /// blank row Signature of candidate
+ }
+}
+</script>
+</body>
+</html>
+
+
