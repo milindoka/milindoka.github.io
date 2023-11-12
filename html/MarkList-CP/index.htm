@@ -29,7 +29,8 @@ window.addEventListener('load', InitRoll);
     // will be called when all the animations on the queue finish
 
 $(document).ready(function(){  
-    $("button").click(function(){ 
+    
+    $("#up").click(function(){ 
 
       if(animrunning==1) return;   
           animrunning=1;
@@ -49,9 +50,34 @@ $(document).ready(function(){
          $("#child6").animate({top: '50vw',opacity:0.1});      
            topindex=(topindex+1)%len;            
         $(child6).promise().done(newval);
-    });  
-});  
+         });  
+  ///------------Down------
+        $("#dn").click(function(){ 
 
+      if(animrunning==1) return;   
+          animrunning=1;
+          
+   // document.getElementById("child11").style.visibility = "hidden";    
+    document.getElementById("child12").style.visibility = "hidden";
+    document.getElementById("child13").style.visibility = "hidden";
+    document.getElementById("child14").style.visibility = "hidden";
+    document.getElementById("child15").style.visibility = "hidden";
+    document.getElementById("child16").style.visibility = "hidden";
+ 
+       $("#child0").animate({top: '10vw',opacity:0.1}); 
+        $("#child1").animate({top: '20vw',opacity:0.3}); 
+        $("#child2").animate({top: '30vw',opacity:1.0});  
+        $("#child3").animate({top: '40vw',opacity:0.3});  
+        $("#child4").animate({top: '50vw',opacity:0.1});  
+        $("#child5").animate({top: '60vw',opacity:0.0});  
+           topindex=(topindex-1)%len;   
+            if(topindex==-1) topindex=len-1;         
+           $(child5).promise().done(newval2);
+    });  
+    
+    
+    
+});  ////end of doc ready function
 
 function newval()
 {        
@@ -65,9 +91,9 @@ function newval()
 	
 	                                    prev1=topindex-1; prev2=topindex-2;   prev3=topindex-3;                               
                                           if(topindex==0) {prev1=len-1; prev2=len-2; prev3=len-3;}
-                                          if(topindex==1) {prev2=len-2; prev3=len-3;}
-       				          if(topindex==2)   { prev3=len-3;}
-                 //                                   topindex++;   
+                                          if(topindex==1) {prev2=len-1; prev3=len-2;}
+       				          if(topindex==2)   { prev3=len-1;}
+                 
                                           document.getElementById("child0").innerHTML = arr[prev3]; 
                                           document.getElementById("child1").innerHTML = arr[prev2]; 
                                           document.getElementById("child2").innerHTML = arr[prev1]; 
@@ -84,9 +110,42 @@ function newval()
                                           document.getElementById("child15").innerHTML = arr[(topindex+2)%len];    
                                          document.getElementById("child16").innerHTML =  arr[(topindex+3)%len];   
                                                                                              
-                                   resetAnim();
+                                 resetAnim();
    }
 
+function newval2()
+{        
+                                             document.getElementById("child0").style.visibility = "hidden";
+                                            document.getElementById("child1").style.visibility = "hidden";
+                                             document.getElementById("child2").style.visibility = "hidden";
+					     document.getElementById("child3").style.visibility = "hidden";
+					     document.getElementById("child4").style.visibility = "hidden";
+					      document.getElementById("child5").style.visibility = "hidden";
+					      document.getElementById("child6").style.visibility = "hidden";
+	
+	                                    prev1=topindex-1; prev2=topindex-2;   prev3=topindex-3;                               
+                                          if(topindex==0) {prev1=len-1; prev2=len-2; prev3=len-3;}
+                                          if(topindex==1) {prev2=len-1; prev3=len-2;}
+       				          if(topindex==2)   { prev3=len-1;}
+                 
+                                          document.getElementById("child0").innerHTML = arr[prev3]; 
+                                          document.getElementById("child1").innerHTML = arr[prev2]; 
+                                          document.getElementById("child2").innerHTML = arr[prev1]; 
+                                          document.getElementById("child3").innerHTML = arr[topindex]; 
+                                          document.getElementById("child4").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child5").innerHTML = arr[(topindex+2)%len];    
+                                         document.getElementById("child6").innerHTML =  arr[(topindex+3)%len];   
+                                          
+                                          document.getElementById("child10").innerHTML = arr[prev3]; 
+                                          document.getElementById("child11").innerHTML = arr[prev2]; 
+                                          document.getElementById("child12").innerHTML = arr[prev1]; 
+                                          document.getElementById("child13").innerHTML = arr[topindex]; 
+                                          document.getElementById("child14").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child15").innerHTML = arr[(topindex+2)%len];    
+                                         document.getElementById("child16").innerHTML =  arr[(topindex+3)%len];   
+                                                                                             
+                               resetAnim2();
+   }
 
 function resetAnim()
 {
@@ -102,19 +161,41 @@ function resetAnim()
  $("#child4").animate({top: '40vw',opacity:0.3});  
  $("#child5").animate({top: '50vw',opacity:0.1});  
 $("#child6").animate({top: '60vw',opacity:0});
+ 
+ $(child6).promise().done(setVisible);
+}
 
-/*
+function resetAnim2()
+{
+
+ $("#child10").animate({top: '0vw',opacity:0.0});  
+ $("#child11").animate({top: '10vw',opacity:0.1});  
+ $("#child12").animate({top: '20vw',opacity:0.3});  
+ $("#child13").animate({top: '30vw',opacity:1.0});  
+ $("#child14").animate({top: '40vw',opacity:0.3});  
+ $("#child15").animate({top: '50vw',opacity:0.1});  
+$("#child16").animate({top: '60vw',opacity:0.0});
+ 
+  document.getElementById("child11").style.visibility = "visible";
+  document.getElementById("child12").style.visibility = "visible";
+  document.getElementById("child13").style.visibility = "visible"
+  document.getElementById("child14").style.visibility = "visible";
+  document.getElementById("child15").style.visibility = "visible";
+
+ $("#child0").animate({top: '0vw',opacity:0.0});  
+ $("#child1").animate({top: '10vw',opacity:0.1});  
  $("#child2").animate({top: '20vw',opacity:0.3});  
  $("#child3").animate({top: '30vw',opacity:1.0});  
  $("#child4").animate({top: '40vw',opacity:0.3});  
- $("#child5").animate({top: '50vw',opacity:0});  
- */
+ $("#child5").animate({top: '50vw',opacity:0.1});  
+ $("#child6").animate({top: '60vw',opacity:0.0});
  
  $(child6).promise().done(setVisible);
 }
 
 function setVisible()
-{    document.getElementById("child1").style.visibility = "visible";
+{    document.getElementById("child0").style.visibility = "visible";
+      document.getElementById("child1").style.visibility = "visible";
       document.getElementById("child2").style.visibility = "visible";
       document.getElementById("child3").style.visibility = "visible";				     
       document.getElementById("child4").style.visibility = "visible";
@@ -128,7 +209,6 @@ function setVisible()
   document.getElementById("child15").style.visibility = "hidden";
 //document.getElementById("child16").style.visibility = "hidden";
   animrunning=0;
-
 /// 
 }
 function nextChar(c) {
@@ -211,13 +291,31 @@ flash();
 { font-size:6vw;
 }
 
+#up {
+  position: absolute;
+   top: 11vw;
+   left:7vw;
+   width: 8vw;
+   height:8vw;
+   transform: rotate(-90deg);
+}
+
+#dn {
+  position: absolute;
+   top: 48vw;
+   left:7vw;
+   width: 8vw;
+   height:8vw;
+   transform: rotate(90deg);
+}
+
 .c0 {
  position: absolute;
   height: 25vw;
   width: 60vw;
   top: 0vw;
   left:20vw;
-  visibility:hidden;
+  opacity:0.0;
 }
 
 
@@ -279,8 +377,8 @@ flash();
    </style>
 </head>  
 <body>  
-<button style="font-size:5vw;">Start Animation</button>  
-
+<button id="up" style="font-size:5vw;">&#10147 </button>  
+<button id="dn" style="font-size:5vw;">&#10147 </button>  
 <div class=c0 id="child0">Number 09</div>
 <div class=c1 id="child1">Number 10</div>
 <div class=c2  id="child2">Number 11</div>
