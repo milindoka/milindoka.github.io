@@ -209,6 +209,55 @@ function InitRoll()
 //flash();
 }
 
+function onbtn(kee)
+{  if(animrunning) return;
+   result = arr[topindex].indexOf(":");
+       left = arr[topindex].substring(result);
+       if(kee=='AB' || kee=='100') {   arr[topindex]=arr[topindex].substring(0,result+2)+kee;     
+                                     document.getElementById("child3").innerHTML = arr[topindex];                                                            
+                                   const button1 = document.getElementById('up').click();
+
+                                   return;
+                                   }
+   
+   if(left.length==2) {  
+                                      arr[topindex]=arr[topindex]+kee;     
+                           
+                                        document.getElementById("child3").innerHTML = arr[topindex];         
+                                       flash();
+                                               
+                                     return;
+                                   }
+   if(left.length==3)  
+   { arr[topindex]=arr[topindex]+kee;     
+      document.getElementById("child3").innerHTML = arr[topindex];                                              
+      const button1 = document.getElementById('up').click();
+      }
+
+   if(left.length>3)  
+   { arr[topindex]=arr[topindex].substring(0,result+2)+kee;     
+      document.getElementById("child3").innerHTML = arr[topindex];                                              
+    flash();
+    }
+
+}
+
+/// this micro 1px left-right animation is required to flush first digit from browser buffer
+///without this animation first digit display is delayed sometimes till second digit is entered.
+/// animation forces browser to display first digit it immediately.
+function flash()
+{
+ $(document).ready(function() {
+                                       $('#child3').animate({
+                       			left : "79px"
+  					}, 1)
+				$('#child3').animate({
+                       			left: "80px"
+  					}, 1)
+						
+					});
+}
+
 
 
 </script>
