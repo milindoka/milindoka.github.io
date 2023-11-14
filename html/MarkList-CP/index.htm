@@ -60,12 +60,12 @@ $(document).ready(function(){
     document.getElementById("child15").style.visibility = "hidden";
     document.getElementById("child16").style.visibility = "hidden";
  
-       $("#child0").animate({top: '10vw',opacity:0.1}); 
-        $("#child1").animate({top: '20vw',opacity:0.3}); 
-        $("#child2").animate({top: '30vw',opacity:1.0});  
-        $("#child3").animate({top: '40vw',opacity:0.3});  
-        $("#child4").animate({top: '50vw',opacity:0.1});  
-        $("#child5").animate({top: '60vw',opacity:0.0});  
+       $("#child0").animate({top: '60px',opacity:0.1}); 
+        $("#child1").animate({top: '100px',opacity:0.3}); 
+        $("#child2").animate({top: '140px',opacity:1.0});  
+        $("#child3").animate({top: '180px',opacity:0.3});  
+        $("#child4").animate({top: '220px',opacity:0.1});  
+        $("#child5").animate({top: '260px',opacity:0.0});  
            topindex=(topindex-1)%len;   
             if(topindex==-1) topindex=len-1;         
            $(child5).promise().done(newval);
@@ -215,7 +215,8 @@ function InitRoll()
 
 
 <style>
-body {margin: 30px;} 
+body {margin: 20px;} 
+
 .container {
 position:relative;
 width:100%;
@@ -226,10 +227,37 @@ margin-right:auto;
 margin-bottom:auto;
 border: 4px solid lightgreen;
 }
+/*   ------ */
+
+
+/* -----------*/
+
+.grid-container {
+  position:absolute;
+  display: grid;
+  height:280px;
+  width: auto;
+  top:300px;
+  left:10px;
+  gap: 5px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  background-color: #bae6e3;
+  padding: 5px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 18px;
+  font-size: 20px;
+  text-align: center;
+}
 
 #up {
-  position: relative;
-   top: 80px;
+  position: absolute;
+   top: 65px;
    left:15px;
    width: 35px;
    height:35px;
@@ -237,9 +265,9 @@ border: 4px solid lightgreen;
 }
 
 #dn {
-  position: relative;
-   top: 245px;
-   left:-25px;
+  position: absolute;
+   top: 212px;
+   left: 15px;
    width: 35px;
    height:35px;
    transform: rotate(90deg);
@@ -318,7 +346,7 @@ border: 4px solid lightgreen;
 
 
 .c10 {
- position: relative;
+ position: absolute;
   height: 38px;
   width: 200px;
   font-size:26px;
@@ -328,7 +356,7 @@ border: 4px solid lightgreen;
 }
 
 .c11 {
- position: relative;
+ position: absolute;
   height: 38px;
   width: 200px;
   font-size:26px;
@@ -338,7 +366,7 @@ border: 4px solid lightgreen;
 }
 
 .c12 {
- position: relative;
+ position: absolute;
   height: 38px;
   width: 200px;
   font-size:26px;
@@ -348,7 +376,7 @@ border: 4px solid lightgreen;
 }
 
 .c13 {
- position: relative;
+ position: absolute;
   height: 38px;
   width: 200px;
   font-size:26px;
@@ -358,7 +386,7 @@ border: 4px solid lightgreen;
 }
 
 .c14{
- position: relative;
+ position: absolute;
   height: 38px;
   width: 200px;
   font-size:26px;
@@ -368,7 +396,7 @@ border: 4px solid lightgreen;
 }
 
 .c15 {
- position: relative;
+ position: absolute;
   height: 38px;
   width: 200px;
   font-size:26px;
@@ -378,7 +406,7 @@ border: 4px solid lightgreen;
 }
 
 .c16 {
- position: relative;
+ position: absolute;
   height: 38px;
   width: 200px;
   font-size:26px;
@@ -408,6 +436,28 @@ border: 4px solid lightgreen;
 <div class=c4 id="child14">M03002 :</div>
 <div class=c5 id="child15">M03003 :</div>
 <div class=c6 id="child16">M03004 :</div>
+
+
+
+<div class="grid-container"  style="user-select: none">     
+  <div class="grid-item"  id="btn1" onclick="onbtn('1')">1</div>
+  <div class="grid-item"  id="btn2" onclick="onbtn('2')">2</div>
+  <div class="grid-item"  id="btn3" onclick="onbtn('3')">3</div>  
+    <div class="grid-item"  id="btn4" onclick="onbtn('4')">Back</div>
+    <div class="grid-item"  id="btn4" onclick="onbtn('4')">4</div>
+<div class="grid-item"  id="btn5" onclick="onbtn('5')">5</div>
+  <div class="grid-item"  id="btn6" onclick="onbtn('6')">6</div>  
+  <div class="grid-item"  id="btn4" onclick="onbtn('4')">New</div>
+  <div class="grid-item"  id="btn7" onclick="onbtn('7')">7</div>
+    <div class="grid-item"  id="btn8" onclick="onbtn('8')">8</div>
+  <div class="grid-item"  id="btn9" onclick="onbtn('9')">9</div>  
+    <div class="grid-item"  id="btn4" onclick="onbtn('4')">Open</div>
+    <div class="grid-item"  id="btn0" onclick="onbtn('0')">0</div>  
+     <div class="grid-item"  id="btnAB" onclick="onbtn('AB')">AB</div>  
+  <div class="grid-item"  id="btn100" onclick="onbtn('100')">100</div>  
+<div class="grid-item"  id="btn4" onclick="onbtn('4')">Save</div>
+</div>
+
 
 </div>
 
