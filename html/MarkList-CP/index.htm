@@ -1,6 +1,6 @@
-<!DOCTYPE html>  
-<html>  
-<head>  
+<!DOCTYPE html>
+<html>
+<head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="jquery-3-7-1.js"></script>  
 <script>   
@@ -23,11 +23,7 @@ var len=arr.length;
     }
     
 window.addEventListener('load', InitRoll);
-//InitRoll();
-  
-      //  $(child5).promise().done(newval);
-    // will be called when all the animations on the queue finish
-
+////////////////////////////////////////////
 $(document).ready(function(){  
     
     $("#up").click(function(){ 
@@ -41,13 +37,13 @@ $(document).ready(function(){
     document.getElementById("child14").style.visibility = "hidden";
     document.getElementById("child15").style.visibility = "hidden";
     document.getElementById("child16").style.visibility = "hidden";
- 
-        $("#child1").animate({top: '0vw',opacity:0.0}); 
-        $("#child2").animate({top: '10vw',opacity:0.1});  
-        $("#child3").animate({top: '20vw',opacity:0.3});  
-        $("#child4").animate({top: '30vw',opacity:1.0});  
-        $("#child5").animate({top: '40vw',opacity:0.3});  
-         $("#child6").animate({top: '50vw',opacity:0.1});      
+
+        $("#child1").animate({top: '20px',opacity:0.0}); 
+        $("#child2").animate({top: '60px',opacity:0.1});  
+        $("#child3").animate({top: '100px',opacity:0.3});  
+        $("#child4").animate({top: '140px',opacity:1.0});  
+        $("#child5").animate({top: '180px',opacity:0.3});  
+         $("#child6").animate({top: '220px',opacity:0.1});      
            topindex=(topindex+1)%len;            
         $(child6).promise().done(newval);
          });  
@@ -72,48 +68,12 @@ $(document).ready(function(){
         $("#child5").animate({top: '60vw',opacity:0.0});  
            topindex=(topindex-1)%len;   
             if(topindex==-1) topindex=len-1;         
-           $(child5).promise().done(newval2);
+           $(child5).promise().done(newval);
     });  
-    
-    
     
 });  ////end of doc ready function
 
 function newval()
-{        
-                                            document.getElementById("child0").style.visibility = "hidden";
-                                            document.getElementById("child1").style.visibility = "hidden";
-                                             document.getElementById("child2").style.visibility = "hidden";
-					     document.getElementById("child3").style.visibility = "hidden";
-					     document.getElementById("child4").style.visibility = "hidden";
-					      document.getElementById("child5").style.visibility = "hidden";
-					      document.getElementById("child6").style.visibility = "hidden";
-	
-	                                    prev1=topindex-1; prev2=topindex-2;   prev3=topindex-3;                               
-                                          if(topindex==0) {prev1=len-1; prev2=len-2; prev3=len-3;}
-                                          if(topindex==1) {prev2=len-1; prev3=len-2;}
-       				          if(topindex==2)   { prev3=len-1;}
-                 
-                                          document.getElementById("child0").innerHTML = arr[prev3]; 
-                                          document.getElementById("child1").innerHTML = arr[prev2]; 
-                                          document.getElementById("child2").innerHTML = arr[prev1]; 
-                                          document.getElementById("child3").innerHTML = arr[topindex]; 
-                                          document.getElementById("child4").innerHTML = arr[(topindex+1)%len]; 
-                                          document.getElementById("child5").innerHTML = arr[(topindex+2)%len];    
-                                         document.getElementById("child6").innerHTML =  arr[(topindex+3)%len];   
-                                          
-                                          document.getElementById("child10").innerHTML = arr[prev3]; 
-                                          document.getElementById("child11").innerHTML = arr[prev2]; 
-                                          document.getElementById("child12").innerHTML = arr[prev1]; 
-                                          document.getElementById("child13").innerHTML = arr[topindex]; 
-                                          document.getElementById("child14").innerHTML = arr[(topindex+1)%len]; 
-                                          document.getElementById("child15").innerHTML = arr[(topindex+2)%len];    
-                                         document.getElementById("child16").innerHTML =  arr[(topindex+3)%len];   
-                                                                                             
-                                 resetAnim();
-   }
-
-function newval2()
 {        
                                              document.getElementById("child0").style.visibility = "hidden";
                                             document.getElementById("child1").style.visibility = "hidden";
@@ -144,37 +104,19 @@ function newval2()
                                           document.getElementById("child15").innerHTML = arr[(topindex+2)%len];    
                                          document.getElementById("child16").innerHTML =  arr[(topindex+3)%len];   
                                                                                              
-                               resetAnim2();
+                               resetAnim();
    }
+
 
 function resetAnim()
 {
-  document.getElementById("child11").style.visibility = "visible";
-  document.getElementById("child12").style.visibility = "visible";
-  document.getElementById("child13").style.visibility = "visible"
-  document.getElementById("child14").style.visibility = "visible";
-  document.getElementById("child15").style.visibility = "visible";
-
- $("#child1").animate({top: '10vw',opacity:0.1});  
- $("#child2").animate({top: '20vw',opacity:0.3});  
- $("#child3").animate({top: '30vw',opacity:1.0});  
- $("#child4").animate({top: '40vw',opacity:0.3});  
- $("#child5").animate({top: '50vw',opacity:0.1});  
-$("#child6").animate({top: '60vw',opacity:0});
- 
- $(child6).promise().done(setVisible);
-}
-
-function resetAnim2()
-{
-
- $("#child10").animate({top: '0vw',opacity:0.0});  
- $("#child11").animate({top: '10vw',opacity:0.1});  
- $("#child12").animate({top: '20vw',opacity:0.3});  
- $("#child13").animate({top: '30vw',opacity:1.0});  
- $("#child14").animate({top: '40vw',opacity:0.3});  
- $("#child15").animate({top: '50vw',opacity:0.1});  
-$("#child16").animate({top: '60vw',opacity:0.0});
+ $("#child10").animate({top: '20px',opacity:0.0});  
+ $("#child11").animate({top: '60px',opacity:0.1});  
+ $("#child12").animate({top: '100px',opacity:0.3});  
+ $("#child13").animate({top: '140px',opacity:1.0});  
+ $("#child14").animate({top: '180px',opacity:0.3});  
+ $("#child15").animate({top: '220px',opacity:0.1});  
+$("#child16").animate({top: '260px',opacity:0.0});
  
   document.getElementById("child11").style.visibility = "visible";
   document.getElementById("child12").style.visibility = "visible";
@@ -182,13 +124,13 @@ $("#child16").animate({top: '60vw',opacity:0.0});
   document.getElementById("child14").style.visibility = "visible";
   document.getElementById("child15").style.visibility = "visible";
 
- $("#child0").animate({top: '0vw',opacity:0.0});  
- $("#child1").animate({top: '10vw',opacity:0.1});  
- $("#child2").animate({top: '20vw',opacity:0.3});  
- $("#child3").animate({top: '30vw',opacity:1.0});  
- $("#child4").animate({top: '40vw',opacity:0.3});  
- $("#child5").animate({top: '50vw',opacity:0.1});  
- $("#child6").animate({top: '60vw',opacity:0.0});
+ $("#child0").animate({top: '20px',opacity:0.0});  
+ $("#child1").animate({top: '60px',opacity:0.1});  
+ $("#child2").animate({top: '100px',opacity:0.3});  
+ $("#child3").animate({top: '140px',opacity:1.0});  
+ $("#child4").animate({top: '180px',opacity:0.3});  
+ $("#child5").animate({top: '220px',opacity:0.1});  
+ $("#child6").animate({top: '260px',opacity:0.0});
  
  $(child6).promise().done(setVisible);
 }
@@ -211,6 +153,7 @@ function setVisible()
   animrunning=0;
 /// 
 }
+///////////////////////////////
 function nextChar(c) {
     return String.fromCharCode(c.charCodeAt(0) + 1);
 }
@@ -242,23 +185,6 @@ function IncrementAlphanumeric(roll)
             return an.join("");
         }
 }
-
-/// this micro 1px left-right animation is required to flush first digit from browser buffer
-///without this animation first digit display is delayed sometimes till second digit is entered.
-/// animation forces browser to display first digit it immediately.
-function flash()
-{
- $(document).ready(function() {
-                                       $('#child3').animate({
-                       			left : "19vw"
-  					}, 1)
-				$('#child3').animate({
-                       			left: "20vw"
-  					}, 1)
-						
-					});
-}
-
 function InitRoll()
 {
 
@@ -280,121 +206,211 @@ function InitRoll()
                                           document.getElementById("child15").innerHTML = arr[topindex+2];                      
 
 
-flash();
+//flash();
 }
+
 
 
 </script>
-<style>
 
-:root
-{ font-size:6vw;
+
+<style>
+body {margin: 30px;} 
+.container {
+position:relative;
+width:100%;
+max-width:480px;
+height:800px;
+margin-left:auto;
+margin-right:auto;
+margin-bottom:auto;
+border: 4px solid lightgreen;
 }
 
 #up {
-  position: absolute;
-   top: 11vw;
-   left:7vw;
-   width: 8vw;
-   height:8vw;
+  position: relative;
+   top: 80px;
+   left:15px;
+   width: 35px;
+   height:35px;
    transform: rotate(-90deg);
 }
 
 #dn {
-  position: absolute;
-   top: 48vw;
-   left:7vw;
-   width: 8vw;
-   height:8vw;
+  position: relative;
+   top: 245px;
+   left:-25px;
+   width: 35px;
+   height:35px;
    transform: rotate(90deg);
 }
 
 .c0 {
  position: absolute;
-  height: 25vw;
-  width: 60vw;
-  top: 0vw;
-  left:20vw;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top: 20px;
+  left:80px;
   opacity:0.0;
 }
 
-
-
 .c1 {
  position: absolute;
-  height: 25vw;
-  width: 60vw;
-  top:10vw;
-  left:20vw;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:60px;
+  left:80px;
   opacity:0.1;
 }
 
 .c2 {
  position: absolute;
-  height: 25vw;
-  width: 60vw;
-  top:20vw;
-  left:20vw;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:100px;
+  left:80px;
   opacity:0.3;
 }
-.c3{
+
+.c3 {
  position: absolute;
-  height: 25vw;
-  width: 60vw;
-  top:30vw;
-  left:20vw;
- opacity:1.0;  
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:140px;
+  left:80px;
+  opacity:1.0;
 }
 
 .c4{
  position: absolute;
-  height: 25vw;
-  width: 60vw;
-  top:40vw;
-  left:20vw;
-  opacity:0.3;  
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:180px;
+  left:80px;
+  opacity:0.3;
 }
 
-.c5{
+.c5 {
  position: absolute;
-  height: 25vw;
-  width: 60vw;
-  top:50vw;
-  left:20vw;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:220px;
+  left:80px;
   opacity:0.1;
 }
 
-.c6{
+.c6 {
  position: absolute;
-  height: 25vw;
-  width: 60vw;
-  top:60vw;
-  left:20vw;
-  opacity:0;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:260px;
+  left:80px;
+  opacity:0.0;
 }
 
 
-   </style>
-</head>  
-<body>  
-<button id="up" style="font-size:5vw;">&#10147 </button>  
-<button id="dn" style="font-size:5vw;">&#10147 </button>  
-<div class=c0 id="child0">Number 09</div>
-<div class=c1 id="child1">Number 10</div>
-<div class=c2  id="child2">Number 11</div>
- <div class=c3 id="child3">Number 12</div>
-<div class=c4  id="child4">Number 13</div>
-<div class=c5  id="child5">Number 14</div>
-<div class=c6  id="child6">Number 15</div>
 
-<div class=c0 id="child10">Number 09</div>
-<div class=c1 id="child11">Number 10</div>
-<div class=c2  id="child12">Number 11</div>
- <div class=c3 id="child13">Number 12</div>
-<div class=c4  id="child14">Number 13</div>
-<div class=c5  id="child15">Number 14</div>
-<div class=c6  id="child16">Number 15</div>
+.c10 {
+ position: relative;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:-265px;
+  left:80px;
+  opacity:0.0;
+}
 
-</body>  
-</html>  
+.c11 {
+ position: relative;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:-260px;
+  left:80px;
+  opacity:0.1;
+}
+
+.c12 {
+ position: relative;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:-255px;
+  left:80px;
+  opacity:0.3;
+}
+
+.c13 {
+ position: relative;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:-250px;
+  left:80px;
+  opacity:1.0;
+}
+
+.c14{
+ position: relative;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:-245px;
+  left:80px;
+  opacity:0.3;
+}
+
+.c15 {
+ position: relative;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:-240px;
+  left:80px;
+  opacity:0.1;
+}
+
+.c16 {
+ position: relative;
+  height: 38px;
+  width: 200px;
+  font-size:26px;
+  top:-235px;
+  left:30px;
+  opacity:0.0;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<button id="up" style="font-size:24px;">&#10147 </button> 
+<button id="dn" style="font-size:24px;">&#10147 </button> 
+
+<div class=c0 id="child0">M03018 :</div>
+<div class=c1 id="child1">M03019 :</div>
+<div class=c2 id="child2">M03020 :</div>
+<div class=c3 id="child3">M03001 : </div>
+<div class=c4 id="child4">M03002 :</div>
+<div class=c5 id="child5">M03003 :</div>
+<div class=c6 id="child6">M03004 :</div>
+
+<div class=c0 id="child10">M03018 :</div>
+<div class=c1 id="child11">M03019 :</div>
+<div class=c2 id="child12">M03020 :</div>
+<div class=c3 id="child13">M03001 : </div>
+<div class=c4 id="child14">M03002 :</div>
+<div class=c5 id="child15">M03003 :</div>
+<div class=c6 id="child16">M03004 :</div>
+
+</div>
+
+</body>
+</html>
 
