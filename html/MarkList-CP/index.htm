@@ -7,7 +7,7 @@
 var topindex=0;   ///centre line index
 var start='M03001';
 var end='M03020';
-
+///&#x27F3 refresh
 let animrunning=0;
  var arr = [];
  
@@ -277,27 +277,27 @@ margin-right:auto;
 margin-bottom:auto;
 border: 4px solid lightgreen;
 }
-/*   ------ */
+/*   --------
+---------*/
 
-table.roll { border: 2px solid black;
+table.roll { 
                 border-collapse: collapse;
                 font-size : 22px;
                 width : 100%;
                 max-width : 480px;
-                margin-top:300px;
                 margin-left: auto;
                 margin-right: auto;
+                 border: 1px solid rgba(0, 0, 0, 0.8);
+ 
 }
 
 table.roll tr { max-height: 40px;
                 text-align : center;
-                }
-
-
-/* -----------*/
+                background-color: #F2FAFA
+ }
 
 .grid-container {
- margin-top:300px;
+ margin-top:250px;
   display: grid;
   height:310px;
   width: 100%;
@@ -498,7 +498,9 @@ table.roll tr { max-height: 40px;
 <div class=c5 id="child15">M03003 :</div>
 <div class=c6 id="child16">M03004 :</div>
 
-
+<table  class="roll" border="1"  style="user-select: none"> 
+<tr  id="seatno"><td contenteditable>M03157001</td><td onclick="OnRefresh()"><img src = "refresh.svg" alt="Refresh"/></td><td contenteditable>M03157020</td></tr>
+</table>
 
 <div class="grid-container"  style="user-select: none">     
   <div class="grid-item"  id="btn1" onclick="onbtn('1')">1</div>
