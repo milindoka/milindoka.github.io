@@ -215,7 +215,8 @@ function InitRoll()
 
 
 <style>
-body {margin: 20px;} 
+body {margin: 20px;
+  margin-right:26px;} 
 
 .container {
 position:relative;
@@ -229,22 +230,34 @@ border: 4px solid lightgreen;
 }
 /*   ------ */
 
+table.roll { border: 2px solid black;
+                border-collapse: collapse;
+                font-size : 22px;
+                width : 100%;
+                max-width : 480px;
+                margin-top:300px;
+                margin-left: auto;
+                margin-right: auto;
+}
+
+table.roll tr { max-height: 40px;
+                text-align : center;
+                }
+
 
 /* -----------*/
 
 .grid-container {
-  position:absolute;
+ margin-top:300px;
   display: grid;
-  height:280px;
-  width: auto;
-  top:300px;
-  left:10px;
+  height:310px;
+  width: 100%;
   gap: 5px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   background-color: #bae6e3;
-  padding: 5px;
   margin-left:auto;
   margin-right:auto;
+  padding:0px;
 }
 
 .grid-item {
@@ -343,8 +356,6 @@ border: 4px solid lightgreen;
   opacity:0.0;
 }
 
-
-
 .c10 {
  position: absolute;
   height: 38px;
@@ -414,6 +425,7 @@ border: 4px solid lightgreen;
   left:30px;
   opacity:0.0;
 }
+
 </style>
 </head>
 <body>
