@@ -7,6 +7,7 @@
 var topindex=0;   ///centre line index
 var start='M03001';
 var end='M03020';
+
 ///&#x27F3 refresh
 let animrunning=0;
  var arr = [];
@@ -206,7 +207,7 @@ function InitRoll()
                                           document.getElementById("child15").innerHTML = arr[topindex+2];                      
 
 
-//flash();
+flash();
 }
 
 function onbtn(kee)
@@ -258,7 +259,32 @@ function flash()
 					});
 }
 
+function  OnNewRoll()
+{
 
+start = document.getElementById("firstroll").value; 
+end = document.getElementById("lastroll").value; 
+
+topindex=0;
+ arr=[];  /// intialize basic roll array
+tempstart=start;
+////  fill roll array
+for(jj=0;jj<160;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+
+len=arr.length;        
+
+
+ for (var i = 0; i < len; i++) 
+  {  arr[i]=arr[i]+' : ';
+     // window.alert(arr[i]);
+    }
+//alert(arr[len-2]);
+
+
+InitRoll();  ///refresh browser with modified roll array
+// const button1 = document.getElementById('button1').click();
+
+}
 
 </script>
 
@@ -294,6 +320,7 @@ table.roll tr { max-height: 40px;
                 text-align : center;
                 background-color: #F2FAFA
  }
+ 
 
 .numgrid {
    
@@ -360,7 +387,7 @@ table.roll tr { max-height: 40px;
 .c0 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top: 20px;
   left:80px;
@@ -370,7 +397,7 @@ table.roll tr { max-height: 40px;
 .c1 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:60px;
   left:80px;
@@ -380,7 +407,7 @@ table.roll tr { max-height: 40px;
 .c2 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:100px;
   left:80px;
@@ -390,7 +417,7 @@ table.roll tr { max-height: 40px;
 .c3 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:140px;
   left:80px;
@@ -400,7 +427,7 @@ table.roll tr { max-height: 40px;
 .c4{
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:180px;
   left:80px;
@@ -410,7 +437,7 @@ table.roll tr { max-height: 40px;
 .c5 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:220px;
   left:80px;
@@ -420,7 +447,7 @@ table.roll tr { max-height: 40px;
 .c6 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:260px;
   left:80px;
@@ -430,7 +457,7 @@ table.roll tr { max-height: 40px;
 .c10 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:-265px;
   left:80px;
@@ -440,7 +467,7 @@ table.roll tr { max-height: 40px;
 .c11 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:-260px;
   left:80px;
@@ -450,7 +477,7 @@ table.roll tr { max-height: 40px;
 .c12 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:-255px;
   left:80px;
@@ -460,7 +487,7 @@ table.roll tr { max-height: 40px;
 .c13 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:-250px;
   left:80px;
@@ -470,7 +497,7 @@ table.roll tr { max-height: 40px;
 .c14{
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:-245px;
   left:80px;
@@ -480,7 +507,7 @@ table.roll tr { max-height: 40px;
 .c15 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:-240px;
   left:80px;
@@ -490,11 +517,17 @@ table.roll tr { max-height: 40px;
 .c16 {
  position: absolute;
   height: 38px;
-  width: 200px;
+  width: 475px;
   font-size:26px;
   top:-235px;
   left:30px;
   opacity:0.0;
+}
+
+.input {
+height:100%;
+border:none;
+font-size:24px;
 }
 
 </style>
@@ -521,7 +554,11 @@ table.roll tr { max-height: 40px;
 <div class=c6 id="child16">M03004 :</div>
 
 <table  class="roll" border="1"  style="user-select: none"> 
-<tr  id="seatno"><td contenteditable>M03157001</td><td onclick="OnRefresh()"><img src = "refresh.svg" alt="Refresh"/></td><td contenteditable>M03157020</td></tr>
+<tr  id="seatno">
+<td style="width:45%;padding-right:8px"><input style="height: 25px;width:100%;font-size:24px;text-transform: uppercase;" type="text" id="firstroll"  maxlength="10" value="M03001" >
+</td>
+<td style="width:30px;" onclick="OnNewRoll()"><img src = "refresh.svg" alt="Refresh"/>
+</td><td style="width:45%;padding-right:8px" ><input value="M03020" style="height: 25px;width:100%;font-size:24px; text-transform: uppercase;" type="text" id="lastroll"  maxlength="10" ></td></tr>
 </table>
 
 <!--
