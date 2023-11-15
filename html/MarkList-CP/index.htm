@@ -287,14 +287,35 @@ table.roll {
                 max-width : 480px;
                 margin-left: auto;
                 margin-right: auto;
-                 border: 1px solid rgba(0, 0, 0, 0.8);
- 
+                border: 1px solid rgba(0, 0, 0, 0.8);
 }
 
 table.roll tr { max-height: 40px;
                 text-align : center;
                 background-color: #F2FAFA
  }
+
+.numgrid {
+   
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 5px;
+  align-items: center;
+  justify-content: center;
+  margin-top:250px;
+ 
+}
+
+.numgrid div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F2FAFA;
+  border: 2px solid rgba(0, 0, 0, 0.8);
+ height: 92px;
+  font-size: 22px;
+}
+
 
 .grid-container {
  margin-top:250px;
@@ -307,14 +328,15 @@ table.roll tr { max-height: 40px;
   margin-left:auto;
   margin-right:auto;
   padding:0px;
+  
 }
 
 .grid-item {
   background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 18px;
-  font-size: 20px;
-  text-align: center;
+  justify-content:center;
+  font-size: 22px;
+  align-items:center;
 }
 
 #up {
@@ -502,6 +524,7 @@ table.roll tr { max-height: 40px;
 <tr  id="seatno"><td contenteditable>M03157001</td><td onclick="OnRefresh()"><img src = "refresh.svg" alt="Refresh"/></td><td contenteditable>M03157020</td></tr>
 </table>
 
+<!--
 <div class="grid-container"  style="user-select: none">     
   <div class="grid-item"  id="btn1" onclick="onbtn('1')">1</div>
   <div class="grid-item"  id="btn2" onclick="onbtn('2')">2</div>
@@ -520,7 +543,25 @@ table.roll tr { max-height: 40px;
   <div class="grid-item"  id="btn100" onclick="onbtn('100')">100</div>  
 <div class="grid-item"  id="btn4" onclick="onbtn('4')">Save</div>
 </div>
-
+-->
+<div class="numgrid" >
+  <div  style="user-select: none" id="btn1" onclick="onbtn('1')">1</div>
+  <div style="user-select: none" id="btn2" onclick="onbtn('2')" >2</div>
+  <div style="user-select: none" id="btn3" onclick="onbtn('3')" >3</div>
+  <div style="user-select: none" id="btnback" onclick="onbtn('1')" >Back</div>
+  <div style="user-select: none" id="btn4" onclick="onbtn('4')" >4</div>
+  <div style="user-select: none" id="btn5" onclick="onbtn('5')" >5</div>
+  <div style="user-select: none" id="btn6" onclick="onbtn('6')" >6</div>
+  <div style="user-select: none" id="btnnew" onclick="onbtn('1')" >New</div>
+  <div style="user-select: none" id="btn7" onclick="onbtn('7')" >7</div>
+  <div style="user-select: none" id="btn8" onclick="onbtn('8')" >8</div>
+  <div style="user-select: none" id="btn9" onclick="onbtn('9')" >9</div>
+  <div style="user-select: none" id="btnopen" onclick="onbtn('1')" >Open</div>
+  <div style="user-select: none" id="btn0" onclick="onbtn('0')" >0</div>
+  <div style="user-select: none" id="btnAB" onclick="onbtn('AB')" >AB</div>
+  <div style="user-select: none" id="btn100" onclick="onbtn('100')" >100</div>
+  <div style="user-select: none" id="btnsave" onclick="onbtn('1')" >Save</div>
+</div>
 
 </div>
 
