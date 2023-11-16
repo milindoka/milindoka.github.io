@@ -214,6 +214,10 @@ function onbtn(kee)
 {  if(animrunning) return;
    result = arr[topindex].indexOf(":");
        left = arr[topindex].substring(result);
+       if(kee=="X") {arr[topindex]=arr[topindex].substring(0,result)+": "; 
+                                 document.getElementById("child3").innerHTML = arr[topindex];         
+                                       flash();return;
+                               }
        if(kee=='AB' || kee=='100') {   arr[topindex]=arr[topindex].substring(0,result+2)+kee;     
                                      document.getElementById("child3").innerHTML = arr[topindex];                                                            
                                    const button1 = document.getElementById('up').click();
@@ -286,6 +290,8 @@ InitRoll();  ///refresh browser with modified roll array
 
 }
 
+
+
 </script>
 
 
@@ -303,8 +309,48 @@ margin-right:auto;
 margin-bottom:auto;
 border: 4px solid lightgreen;
 }
-/*   --------
----------*/
+
+/*   --------slider ------*/
+
+.slidecontainer {
+  width: 100%;
+ }
+
+.slider {
+ 
+  margin-top:230px;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 20px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+
+/* ----   slider class end --------------*/
 
 table.roll { 
                 border-collapse: collapse;
@@ -329,7 +375,7 @@ table.roll tr { max-height: 40px;
   grid-gap: 5px;
   align-items: center;
   justify-content: center;
-  margin-top:250px;
+  margin-top:10px;
  
 }
 
@@ -339,7 +385,7 @@ table.roll tr { max-height: 40px;
   justify-content: center;
   background-color: #F2FAFA;
   border: 2px solid rgba(0, 0, 0, 0.8);
- height: 92px;
+ height: 85px;
   font-size: 22px;
 }
 
@@ -347,7 +393,7 @@ table.roll tr { max-height: 40px;
 .grid-container {
  margin-top:250px;
   display: grid;
-  height:310px;
+  height:290px;
   width: 100%;
   gap: 5px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -524,7 +570,7 @@ table.roll tr { max-height: 40px;
   opacity:0.0;
 }
 
-.input {
+.input1{
 height:100%;
 border:none;
 font-size:24px;
@@ -555,10 +601,10 @@ font-size:24px;
 
 <table  class="roll" border="1"  style="user-select: none"> 
 <tr  id="seatno">
-<td style="width:45%;padding-right:8px"><input style="height: 25px;width:100%;font-size:24px;text-transform: uppercase;" type="text" id="firstroll"  maxlength="10" value="M03001" >
+<td style="width:45%;padding-right:8px"><input class="input1" style="height: 25px;width:100%;font-size:24px;text-transform: uppercase;" type="text" id="firstroll"  maxlength="10" value="M03001" >
 </td>
 <td style="width:30px;" onclick="OnNewRoll()"><img src = "refresh.svg" alt="Refresh"/>
-</td><td style="width:45%;padding-right:8px" ><input value="M03020" style="height: 25px;width:100%;font-size:24px; text-transform: uppercase;" type="text" id="lastroll"  maxlength="10" ></td></tr>
+</td><td style="width:45%;padding-right:8px" ><input class="input1" value="M03020" style="height: 25px;width:100%;font-size:24px; text-transform: uppercase;" type="text" id="lastroll"  maxlength="10" ></td></tr>
 </table>
 
 <!--
@@ -581,11 +627,17 @@ font-size:24px;
 <div class="grid-item"  id="btn4" onclick="onbtn('4')">Save</div>
 </div>
 -->
+
+<div class="slidecontainer">
+  <input type="range" min="0" max="19" value="50" class="slider" id="myRange">
+  <p>Value: <span id="demo"></span></p>
+</div>
+
 <div class="numgrid" >
   <div  style="user-select: none" id="btn1" onclick="onbtn('1')">1</div>
   <div style="user-select: none" id="btn2" onclick="onbtn('2')" >2</div>
   <div style="user-select: none" id="btn3" onclick="onbtn('3')" >3</div>
-  <div style="user-select: none" id="btnback" onclick="onbtn('1')" >Back</div>
+  <div style="user-select: none" id="btnback" onclick="onbtn('X')" >X</div>
   <div style="user-select: none" id="btn4" onclick="onbtn('4')" >4</div>
   <div style="user-select: none" id="btn5" onclick="onbtn('5')" >5</div>
   <div style="user-select: none" id="btn6" onclick="onbtn('6')" >6</div>
@@ -600,8 +652,19 @@ font-size:24px;
   <div style="user-select: none" id="btnsave" onclick="onbtn('1')" >Save</div>
 </div>
 
-</div>
 
+</div>
+<script>
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+ 
+}
+
+</script>
 </body>
 </html>
 
