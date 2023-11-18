@@ -155,6 +155,7 @@ function setVisible()
   document.getElementById("child15").style.visibility = "hidden";
 //document.getElementById("child16").style.visibility = "hidden";
   animrunning=0;
+  slider.value=topindex;
 /// 
 }
 ///////////////////////////////
@@ -211,6 +212,7 @@ function InitRoll()
 
 
 flash();
+slider.value=topindex;
 }
 
 function onbtn(kee)
@@ -635,16 +637,15 @@ var slider = document.getElementById("myRange");
 
 slider.oninput = function() {
 topindex= Number(this.value); 
-document.getElementById("child3").innerHTML = arr[topindex];    
-document.getElementById("child13").innerHTML = arr[topindex];    
+//document.getElementById("child3").innerHTML = arr[topindex];    
+//document.getElementById("child13").innerHTML = arr[topindex];    
 newval();
  }
-
 
 function mouseUp()
  {   
  
- newval();
+ //newval();
  //const dn = document.getElementById('dn').click();
                                       
  }
