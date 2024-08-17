@@ -620,10 +620,9 @@ input[type=number] {
 </table>
 
 <div style="position: absolute; top: 40px; right: 10px; z-index: 1000;">
-  <button id="printButton" onclick="printMarklist()" style="padding:5px;width:100px;margin-right: 5px;">Print</button>
-  <button style="padding:5px;width:100px;" id="mcqButton" onclick="toggleMCQMode()">MCQ</button>
+  <button id="printButton" onclick="printMarklist()" style="margin-right: 5px;">Print</button>
+  <button id="mcqButton" onclick="toggleMCQMode()">MCQ</button>
 </div>
-
 
 
 <table  class="pref"> 
@@ -712,10 +711,6 @@ function updateDisplayedRolls() {
 
 
 <div id="mcqInputs" style="display: none;">
-   <div style="position: absolute; top: 140px; right: 5px; z-index: 1000;">
-  <button id="pushButton" onclick="transferMarks()" style="padding:5px;width:100px;margin-right: 5px;">Push</button>
-</div>
-<span id="scoreDisplay" style="width:90px;padding-left:12px;padding-top:5px;padding-bottom:4px;border:1px solid black;background-color:#e7e7e7; color:black; position : absolute; top: 140px; right: 118px; z-index: 1000;";  >Score:</span>
   <div style="margin-bottom: 10px;">
     <label for="studentAnswers">Student Answers:</label>
     <input type="text" id="studentAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" maxlength="25" style="width: 100%; font-size: 18px; text-transform: uppercase;">
@@ -733,48 +728,24 @@ function updateDisplayedRolls() {
 </div>
 
 
-  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+  <div id="scoreDisplay" style="margin-top: 10px; font-size: 18px; font-weight: bold;"></div>
 
-  <style>
-    .mcq-button {
-      font-size: 18px;
-      padding: 15px 20px;
-      min-width: 80px;
-      min-height: 60px;
-      border-radius: 8px;
-      border: 2px solid #007bff;
-      background-color: #f8f9fa;
-      color: #007bff;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .mcq-button:hover {
-      background-color: #007bff;
-      color: white;
-    }
-  </style>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
+  
+    <button onclick="handleButtonClick(this)">A</button>
+    <button onclick="handleButtonClick(this)">B</button>
+    <button onclick="handleButtonClick(this)">C</button>
+    <button onclick="handleButtonClick(this)">D</button>
+    <button onclick="handleButtonClick(this)">1</button>
+    <button onclick="handleButtonClick(this)">2</button>
+    <button onclick="handleButtonClick(this)">3</button>
+    <button onclick="handleButtonClick(this)">4</button>
+    <button onclick="addMCQAnswer('-')">Skip (-)</button>
+    <button onclick="backspaceMCQAnswer()">Backspace</button>
+    <button onclick="clearFocusedInput()">Clear</button>
+    <button onclick="transferMarks()">Done</button>
 
-  <button class="mcq-button" onclick="handleButtonClick(this)">A</button>
-  <button class="mcq-button" onclick="handleButtonClick(this)">B</button>
-  <button class="mcq-button" onclick="handleButtonClick(this)">C</button>
-  <button class="mcq-button" onclick="handleButtonClick(this)">D</button>
-  <button class="mcq-button" onclick="handleButtonClick(this)">1</button>
-  <button class="mcq-button" onclick="handleButtonClick(this)">2</button>
-  <button class="mcq-button" onclick="handleButtonClick(this)">3</button>
-  <button class="mcq-button" onclick="handleButtonClick(this)">4</button>
-  <button class="mcq-button" onclick="addMCQAnswer('-')">Skip (-)</button>
-  <button class="mcq-button" onclick="backspaceMCQAnswer()">Backspace</button>
-  <button class="mcq-button" onclick="clearFocusedInput()">Clear</button>
-  <button class="mcq-button" onclick="onbtn('AB')">AB</button>
-
-</div>
-
- 
-
-
-
-
-
+  </div>
 </div>
 
 
@@ -1062,41 +1033,56 @@ function handleButtonClick(button) {
     
 }
 
+
 function calculateScore() {
-  console.log('Calculating fn called...');
+ // window.alert("Calculating Score...");
+  
     var studentAnswers = document.getElementById('studentAnswers').value.toUpperCase();
     var correctAnswers = document.getElementById('correctAnswers').value.toUpperCase();
     var marksAwarded = document.getElementById('marksAwarded').value;
     var negativeMarks = document.getElementById('negativeMarks').value;
 
-    console.log('Student Answers:', studentAnswers);
-    console.log('Correct Answers:', correctAnswers);
-    console.log('Marks Awarded:', marksAwarded);
-    console.log('Negative Marks:', negativeMarks);
     var score = 0;
-    var minLength = Math.min(studentAnswers.length, correctAnswers.length, marksAwarded.length);
+    var minLength = Math.min(studentAnswers.length, correctAnswers.length, marksAwarded.length, negativeMarks.length);
 
     for (var i = 0; i < minLength; i++) {
-      
-    console.log('Processing answer', i);
-    // rest of the loop
-   
-
         if (studentAnswers[i] === correctAnswers[i]) {
-            score += parseInt(marksAwarded[i] || 0);
-        } else if (studentAnswers[i] !== '-' && correctAnswers[i] !== '-' && negativeMarks && negativeMarks.trim() !== '') {
-            score -= parseInt(negativeMarks[i] || 0);
+            score += parseInt(marksAwarded[i]);
+        } else if (studentAnswers[i] !== '-' && correctAnswers[i] !== '-') {
+            score -= parseInt(negativeMarks[i]);
         }
     }
 
-    document.getElementById('scoreDisplay').textContent = 'Score: ' + score;
-    console.log('Score:', score);
+    document.getElementById('scoreDisplay').textContent = 'Current Score: ' + score;
+   //// window.alert(score);
 }
 
-document.getElementById('studentAnswers').addEventListener('input', calculateScore);
-document.getElementById('correctAnswers').addEventListener('input', calculateScore);
-document.getElementById('marksAwarded').addEventListener('input', calculateScore);
-document.getElementById('negativeMarks').addEventListener('input', calculateScore);
+// Assuming you have an input field with id 'answerInput'
+const answerInput = document.getElementById('studentAnswers');
+
+answerInput.addEventListener('keyup', function(event) {
+   kii="ABCD-"
+   // Check if the key pressed is Enter (key code 13)
+    if (event.keyCode === kii.charCodeAt(0) || event.keyCode === kii.charCodeAt(1) || 
+    event.keyCode === kii.charCodeAt(2) || event.keyCode === kii.charCodeAt(3) || 
+    event.keyCode === kii.charCodeAt(4))
+  
+    {  
+        // Process the answer
+       const answer = this.value.trim();
+        
+        // Call your existing answer processing logic here
+        // For example:
+        // processAnswer(answer);
+
+        // Then call calculateScore
+        calculateScore();
+
+        // Clear the input field
+       //    this.value = '';
+    }
+});
+
 
 </script>
 </body>
