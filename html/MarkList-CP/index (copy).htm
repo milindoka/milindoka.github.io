@@ -620,7 +620,7 @@ input[type=number] {
 </table>
 
 <div style="position: absolute; top: 40px; right: 10px; z-index: 1000;">
-  <button id="printButton" onclick="printMarklist()" style="padding:5px;width:45px;margin-right: 5px;">Print</button>
+  <button id="printButton" onclick="printMarklist()" style="padding:5px;width:100px;margin-right: 5px;">Print</button>
   <button style="padding:5px;width:100px;" id="mcqButton" onclick="toggleMCQMode()">MCQ</button>
 </div>
 
@@ -715,10 +715,7 @@ function updateDisplayedRolls() {
    <div style="position: absolute; top: 140px; right: 5px; z-index: 1000;">
   <button id="pushButton" onclick="transferMarks()" style="padding:5px;width:100px;margin-right: 5px;">Push</button>
 </div>
-   <span id="scoreDisplay" style="width:30px;padding-left:12px;padding-top:5px;padding-bottom:4px;
-       border:1px solid black;background-color:#e7e7e7; color:black; 
-       position : absolute; top: 140px; right: 118px; z-index: 1000;" 
-       >0</span>
+<span id="scoreDisplay" style="width:90px;padding-left:12px;padding-top:5px;padding-bottom:4px;border:1px solid black;background-color:#e7e7e7; color:black; position : absolute; top: 140px; right: 118px; z-index: 1000;";  >Score:</span>
   <div style="margin-bottom: 10px;">
     <label for="studentAnswers">Student Answers:</label>
     <input type="text" id="studentAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" maxlength="25" style="width: 100%; font-size: 18px; text-transform: uppercase;" readonly>
@@ -1003,7 +1000,7 @@ function toggleMCQMode() {
 
 
 function transferMarks() {
-  var scoreText = document.getElementById('scoreDisplay').textContent;
+    var scoreText = document.getElementById('scoreDisplay').textContent.split(': ')[1];
     var score = Math.max(0, parseInt(scoreText)); // Ensure positive integer
     var formattedScore = score < 10 ? '0' + score : score.toString(); // Format as two digits
     var currentRoll = arr[topindex].split(':')[0].trim();
@@ -1092,7 +1089,7 @@ function calculateScore() {
         }
     }
 
-    document.getElementById('scoreDisplay').textContent = score;
+    document.getElementById('scoreDisplay').textContent = 'Score: ' + score;
     console.log('Score:', score);
 }
 
