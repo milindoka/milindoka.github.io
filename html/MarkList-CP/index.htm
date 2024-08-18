@@ -718,11 +718,11 @@ function updateDisplayedRolls() {
 <span id="scoreDisplay" style="width:90px;padding-left:12px;padding-top:5px;padding-bottom:4px;border:1px solid black;background-color:#e7e7e7; color:black; position : absolute; top: 140px; right: 118px; z-index: 1000;";  >Score:</span>
   <div style="margin-bottom: 10px;">
     <label for="studentAnswers">Student Answers:</label>
-    <input type="text" id="studentAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" maxlength="25" style="width: 100%; font-size: 18px; text-transform: uppercase;">
+    <input type="text" id="studentAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" maxlength="25" style="width: 100%; font-size: 18px; text-transform: uppercase;" readonly>
   </div>
   <div style="margin-bottom: 10px;">
     <label for="correctAnswers">Correct Answers:</label>
-    <input type="text" id="correctAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" maxlength="25" style="width: 100%; font-size: 18px; text-transform: uppercase;">
+    <input type="text" id="correctAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" maxlength="25" style="width: 100%; font-size: 18px; text-transform: uppercase;" readonly>
   </div>
   <div style="margin-bottom: 10px;">
     <label for="marksAwarded">Marks Awarded:</label>
