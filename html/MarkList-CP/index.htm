@@ -312,7 +312,7 @@ body {margin: 20px;
 position:relative;
 width:100%;
 max-width:480px;
-height:1000px;
+height:1040px;
 margin-left:auto;
 margin-right:auto;
 margin-bottom:auto;
@@ -381,7 +381,7 @@ table.roll tr { max-height: 40px;
    
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 5px;
+  grid-gap: 10px;
   align-items: center;
   justify-content: center;
   margin-top:10px;
@@ -392,10 +392,14 @@ table.roll tr { max-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #F2FAFA;
-  border: 2px solid rgba(0, 0, 0, 0.8);
- height: 85px;
-  font-size: 22px;
+  background-color: #f8f9fa;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  color: #007bff;
+  padding: 15px 20px;
+  min-width: 65px;
+  min-height: 50px;
+  font-size: 18px;
 }
 
 
@@ -534,16 +538,16 @@ font-size:24px;
 .btn {
   border: none;
   border-radius: 8px;
-  font-size: 22px;
+  font-size: 18px;
   font-family: inherit;
   background: transparent;
-  height: 85px;
-  margin-left : auto;
-  margin-right : auto;
+  min-height: 60px;
+  padding: 15px 20px;
+  color: #007bff;
   }
 
 .upload-btn-wrapper input[type=file] {
-  font-size: 100px;
+  font-size: 80px;
   position: absolute;
   left: 0;
   top: 0;
@@ -589,11 +593,12 @@ input[type=number] {
 
 
 .pg input {
-  .h-formfield-uppercase input {
+  .h-formfield-uppercase input
+   {
   text-transform: uppercase;
   &::placeholder {
     text-transform: none;
-  }
+  } 
 }
 }
 
@@ -638,13 +643,15 @@ input[type=number] {
 
 <table  class="pref"> 
 <tr><td style="width : 50%">Examiner </td><td><input type="text"  size="8" value="MO" id="examiner"></td></tr>
-<tr><td>Class</td><td><input type="text" size="22" value="FY" id="class" ></td></tr>
-<tr><td>Div</td><td><input type="text" size="22" value="A" id="div"></td></tr>
+<tr><td>Class</td><td><input type="text" size="22" value="FY" id="clas" ></td></tr>
+<tr><td>Div</td><td><input type="text" size="22" value="A" id="deev"></td></tr>
 <tr><td>Stream : &ensp;</td><td><input type="text" size="12" value="Science" id="stream"></td></tr>
 <tr><td>Subject : &ensp;</td><td><input type="text" size="5" value="Maths" id="subject"></td></tr>
 <tr><td>Examination : &ensp;</td><td><input type="text" size="10" value="English" id="examination"></td></tr>
 <tr><td>Max Marks : &ensp;</td><td><input type="text" size="10" value="50" id="max"></td></tr>
 <tr><td>Date : &ensp;</td><td><input type="text" size="10" value="01/01/24" id="det"></td></tr>
+<tr><td>School/College : &ensp;</td><td><input type="text" size="22" value="XYZ College" id="schoolcollege1"></td></tr>
+<tr><td>Address : &ensp;</td><td><input type="text" size="22" value="Mumbai" id="schoolcollege2"></td></tr> 
 </table>
 
 
@@ -731,22 +738,22 @@ function updateDisplayedRolls() {
        >0</span>
   <div style="margin-bottom: 10px;">
     <span class="pg">
-    
     <input type="text" placeholder="Studets Answers eg ABADCBA..." id="studentAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" maxlength="25" 
-    style="width: 100%; font-size: 18px;" readonly>
+    style="font-family: monospace; width: 100%; font-size: 18px;" readonly>
   </div>
   <div style="margin-bottom: 10px;">
-  
     <input type="text" placeholder="Correct Answers eg DABCADB..." id="correctAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" 
-    maxlength="25" style="width: 100%; font-size: 18px;" readonly>
+    maxlength="25" style="font-family: monospace; width: 100%; font-size: 18px;" readonly>
   </div>
   </span>
   <div style="margin-bottom: 10px;">
     
-    <input type="text" placeholder="Marks Awarded eg 2422321..." id="marksAwarded" onclick="setFocus(this)" onkeypress="return validateMarksInput(event)" maxlength="25" style="width: 100%; font-size: 18px;" readonly>  </div>
+    <input type="text"  placeholder="Marks Awarded eg 2422321..." id="marksAwarded" onclick="setFocus(this)" onkeypress="return validateMarksInput(event)" maxlength="25" 
+    style="font-family: monospace; width: 100%; font-size: 18px;" readonly>  </div>
   <div style="margin-bottom: 10px;">
     
-    <input type="text" placeholder="Optional Negative Marks eg 1211111..." id="negativeMarks" onclick="setFocus(this)" onkeypress="return validateMarksInput(event)" maxlength="25" style="width: 100%; font-size: 18px;" readonly>  
+    <input type="text" placeholder="Optional Negative Marks eg 1211111..." id="negativeMarks" onclick="setFocus(this)" onkeypress="return validateMarksInput(event)" maxlength="25" 
+    style="font-family: monospace; width: 100%; font-size: 18px;" readonly>  
 </div>
 
 
@@ -1109,6 +1116,42 @@ function calculateScore() {
     document.getElementById('scoreDisplay').textContent = score;
     console.log('Score:', score);
 }
+
+
+
+function printMarklist() 
+{
+ 
+sessionStorage.setItem("mrkArray", JSON.stringify(arr));
+
+schoolcollege1=document.getElementById("schoolcollege1").value;
+schoolcollege2=document.getElementById("schoolcollege2").value;
+examiner=document.getElementById("examiner").value;
+clas=document.getElementById("clas").value;
+deev=document.getElementById("deev").value;
+stream=document.getElementById("stream").value;
+subject=document.getElementById("subject").value;
+examination=document.getElementById("examination").value;
+max=document.getElementById("max").value;
+det=document.getElementById("det").value;
+
+sessionStorage.setItem("schoolcollege1", schoolcollege1);
+sessionStorage.setItem("schoolcollege2",schoolcollege2);
+sessionStorage.setItem("clas", clas);
+sessionStorage.setItem("deev", deev);
+sessionStorage.setItem("stream", stream);
+sessionStorage.setItem("subject", subject);
+sessionStorage.setItem("examination", examination);
+sessionStorage.setItem("max", max);
+sessionStorage.setItem("det", det);
+sessionStorage.setItem("examiner", examiner);
+
+ //open printML html file
+
+window.location.href = "PrintML.htm";
+ 
+}
+
 
 document.getElementById('studentAnswers').addEventListener('input', calculateScore);
 document.getElementById('correctAnswers').addEventListener('input', calculateScore);
