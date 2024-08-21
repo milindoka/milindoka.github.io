@@ -295,11 +295,11 @@ InitRoll();  ///refresh browser with modified roll array
 }
 
 function FirstBlank()
-{
+{ len=arr.length;
 for (var i = 0; i < len; i++) 
   {   result = arr[i].indexOf(":");
        left = arr[i].substring(result);
-       if(left.length==2) { topindex=i; slider.value=topindex; mouseUp(); return;  }
+       if(left.length==2) { topindex=(i-1)%len; slider.value=topindex; mouseUp(); return;  }
     }
 }
 </script>
@@ -852,8 +852,8 @@ function SaveFile()
     text=text+"=========ML-V-01========\n";
     text=text+"\n";
     text=text+"Examiner : "+ document.getElementById("examiner").value+ "\n";
-    text=text+"Class : "+ document.getElementById("class").value+ "\n";
-    text=text+"Div : "+ document.getElementById("div").value+ "\n";
+    text=text+"Class : "+ document.getElementById("clas").value+ "\n";
+    text=text+"Div : "+ document.getElementById("deev").value+ "\n";
     text=text+"Stream : "+ document.getElementById("stream").value+ "\n";
     text=text+"Subject : "+ document.getElementById("subject").value+ "\n";
     text=text+"Examination : "+ document.getElementById("examination").value+ "\n";
@@ -915,13 +915,13 @@ function download(filename, text) {
         }
         if(templine.includes("Class"))
         {
-          document.getElementById("class").value=templine.split(":")[1].trim();
+          document.getElementById("clas").value=templine.split(":")[1].trim();
           continue;
         }
 
         if(templine.includes("Div"))
         {
-          document.getElementById("div").value=templine.split(":")[1].trim();
+          document.getElementById("deev").value=templine.split(":")[1].trim();
           continue;
         }
         if(templine.includes("Stream")) 
