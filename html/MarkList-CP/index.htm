@@ -328,7 +328,6 @@ border: 4px solid lightgreen;
 .slider {
  
   margin-top:230px;
-  -webkit-appearance: none;
   width: 100%;
   height: 25px;
   background: #d3d3d3;
@@ -402,7 +401,7 @@ table.roll tr { max-height: 40px;
   font-size: 18px;
   margin-left: 5px;
   margin-right: 5px;
-  margin-top: 5px;
+  margin-top: 19px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -887,8 +886,13 @@ function SaveFile()
     text=text+"\n";
     text=text+"=========END========\n";
     
+    filename = document.getElementById("examination").value+'-'
+             + document.getElementById("subject").value +'-'
+             + document.getElementById("clas").value+'-'
+             + document.getElementById("examiner").value
+             +".mrk";
 
-    download("Test33.mrk",text);
+    download(filename,text);
 }
 
  
