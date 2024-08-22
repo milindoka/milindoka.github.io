@@ -14,7 +14,7 @@ let animrunning=0;
  
 tempstart=start;
 ////  fill roll array
-for(jj=0;jj<160;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+for(jj=0;jj<200;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
 
 var len=arr.length;        
 
@@ -270,14 +270,14 @@ function flash()
 function  OnNewRoll()
 {
 
-start = document.getElementById("firstroll").value; 
-end = document.getElementById("lastroll").value; 
+start = document.getElementById("firstroll").value.toUpperCase();
+end = document.getElementById("lastroll").value.toUpperCase(); 
 
 topindex=0;
  arr=[];  /// intialize basic roll array
 tempstart=start;
 ////  fill roll array
-for(jj=0;jj<160;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+for(jj=0;jj<200;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
 
 len=arr.length;        
 slider.max=len-1;
@@ -403,8 +403,16 @@ table.roll tr { max-height: 40px;
   margin-left: 5px;
   margin-right: 5px;
   margin-top: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+.numgrid div:active {
+  background-color: #007bff;
+  color: white;
+  transform: scale(0.95);
+  transition: all 0.1s ease;
+}
 
 .grid-container {
  margin-top:250px;
@@ -426,6 +434,7 @@ table.roll tr { max-height: 40px;
   justify-content:center;
   font-size: 22px;
   align-items:center;
+
 }
 
 #up {
@@ -560,7 +569,7 @@ font-size:24px;
 table.pref
 {width : 100%;
   position: absolute;
-  margin-top : 680px;
+  margin-top : 640px;
   border : 1px solid;
   border-collapse: collapse;
 }
@@ -637,10 +646,13 @@ input[type=number] {
 </td><td style="width:45%;padding-right:8px" ><input class="input1" value="M03020" style="height: 25px;width:100%;font-size:24px; text-transform: uppercase;" type="text" id="lastroll"  maxlength="10" ></td></tr>
 </table>
 
-<div style="position: absolute; top: 40px; right: 10px; z-index: 1000;">
-  <button id="printButton" onclick="printMarklist()" style="padding:5px;width:45px;margin-right: 5px;">Print</button>
-  <button style="padding:5px;width:100px;" id="mcqButton" onclick="toggleMCQMode()">MCQ</button>
+<div style="position: absolute; top: 40px; right: 5px; z-index: 1000;">
+  <button id="printButton" onclick="printMarklist()" style="padding:5px;width:100px;margin-right: 5px;">Print</button>
 </div>
+<div style="position: absolute; top: 90px; right: 10px; z-index: 1000;">
+    <button style="padding:5px;width:100px;" id="mcqButton" onclick="toggleMCQMode()">MCQ</button>
+</div>
+
 
 
 
@@ -775,10 +787,13 @@ function updateDisplayedRolls() {
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    .mcq-button:hover {
-      background-color: #007bff;
-      color: white;
-    }
+
+  .mcq-button:active {
+  background-color: #007bff;
+  color: white;
+  transform: scale(0.95);
+  transition: all 0.1s ease;
+}
   </style>
 
   <button class="mcq-button" onclick="handleButtonClick(this)">A</button>
