@@ -517,16 +517,3 @@ function vectorMult(v,s){
 
 let slider;
 let sliderY = 515; // Position of the slider below the carrom board
-function touchStarted() {
-  mousePressed();
-  return false;
-}
-function touchMoved() {
-  mouseDragged();
-  return false;
-}
-
-function touchEnded() {
-  mouseReleased();
-  return false;
-}
