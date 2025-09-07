@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Keyboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        #input {
+            width: 100%;
+            max-width: 400px;
+            height: 100px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        #keyboard {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            max-width: 500px;
+            width: 100%;
+        }
+        .key {
+            padding: 15px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+        }
+        .key:hover {
+            background-color: #e0e0e0;
+        }
+        .key:active {
+            background-color: #d0d0d0;
+        }
+        .space {
+            grid-column: span 4;
+        }
+        .backspace {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            #input {
+                font-size: 14px;
+                height: 80px;
+            }
+            #keyboard {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 3px;
+                max-width: none;
+            }
+            .key {
+                padding: 12px;
+                font-size: 14px;
+            }
+            .space {
+                grid-column: span 3;
+            }
+            .backspace {
+                grid-column: span 3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Virtual Keyboard</h1>
+    <textarea id="input" placeholder="Type here..."></textarea>
+    <div id="keyboard">
+        <div class="key" data-key="1">1</div>
+        <div class="key" data-key="2">2</div>
+        <div class="key" data-key="3">3</div>
+        <div class="key" data-key="4">4</div>
+        <div class="key" data-key="5">5</div>
+        <div class="key" data-key="6">6</div>
+        <div class="key" data-key="7">7</div>
+        <div class="key" data-key="8">8</div>
+        <div class="key" data-key="9">9</div>
+        <div class="key" data-key="0">0</div>
+        <div class="key" data-key="q">Q</div>
+        <div class="key" data-key="w">W</div>
+        <div class="key" data-key="e">E</div>
+        <div class="key" data-key="r">R</div>
+        <div class="key" data-key="t">T</div>
+        <div class="key" data-key="y">Y</div>
+        <div class="key" data-key="u">U</div>
+        <div class="key" data-key="i">I</div>
+        <div class="key" data-key="o">O</div>
+        <div class="key" data-key="p">P</div>
+        <div class="key" data-key="a">A</div>
+        <div class="key" data-key="s">S</div>
+        <div class="key" data-key="d">D</div>
+        <div class="key" data-key="f">F</div>
+        <div class="key" data-key="g">G</div>
+        <div class="key" data-key="h">H</div>
+        <div class="key" data-key="j">J</div>
+        <div class="key" data-key="k">K</div>
+        <div class="key" data-key="l">L</div>
+        <div class="key" data-key="z">Z</div>
+        <div class="key" data-key="x">X</div>
+        <div class="key" data-key="c">C</div>
+        <div class="key" data-key="v">V</div>
+        <div class="key" data-key="b">B</div>
+        <div class="key" data-key="n">N</div>
+        <div class="key" data-key="m">M</div>
+        <div class="key space" data-key=" ">SPACE</div>
+        <div class="key backspace" data-key="backspace">⌫</div>
+    </div>
+
+    <script>
+        const input = document.getElementById('input');
+        const keys = document.querySelectorAll('.key');
+
+        keys.forEach(key => {
+            key.addEventListener('click', () => {
+                const keyValue = key.getAttribute('data-key');
+                if (keyValue === 'backspace') {
+                    input.value = input.value.slice(0, -1);
+                } else {
+                    input.value += keyValue;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
