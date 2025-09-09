@@ -77,29 +77,6 @@
             flex: 1.5;
         }
 
-        .button-row {
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-
-        .nav-button {
-            background-color: #4c4c4c;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .nav-button:active {
-            background-color: #6c6c6c;
-        }
-
         .hidden {
             display: none;
         }
@@ -122,12 +99,6 @@
 </head>
 <body>
     <div id="input-area"></div>
-    <div class="button-row">
-        <button class="nav-button" id="next-rec">Next Rec</button>
-        <button class="nav-button" id="prev-rec">Prev Rec</button>
-        <button class="nav-button" id="next-field">Next Field</button>
-        <button class="nav-button" id="prev-field">Prev Field</button>
-    </div>
     <div class="keyboard">
         <!-- Letters Layout -->
         <div id="letters" class="layout">
@@ -350,62 +321,6 @@
 
         // Initial setup
         showLayout('letters');
-
-        // Initialize 4x5 grid
-        let grid = [];
-        for (let i = 0; i < 4; i++) {
-            grid[i] = [];
-            for (let j = 0; j < 5; j++) {
-                grid[i][j] = (i + 1) + ',' + (j + 1);
-            }
-        }
-
-        // Navigation variables
-        let currentRow = 0;
-        let currentCol = 0;
-
-        // Function to update input area
-        function updateInputArea() {
-            inputArea.textContent = grid[currentRow][currentCol];
-        }
-
-        // Navigation functions
-        function nextRec() {
-            if (currentRow < 3) {
-                currentRow++;
-                updateInputArea();
-            }
-        }
-
-        function prevRec() {
-            if (currentRow > 0) {
-                currentRow--;
-                updateInputArea();
-            }
-        }
-
-        function nextField() {
-            if (currentCol < 4) {
-                currentCol++;
-                updateInputArea();
-            }
-        }
-
-        function prevField() {
-            if (currentCol > 0) {
-                currentCol--;
-                updateInputArea();
-            }
-        }
-
-        // Add event listeners for navigation buttons
-        document.getElementById('next-rec').addEventListener('click', nextRec);
-        document.getElementById('prev-rec').addEventListener('click', prevRec);
-        document.getElementById('next-field').addEventListener('click', nextField);
-        document.getElementById('prev-field').addEventListener('click', prevField);
-
-        // Display first element in input area
-        updateInputArea();
     </script>
 </body>
 </html>
