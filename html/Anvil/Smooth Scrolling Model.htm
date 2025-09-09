@@ -1,0 +1,187 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+<script src="jquery-3-7-1.js"></script>
+<script>   
+ var topindex=0;
+let animrunning=0;
+ var arr = [];
+    for (var i = 10; i <= 30; i++) 
+    {  arr.push('Number ' + i.toString());  }
+var len=arr.length;        
+      //  $(child5).promise().done(newval);
+    // will be called when all the animations on the queue finish
+
+
+$(document).ready(function(){  
+ 
+  
+    $("button").click(function(){ 
+ 
+  if(animrunning==1) return;   
+  animrunning=1;
+  //  if(topindex>=len-4 )   return;
+   animrunning=true;
+    document.getElementById("child12").style.visibility = "hidden";
+    document.getElementById("child13").style.visibility = "hidden";
+    document.getElementById("child14").style.visibility = "hidden";
+     
+        $("#child2").animate({top: '100px',opacity:0.0},"slow");  
+        $("#child3").animate({top: '150px',opacity:0.5},"slow");  
+        $("#child4").animate({top: '200px',opacity:1.0},"slow");  
+        $("#child5").animate({top: '250px',opacity:0.5},"slow");  
+        $(child5).promise().done(newval);
+    });  
+});  
+
+function newval() {         document.getElementById("child2").style.visibility = "hidden";
+					   document.getElementById("child3").style.visibility = "hidden";
+					   document.getElementById("child4").style.visibility = "hidden";
+ 					   document.getElementById("child5").style.visibility = "hidden";
+					     
+                                          topindex++;  
+                                          document.getElementById("child1").innerHTML = arr[topindex%len]; 
+                                          document.getElementById("child2").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child3").innerHTML = arr[(topindex+2)%len]; 
+                                          document.getElementById("child4").innerHTML = arr[(topindex+3)%len]; 
+                                          document.getElementById("child5").innerHTML = arr[(topindex+4)%len];    
+                                          
+                                          document.getElementById("child11").innerHTML = arr[(topindex)%len]; 
+                                          document.getElementById("child12").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child13").innerHTML = arr[(topindex+2)%len]; 
+                                          document.getElementById("child14").innerHTML = arr[(topindex+3)%len]; 
+                                          document.getElementById("child15").innerHTML = arr[(topindex+4)%len];                      
+                 
+                                           
+                                   resetAnim();
+                                }
+
+
+function resetAnim()
+{
+  document.getElementById("child12").style.opacity=0.5;
+  document.getElementById("child13").style.opacity=1.0;
+  document.getElementById("child14").style.opacity=0.5;
+  
+  
+  document.getElementById("child12").style.visibility = "visible";
+  document.getElementById("child13").style.visibility = "visible";
+  document.getElementById("child14").style.visibility = "visible";
+ 
+ $("#child2").animate({top: '150px',opacity:0.5},"slow");  
+ $("#child3").animate({top: '200px',opacity:1.0},"slow");  
+ $("#child4").animate({top: '250px',opacity:0.5},"slow");  
+ $("#child5").animate({top: '300px',opacity:0},"slow");  
+ $(child5).promise().done(setVisible);
+}
+
+function setVisible()
+{
+     document.getElementById("child2").style.visibility = "visible";
+     document.getElementById("child3").style.visibility = "visible";				     
+     document.getElementById("child4").style.visibility = "visible";
+     document.getElementById("child5").style.visibility = "visible";
+      
+     document.getElementById("child12").style.visibility = "hidden";	
+     document.getElementById("child13").style.visibility = "hidden";
+     document.getElementById("child14").style.visibility = "hidden";
+     animrunning=0;
+}
+
+</script>
+<style>
+.c1 {
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:100px;
+  left:200px;
+  opacity:0.0;
+}
+
+.c2 {
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:150px;
+  left:200px;
+ opacity: 0.5;  
+}
+.c3{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:200px;
+  left:200px;
+opacity:1.0;  
+}
+
+.c4{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:250px;
+  left:200px;
+  opacity:0.5;
+}
+
+.c5{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:300px;
+  left:200px;
+  opacity:0.0;
+}
+
+
+.c12 {
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:150px;
+  left:200px;
+ opacity: 0.5;  
+ visibility:hidden;
+}
+.c13{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:200px;
+  left:200px;
+opacity:1.0;  
+visibility:hidden;
+}
+
+.c14{
+ position: absolute;
+  height: 25px;
+  width: 200px;
+  top:250px;
+  left:200px;
+  opacity:0.5;
+visibility:hidden;
+}
+
+
+   </style>
+</head>  
+<body>  
+<button>Start Animation</button>  
+<div class=c1 id="child1">Number 10</div>
+<div class=c2  id="child2">Number 11</div>
+ <div class=c3 id="child3">Number 12</div>
+<div class=c4  id="child4">Number 13</div>
+<div class=c5  id="child5">Number 14</div>
+
+<div class=c1 id="child11">Number 10</div>
+<div class=c12  id="child12">Number 11</div>
+ <div class=c13 id="child13">Number 12</div>
+<div class=c14  id="child14">Number 13</div>
+<div class=c5  id="child15">Number 14</div>
+
+
+</body>  
+</html>  
+
