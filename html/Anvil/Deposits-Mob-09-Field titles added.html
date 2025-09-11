@@ -384,7 +384,9 @@
             if (key === 'backspace') {
                 inputArea.textContent = inputArea.textContent.slice(0, -1);
             } else if (key === 'enter') {
-                nextRec();
+                if (inputArea.textContent.length < 8) {
+                    inputArea.textContent += '\n';
+                }
             } else if (key === 'shift') {
                 isShift = !isShift;
                 showLayout(isShift ? 'uppercase' : 'letters');
