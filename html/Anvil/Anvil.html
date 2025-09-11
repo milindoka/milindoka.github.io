@@ -1,506 +1,604 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animated Spreadsheet</title>
-  <style>
-    :root {
-      --item-height: 30px;
-      --animation-duration: 0.5s;
-      }
-    .list-container {
-      position: relative;
-      height: calc(var(--item-height) * 7);
-     }
-  table {margin-left: auto;margin-right: auto;}
-
-    .list-item {
-      position: absolute;
-      height: var(--item-height);
-      transition: all var(--animation-duration) ease;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start; /* Align items to start */
-      font-size: 16px;
-    }
-    
-.list-item td, .header-row th {
-  height: 20px;
-  empty-cells: show; 
-  padding: 0 20px;
-  text-align: center;
-  margin-right: 2px !important;
-  background-color: rgb(223, 188, 170) !important; /* Ensure background color is applied */
-  border: 3px solid rgba(219, 210, 210, 0.552); /* Add a border to make cells visible */
-  
-}
-
-.list-item td {
-  empty-cells: show !important; /* This may not be necessary */
-  text-align: left;
-  background-color: aqua !important; /* Ensure background color is applied */
-  overflow: hidden;
-    white-space: nowrap;
-}
-
-/* Ensure that all cells have a minimum height */
-.list-item td {
-  height: 20px; /* Ensures consistent height */
-  border-spacing: 20px;
-}
-
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 20px 0;
-      width: 100%;
-    }
-    .button-row {
-      display: flex;
-      justify-content: center;
-      margin: 10px 0;
-      width: 100%;
-      gap: 10px;
-    }
-    .button-row button {
-      flex: 1;
-      min-width: 0;
-    }
-
-    @media (max-width: 768px) {
-      .button-row {
-        gap: 5px;
-      }
-      .button-row button {
-        height: 40px;
-        font-size: 16px;
-        flex: 1;
-        min-width: 0;
-      }
-      .list-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      table {
-        min-width: 300px;
-        font-size: 14px;
-      }
-      .list-item td {
-        padding: 0 5px;
-      }
-      .header-row th {
-        padding: 0 5px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div id="list-container" class="list-container">
-    <table id="data-table">
-      <thead>
-        <tr class="header-row"></tr>
-      </thead>
-      <tbody id="list-body"></tbody>
-    </table>
-  </div>
-  <!-- Button Container -->
-  <div class="button-container">
-    <div class="button-row">
-      <button id="animate-btn">Up</button>
-      <button id="animate-down-btn">Down</button>
-      <button id="insert-below-btn">Insert Below</button>
-      <button id="insert-above-btn">Insert Above</button>
-    </div>
-    <div class="button-row">
-      <button id="delete-row-btn">Delete Row</button>
-      <button id="copy-upper-btn">Copy Upper</button>
-      <button id="save-data-btn">Save Data</button>
-      <button id="load-data-btn">Load Data</button>
-    </div>
-  </div>
-  <script>
-    const listContainer = document.getElementById('list-container');
-    const animateBtn = document.getElementById('animate-btn');
-    const animateDownBtn = document.getElementById('animate-down-btn');
-    const insertBelowBtn = document.getElementById('insert-below-btn');
-    const insertAboveBtn = document.getElementById('insert-above-btn');
-    const deleteRowBtn = document.getElementById('delete-row-btn');
-     
-
-    const listBody = document.getElementById('list-body');
-    const headerRow = document.querySelector('.header-row');
-    const itemHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--item-height'));
-
-    // Define column widths in an array (first element is for serial number column)
-    const columnWidths = [20, 250]; // Adjust widths as needed
-    const MaxChars = [-1,      8];// Maximum characters for each column
-    const headerArray = ['Sr', 'Maturity Date']; // Header array    
-    const numColumns = columnWidths.length;
-
-    const items = Array.from({length: 9}, () => 
-      Array.from({length: numColumns - 1}, () => '')
-    );
-
-    let currentIndex = items.length - 3;
-    let isAnimating = false;
-
-    // Create the header row
-    function createHeaderRow() {
-      headerArray.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        headerRow.appendChild(th);
-      });
-    }
-
-    function createListItems() {
-      for (let i = 0; i < 7; i++) {
-        const item = document.createElement('tr');
-        item.className = 'list-item';
-        item.style.top = `${i * itemHeight}px`;
-        item.style.opacity = i === 2 || i === 4 ? 0.5 : i === 3 ? 1 : i === 1 || i === 5 ? 0.25 : 0;
-
-        // Create and append the serial number cell
-        const serialCell = document.createElement('td');
-        serialCell.textContent = i + 1; // Serial numbers start from 1
-        item.appendChild(serialCell);
-
-        for (let j = 0; j < numColumns - 1; j++) {
-          const cell = document.createElement('td');
-          if (i === 3) {
-            cell.setAttribute('contenteditable', 'true');
-            cell.addEventListener('keypress', function(e) {
-              const maxLength = MaxChars[j + 1];
-              if (this.textContent.length >= maxLength) {
-                e.preventDefault();
-                return false;
-              }
-            });
-            cell.addEventListener('paste', function(e) {
-              e.preventDefault();
-              const text = e.clipboardData.getData('text/plain');
-              const maxLength = MaxChars[j + 1];
-              const availableSpace = maxLength - this.textContent.length;
-              if (availableSpace > 0) {
-                document.execCommand('insertText', false, text.substr(0, availableSpace));
-              }
-            });
-            cell.addEventListener('blur', (event) => {
-              const rowOffset = (currentIndex + 3) % items.length;
-              items[rowOffset][j] = event.target.textContent;
-            });
-          } else {
-            cell.setAttribute('contenteditable', 'false');
-          }
-          item.appendChild(cell);
-        }        listBody.appendChild(item);
-      }
-      updateListItems();
-      
-      // Use setTimeout to set focus after a short delay
-      setTimeout(() => {
-        const centerRow = listBody.querySelectorAll('.list-item')[3];
-        const firstCell = centerRow.querySelector('td:nth-child(2)'); // Select the second td (first after serial number)
-        if (firstCell) {
-          firstCell.focus();
-        }
-      }, 0);
-    }    function setColumnWidths() {
-      const cells = listBody.querySelectorAll('td');
-      cells.forEach((cell, index) => {
-        const columnIndex = index % numColumns;
-        cell.style.width = `${columnWidths[columnIndex]}px`;
-      });
-      
-      const headerCells = headerRow.querySelectorAll('th');
-      headerCells.forEach((cell, index) => {
-        cell.style.width = `${columnWidths[index]}px`;
-      });
-    }
-
-    function updateListItems() {
-      const listItems = document.querySelectorAll('.list-item');
-      listItems.forEach((item, index) => {
-        const cells = item.getElementsByTagName('td');
-        const rowData = items[(currentIndex + index) % items.length];
-        cells[0].textContent = (currentIndex + index) % (items.length) + 1; // Update serial number
-        for (let i = 0; i < cells.length - 1; i++) {
-          cells[i + 1].textContent = rowData[i] || ''; // Set to empty string if no data
-        }
-      });
-      setColumnWidths();
-    }
-//////////////////////////////////////////////////////////////////
-function animateList() {
-    if (isAnimating) return;
-    isAnimating = true;
-
-    // Get the currently focused cell index
-    const activeElement = document.activeElement;
-    let focusedCellIndex = -1;
-    let focusedRowIndex = -1;
-
-    // Ensure focus is on a cell, otherwise set it to the center cell
-    if (activeElement.tagName === 'TD') {
-        const currentRow = activeElement.parentElement; // Get the current row
-        const cells = currentRow.getElementsByTagName('td'); // Get all cells in the current row
-        focusedCellIndex = Array.prototype.indexOf.call(cells, activeElement); // Get the index of the current cell
-        focusedRowIndex = Array.prototype.indexOf.call(listBody.children, currentRow); // Get the index of the current row
-
-        // Save the current value to items before animation
-        const rowOffset = (currentIndex + focusedRowIndex) % items.length; // Calculate the row offset
-        items[rowOffset][focusedCellIndex - 1] = activeElement.textContent; // Save value (skip serial number cell)
-    } else {
-        // Focus the first cell of the center row if no cell is focused
-        const centerRow = listBody.querySelectorAll('.list-item')[3];
-        const firstCell = centerRow.firstChild;
-        firstCell.focus();
-        focusedCellIndex = 0; // Set to the first cell index
-        focusedRowIndex = 3; // Center row index
-    }
-
-    const listItems = document.querySelectorAll('.list-item');
-    listItems.forEach((item, index) => {
-        item.style.top = `${(index - 1) * itemHeight}px`;
-        item.style.opacity = index === 4 ? 1 : index === 3 || index === 5 ? 0.5 : index === 2 || index === 6 ? 0.25 : 0;
-    });
-
-    setTimeout(() => {
-        currentIndex = (currentIndex + 1) % items.length;
-        updateListItems();
-        listItems.forEach((item, index) => {
-            item.style.transition = 'none';
-            item.style.top = `${index * itemHeight}px`;
-            item.style.opacity = index === 3 ? 1 : index === 2 || index === 4 ? 0.5 : index === 1 || index === 5 ? 0.25 : 0;
-        });
-        setTimeout(() => {
-            listItems.forEach(item => item.style.transition = '');
-            isAnimating = false;
-
-            // Restore focus to the previously focused cell
-            if (focusedCellIndex !== -1 && focusedRowIndex !== -1) {
-                const newRow = listItems[3]; // Center row index is still 3
-                const newCell = newRow.getElementsByTagName('td')[focusedCellIndex];
-                newCell.focus();
-            }
-        }, 50);
-    }, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--animation-duration')) * 1000);
-}
-//////////////////////////////////////
-function animateListDown() {
-    if (isAnimating) return;
-    isAnimating = true;
-
-    // Get the currently focused cell index
-    const activeElement = document.activeElement;
-    let focusedCellIndex = -1;
-    let focusedRowIndex = -1;
-
-    // Ensure focus is on a cell, otherwise set it to the center cell
-    if (activeElement.tagName === 'TD') {
-        const currentRow = activeElement.parentElement; // Get the current row
-        const cells = currentRow.getElementsByTagName('td'); // Get all cells in the current row
-        focusedCellIndex = Array.prototype.indexOf.call(cells, activeElement); // Get the index of the current cell
-        focusedRowIndex = Array.prototype.indexOf.call(listBody.children, currentRow); // Get the index of the current row
-
-        // Save the current value to items before animation
-        const rowOffset = (currentIndex + focusedRowIndex) % items.length; // Calculate the row offset
-        items[rowOffset][focusedCellIndex - 1] = activeElement.textContent; // Save value (skip serial number cell)
-    } else {
-        // Focus the first cell of the center row if no cell is focused
-        const centerRow = listBody.querySelectorAll('.list-item')[3];
-        const firstCell = centerRow.firstChild;
-        firstCell.focus();
-        focusedCellIndex = 0; // Set to the first cell index
-        focusedRowIndex = 3; // Center row index
-    }
-
-    const listItems = document.querySelectorAll('.list-item');
-    listItems.forEach((item, index) => {
-        item.style.top = `${(index + 1) * itemHeight}px`;
-        item.style.opacity = index === 2 ? 1 : index === 3 || index === 1 ? 0.5 : index === 4 || index === 0 ? 0.25 : 0;
-    });
-
-    setTimeout(() => {
-        currentIndex = (currentIndex - 1 + items.length) % items.length; // Move to the previous index
-        updateListItems();
-        listItems.forEach((item, index) => {
-            item.style.transition = 'none';
-            item.style.top = `${index * itemHeight}px`;
-            item.style.opacity = index === 3 ? 1 : index === 2 || index === 4 ? 0.5 : index === 1 || index === 5 ? 0.25 : 0;
-        });
-        setTimeout(() => {
-            listItems.forEach(item => item.style.transition = '');
-            isAnimating = false;
-
-            // Restore focus to the previously focused cell
-            if (focusedCellIndex !== -1 && focusedRowIndex !== -1) {
-                const newRow = listItems[3]; // Center row index is still 3
-                const newCell = newRow.getElementsByTagName('td')[focusedCellIndex];
-                newCell.focus();
-            }
-        }, 50);
-    }, parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--animation-duration')) * 1000);
-}
-////////////////////////////////////   
-    function insertRowBelow() {
-      const currentRow = (currentIndex + 3) % items.length;
-      const newRow = Array(numColumns - 1).fill('');
-      items.splice(currentRow + 1, 0, newRow);
-      updateListItems();
-    }
-
-    function insertRowAbove() {
-      const currentRow = (currentIndex + 3) % items.length;
-      const newRow = Array(numColumns - 1).fill('');
-      items.splice(currentRow, 0, newRow);
-      updateListItems();
-    }
-    
-/////////////// Add event listener for keydown events to handle arrow keys and Enter key
-document.addEventListener('keydown', (event) => {
-  const activeElement = document.activeElement;
-  // Check if the active element is a cell
-  if (activeElement.tagName === 'TD') {
-    const currentRow = activeElement.parentElement; // Get the current row
-    const cells = currentRow.getElementsByTagName('td'); // Get all cells in the current row
-    const cellIndex = Array.prototype.indexOf.call(cells, activeElement); // Get the index of the current cell
-
-    if (event.key === 'Enter' || event.key === 'ArrowDown') {
-      // Trigger animation up on Enter or Down Arrow key
-      animateList();
-      event.preventDefault(); // Prevent default behavior
-    } else if (event.key === 'ArrowUp') {
-      // Trigger animation down on Up Arrow key
-      animateListDown();
-      event.preventDefault(); // Prevent default behavior
-    } else if (event.key === 'ArrowRight') {
-      // Move focus to the right cell
-      if (cellIndex < cells.length - 1) {
-        cells[cellIndex + 1].focus();
-      }
-      event.preventDefault(); // Prevent default scrolling behavior
-    } else if (event.key === 'ArrowLeft') {
-      // Move focus to the left cell
-      if (cellIndex > 0) {
-        cells[cellIndex - 1].focus();
-      }
-      event.preventDefault(); // Prevent default scrolling behavior
-    }
-  }
-});
-//////////////////////////////////
-function deleteRow() {
-  if (items.length > 7) {
-    const centerRowIndex = (currentIndex + 3) % items.length;
-    items.splice(centerRowIndex, 1);
-    currentIndex = Math.min(currentIndex, items.length - 1);
-    updateListItems();
-   // animateList(); // Animate Up to show the next row
-   // animateListDown(); // Animate Dn to show the next row
-  } else {
-    alert("Cannot delete row. Minimum number of rows (7) reached.");
-  }
-}
-
-/////////////////////////////
-    createHeaderRow(); // Create the header row
-    createListItems();
-    animateBtn.addEventListener('mousedown', animateList);
-    animateDownBtn.addEventListener('mousedown', animateListDown);
-    insertBelowBtn.addEventListener('click', insertRowBelow);
-    insertAboveBtn.addEventListener('click', insertRowAbove);
-    deleteRowBtn.addEventListener('click', deleteRow);
-   
-
-
-  const saveDataBtn = document.getElementById('save-data-btn');
-  saveDataBtn.addEventListener('click', saveDataAsHTML);
-  /////////////////////////////////
-  function saveDataAsHTML() {
-    // Create a new HTML document
-    let htmlContent = `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saved Spreadsheet Data</title>
+    <title>Fixed-Deposits (Mobile Version)</title>
+
     <style>
-      table { border-collapse: collapse; }
-      th, td { border: 1px solid black; padding: 5px; }
-      ${columnWidths.map((width, index) => `
-        th:nth-child(${index + 1}), td:nth-child(${index + 1}) { width: ${width}px; }
-      `).join('')}
+        :root {
+            --animation-duration: 0.6s;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            position: relative;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        #input-area, #prev-record, #next-record, #prev-record-hidden, #input-area-hidden, #next-record-hidden {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 4px;
+            background-color: #fff;
+            white-space: pre-wrap;
+            min-height: 40px;
+            transition: top var(--animation-duration) ease, opacity var(--animation-duration) ease, background-color var(--animation-duration) ease;
+        }
+
+        #prev-record, #prev-record-hidden {
+            top: 150px;
+            background-color: #f9f9f9;
+            color: #666;
+            opacity: 0.5;
+        }
+
+        #input-area, #input-area-hidden {
+            top: 200px;
+            opacity: 1;
+        }
+
+        #next-record, #next-record-hidden {
+            top: 250px;
+            background-color: #f9f9f9;
+            color: #666;
+            opacity: 0.5;
+        }
+
+        #prev-record-hidden {
+            top: 100px;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #input-area-hidden {
+            top: 150px;
+            opacity: 0.5;
+            visibility: hidden;
+        }
+
+        #next-record-hidden {
+            top: 300px;
+            opacity: 0.5;
+            visibility: hidden;
+        }
+
+        .keyboard {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 380px;
+            width: 100%;
+            max-width: 600px;
+            background-color: #2c2c2c;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 5px;
+        }
+
+        .key {
+            background-color: #3c3c3c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 15px;
+            font-size: 20px;
+            flex: 1;
+            margin: 2px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .key:active {
+            background-color: #5c5c5c;
+        }
+
+        .key.shift, .key.caps, .key.symbol, .key.number {
+            background-color: #4c4c4c;
+        }
+
+        .key.space {
+            flex: 5;
+        }
+
+        .key.backspace, .key.enter {
+            flex: 1.5;
+        }
+
+        .button-row {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 320px;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-button {
+            background-color: #4c4c4c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .nav-button:active {
+            background-color: #6c6c6c;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            .keyboard {
+                padding: 5px;
+            }
+            .key {
+                padding: 10px;
+                font-size: 16px;
+                margin: 1px;
+            }
+            .row {
+                margin-bottom: 3px;
+            }
+        }
+
+        /* Make all div backgrounds transparent */
+        div {
+            background-color: transparent !important;
+        }
     </style>
-  </head>
-  <body>
-    <table>
-      <thead>
-        <tr>
-          ${headerArray.map(header => `<th>${header}</th>`).join('')}
-        </tr>
-      </thead>
-      <tbody>
-        ${items.map((row, index) => `
-          <tr>
-            <td>${index + 1}</td>
-            ${row.map(cell => `<td>${cell}</td>`).join('')}
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  </body>
-  </html>
-    `;
+</head>
+<body>
+    <div id="prev-record"></div>
+    <div id="input-area"></div>
+    <div id="next-record"></div>
+    <div id="prev-record-hidden"></div>
+    <div id="input-area-hidden"></div>
+    <div id="next-record-hidden"></div>
+    <div class="button-row">
+        <button class="nav-button" id="next-rec">Next Rec</button>
+        <button class="nav-button" id="prev-rec">Prev Rec</button>
+        <button class="nav-button" id="next-field">Next Field</button>
+        <button class="nav-button" id="prev-field">Prev Field</button>
+    </div>
+    <div class="keyboard">
+        <!-- Letters Layout -->
+        <div id="letters" class="layout">
+            <div class="row">
+                <button class="key" data-key="q">q</button>
+                <button class="key" data-key="w">w</button>
+                <button class="key" data-key="e">e</button>
+                <button class="key" data-key="r">r</button>
+                <button class="key" data-key="t">t</button>
+                <button class="key" data-key="y">y</button>
+                <button class="key" data-key="u">u</button>
+                <button class="key" data-key="i">i</button>
+                <button class="key" data-key="o">o</button>
+                <button class="key" data-key="p">p</button>
+            </div>
+            <div class="row">
+                <button class="key" data-key="a">a</button>
+                <button class="key" data-key="s">s</button>
+                <button class="key" data-key="d">d</button>
+                <button class="key" data-key="f">f</button>
+                <button class="key" data-key="g">g</button>
+                <button class="key" data-key="h">h</button>
+                <button class="key" data-key="j">j</button>
+                <button class="key" data-key="k">k</button>
+                <button class="key" data-key="l">l</button>
+            </div>
+            <div class="row">
+                <button class="key shift" data-key="shift">⇧</button>
+                <button class="key" data-key="z">z</button>
+                <button class="key" data-key="x">x</button>
+                <button class="key" data-key="c">c</button>
+                <button class="key" data-key="v">v</button>
+                <button class="key" data-key="b">b</button>
+                <button class="key" data-key="n">n</button>
+                <button class="key" data-key="m">m</button>
+                <button class="key backspace" data-key="backspace">⌫</button>
+            </div>
+            <div class="row">
+                <button class="key symbol" data-key="symbol">123</button>
+                <button class="key space" data-key=" ">Space</button>
+                <button class="key enter" data-key="enter">↵</button>
+            </div>
+        </div>
 
-    // Create a Blob with the HTML content
-    const blob = new Blob([htmlContent], { type: 'text/html' });
+        <!-- Uppercase Letters Layout -->
+        <div id="uppercase" class="layout hidden">
+            <div class="row">
+                <button class="key" data-key="Q">Q</button>
+                <button class="key" data-key="W">W</button>
+                <button class="key" data-key="E">E</button>
+                <button class="key" data-key="R">R</button>
+                <button class="key" data-key="T">T</button>
+                <button class="key" data-key="Y">Y</button>
+                <button class="key" data-key="U">U</button>
+                <button class="key" data-key="I">I</button>
+                <button class="key" data-key="O">O</button>
+                <button class="key" data-key="P">P</button>
+            </div>
+            <div class="row">
+                <button class="key" data-key="A">A</button>
+                <button class="key" data-key="S">S</button>
+                <button class="key" data-key="D">D</button>
+                <button class="key" data-key="F">F</button>
+                <button class="key" data-key="G">G</button>
+                <button class="key" data-key="H">H</button>
+                <button class="key" data-key="J">J</button>
+                <button class="key" data-key="K">K</button>
+                <button class="key" data-key="L">L</button>
+            </div>
+            <div class="row">
+                <button class="key shift" data-key="shift">⇧</button>
+                <button class="key" data-key="Z">Z</button>
+                <button class="key" data-key="X">X</button>
+                <button class="key" data-key="C">C</button>
+                <button class="key" data-key="V">V</button>
+                <button class="key" data-key="B">B</button>
+                <button class="key" data-key="N">N</button>
+                <button class="key" data-key="M">M</button>
+                <button class="key backspace" data-key="backspace">⌫</button>
+            </div>
+            <div class="row">
+                <button class="key symbol" data-key="symbol">123</button>
+                <button class="key space" data-key=" ">Space</button>
+                <button class="key enter" data-key="enter">↵</button>
+            </div>
+        </div>
 
-    // Create a download link and trigger the download
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'spreadsheet_data.html';
-    a.click();
+        <!-- Numbers and Symbols Layout -->
+        <div id="symbols" class="layout hidden">
+            <div class="row">
+                <button class="key" data-key="1">1</button>
+                <button class="key" data-key="2">2</button>
+                <button class="key" data-key="3">3</button>
+                <button class="key" data-key="4">4</button>
+                <button class="key" data-key="5">5</button>
+                <button class="key" data-key="6">6</button>
+                <button class="key" data-key="7">7</button>
+                <button class="key" data-key="8">8</button>
+                <button class="key" data-key="9">9</button>
+                <button class="key" data-key="0">0</button>
+            </div>
+            <div class="row">
+                <button class="key" data-key="-">-</button>
+                <button class="key" data-key="/">/</button>
+                <button class="key" data-key=":">:</button>
+                <button class="key" data-key=";">;</button>
+                <button class="key" data-key="(">(</button>
+                <button class="key" data-key=")">)</button>
+                <button class="key" data-key="$">$</button>
+                <button class="key" data-key="&">&</button>
+                <button class="key" data-key="@">@</button>
+            </div>
+            <div class="row">
+                <button class="key symbol" data-key="symbol-more">=+#</button>
+                <button class="key" data-key=".">.</button>
+                <button class="key" data-key=",">,</button>
+                <button class="key" data-key="?">?</button>
+                <button class="key" data-key="!">!</button>
+                <button class="key" data-key="'">'</button>
+                <button class="key backspace" data-key="backspace">⌫</button>
+            </div>
+            <div class="row">
+                <button class="key letter" data-key="letter">ABC</button>
+                <button class="key space" data-key=" ">Space</button>
+                <button class="key enter" data-key="enter">↵</button>
+            </div>
+        </div>
 
-    // Clean up
-    URL.revokeObjectURL(a.href);
-  }
+        <!-- More Symbols Layout -->
+        <div id="more-symbols" class="layout hidden">
+            <div class="row">
+                <button class="key" data-key="[">[</button>
+                <button class="key" data-key="]">]</button>
+                <button class="key" data-key="{">{</button>
+                <button class="key" data-key="}">}</button>
+                <button class="key" data-key="#">#</button>
+                <button class="key" data-key="%">%</button>
+                <button class="key" data-key="^">^</button>
+                <button class="key" data-key="*">*</button>
+                <button class="key" data-key="+">+</button>
+                <button class="key" data-key="=">=</button>
+            </div>
+            <div class="row">
+                <button class="key" data-key="_">_</button>
+                <button class="key" data-key="\">\\</button>
+                <button class="key" data-key="|">|</button>
+                <button class="key" data-key="~">~</button>
+                <button class="key" data-key="<">&lt;</button>
+                <button class="key" data-key=">">&gt;</button>
+                <button class="key" data-key="€">€</button>
+                <button class="key" data-key="£">£</button>
+                <button class="key" data-key="¥">¥</button>
+            </div>
+            <div class="row">
+                <button class="key symbol" data-key="symbol-back">123</button>
+                <button class="key" data-key=".">.</button>
+                <button class="key" data-key=",">,</button>
+                <button class="key" data-key="?">?</button>
+                <button class="key" data-key="!">!</button>
+                <button class="key" data-key="'">'</button>
+                <button class="key backspace" data-key="backspace">⌫</button>
+            </div>
+            <div class="row">
+                <button class="key letter" data-key="letter">ABC</button>
+                <button class="key space" data-key=" ">Space</button>
+                <button class="key enter" data-key="enter">↵</button>
+            </div>
+        </div>
+    </div>
 
-  //////////////////////////////////////
-  // Add event listener for the Save Data button
-  const loadDataBtn = document.getElementById('load-data-btn');
-  loadDataBtn.addEventListener('click', loadDataFromHTML);
+    <script>
+        const inputArea = document.getElementById('input-area');
+        const prevRecord = document.getElementById('prev-record');
+        const nextRecord = document.getElementById('next-record');
+        const layouts = document.querySelectorAll('.layout');
+        let isShift = false;
+        let currentLayout = 'letters';
+        let animrunning = false;
 
-  function loadDataFromHTML() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.html';
-    input.onchange = function(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const content = e.target.result;
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(content, 'text/html');
-        const rows = doc.querySelectorAll('table tbody tr');
-      
-        items.length = 0; // Clear existing data
-        rows.forEach(row => {
-          const cells = row.querySelectorAll('td');
-          const rowData = Array.from(cells).slice(1).map(cell => cell.textContent);
-          items.push(rowData);
+        function showLayout(layoutId) {
+            layouts.forEach(layout => {
+                layout.classList.add('hidden');
+            });
+            document.getElementById(layoutId).classList.remove('hidden');
+            currentLayout = layoutId;
+        }
+
+        function handleKeyPress(key) {
+            if (key === 'backspace') {
+                inputArea.textContent = inputArea.textContent.slice(0, -1);
+            } else if (key === 'enter') {
+                if (inputArea.textContent.length < 8) {
+                    inputArea.textContent += '\n';
+                }
+            } else if (key === 'shift') {
+                isShift = !isShift;
+                showLayout(isShift ? 'uppercase' : 'letters');
+            } else if (key === 'symbol') {
+                showLayout('symbols');
+            } else if (key === 'symbol-more') {
+                showLayout('more-symbols');
+            } else if (key === 'symbol-back') {
+                showLayout('symbols');
+            } else if (key === 'letter') {
+                showLayout(isShift ? 'uppercase' : 'letters');
+            } else {
+                if (inputArea.textContent.length < 8) {
+                    inputArea.textContent += key;
+                }
+                if (isShift && currentLayout === 'uppercase') {
+                    isShift = false;
+                    showLayout('letters');
+                }
+            }
+        }
+
+        document.querySelectorAll('.key').forEach(key => {
+            key.addEventListener('click', () => {
+                const dataKey = key.getAttribute('data-key');
+                handleKeyPress(dataKey);
+            });
         });
-      
-        currentIndex = 0;
-        updateListItems();
-      };
-      reader.readAsText(file);
-    };
-    input.click();
-  }
-  </script>
+
+        // Initial setup
+        showLayout('letters');
+
+        // Initialize 10x8 grid
+        let grid = [];
+        for (let i = 0; i < 10; i++) {
+            grid[i] = [];
+            for (let j = 0; j < 8; j++) {
+                grid[i][j] = (i + 1) + ',' + (j + 1);
+            }
+        }
+
+        // Navigation variables
+        let currentRow = 0;
+        let currentCol = 0;
+
+        // Function to update input area
+        function updateInputArea() {
+            let prevRow = currentRow > 0 ? currentRow - 1 : 9;
+            prevRecord.textContent = grid[prevRow][currentCol];
+
+            inputArea.textContent = grid[currentRow][currentCol];
+
+            let nextRow = currentRow < 9 ? currentRow + 1 : 0;
+            nextRecord.textContent = grid[nextRow][currentCol];
+        }
+
+        // Navigation functions
+        function nextRec() {
+            if (animrunning) return;
+            animrunning = true;
+
+            // Update hidden with new content
+            let newNextRow = (currentRow + 2) % 10;
+            document.getElementById('next-record-hidden').textContent = grid[newNextRow][currentCol];
+
+            // Set visibility
+            document.getElementById('next-record-hidden').style.visibility = 'visible';
+
+            // Animate
+            document.getElementById('prev-record').style.top = '100px';
+            document.getElementById('prev-record').style.opacity = '0';
+            document.getElementById('input-area').style.top = '150px';
+            document.getElementById('input-area').style.opacity = '0.5';
+            document.getElementById('next-record').style.top = '200px';
+            document.getElementById('next-record').style.opacity = '1';
+            document.getElementById('next-record-hidden').style.top = '250px';
+            document.getElementById('next-record-hidden').style.opacity = '0.5';
+
+            // Add transitionend listener
+            document.getElementById('next-record-hidden').addEventListener('transitionend', handleNextRecTransitionEnd, { once: true });
+        }
+
+        function handleNextRecTransitionEnd() {
+            // Capture old content before updating
+            let oldPrev = document.getElementById('prev-record').textContent;
+            let oldInput = document.getElementById('input-area').textContent;
+            let oldNext = document.getElementById('next-record').textContent;
+
+            // Update currentRow
+            if (currentRow < 9) {
+                currentRow++;
+            } else {
+                currentRow = 0;
+            }
+            updateInputArea();
+
+            // Swap content
+            document.getElementById('prev-record').textContent = oldInput;
+            document.getElementById('input-area').textContent = oldNext;
+            document.getElementById('next-record').textContent = document.getElementById('next-record-hidden').textContent;
+
+            // Reset positions and visibility
+            let animatedElements = ['prev-record', 'input-area', 'next-record', 'next-record-hidden'];
+            animatedElements.forEach(id => {
+                document.getElementById(id).style.transition = 'none';
+            });
+
+            document.getElementById('prev-record').style.top = '150px';
+            document.getElementById('input-area').style.top = '200px';
+            document.getElementById('next-record').style.top = '250px';
+            document.getElementById('prev-record').style.opacity = '0.5';
+            document.getElementById('input-area').style.opacity = '1';
+            document.getElementById('next-record').style.opacity = '0.5';
+            document.getElementById('next-record-hidden').style.visibility = 'hidden';
+            document.getElementById('next-record-hidden').style.top = '300px';
+            document.getElementById('next-record-hidden').style.opacity = '0.5';
+
+            setTimeout(() => {
+                animatedElements.forEach(id => {
+                    document.getElementById(id).style.transition = '';
+                });
+                animrunning = false;
+            }, 50);
+        }
+
+        function prevRec() {
+            if (animrunning) return;
+            animrunning = true;
+
+            // Update hidden with new content
+            let newPrevRow = (currentRow - 1 + 10) % 10;
+            document.getElementById('prev-record-hidden').textContent = grid[newPrevRow][currentCol];
+
+            // Set visibility
+            document.getElementById('prev-record-hidden').style.visibility = 'visible';
+
+            // Animate
+            document.getElementById('prev-record').style.top = '200px';
+            document.getElementById('prev-record').style.opacity = '0.5';
+            document.getElementById('input-area').style.top = '250px';
+            document.getElementById('input-area').style.opacity = '1';
+            document.getElementById('next-record').style.top = '300px';
+            document.getElementById('next-record').style.opacity = '0.5';
+            document.getElementById('prev-record-hidden').style.top = '150px';
+            document.getElementById('prev-record-hidden').style.opacity = '0.5';
+
+            // Add transitionend listener
+            document.getElementById('prev-record-hidden').addEventListener('transitionend', handlePrevRecTransitionEnd, { once: true });
+        }
+
+        function handlePrevRecTransitionEnd() {
+            // Capture old content before updating
+            let oldPrev = document.getElementById('prev-record').textContent;
+            let oldInput = document.getElementById('input-area').textContent;
+            let oldNext = document.getElementById('next-record').textContent;
+
+            // Update currentRow
+            if (currentRow > 0) {
+                currentRow--;
+            } else {
+                currentRow = 9;
+            }
+            updateInputArea();
+
+            // Swap content
+            document.getElementById('prev-record').textContent = document.getElementById('prev-record-hidden').textContent;
+            document.getElementById('input-area').textContent = oldPrev;
+            document.getElementById('next-record').textContent = oldInput;
+
+            // Reset positions and visibility
+            let animatedElements = ['prev-record', 'input-area', 'next-record', 'prev-record-hidden'];
+            animatedElements.forEach(id => {
+                document.getElementById(id).style.transition = 'none';
+            });
+
+            document.getElementById('prev-record').style.top = '150px';
+            document.getElementById('input-area').style.top = '200px';
+            document.getElementById('next-record').style.top = '250px';
+            document.getElementById('prev-record').style.opacity = '0.5';
+            document.getElementById('input-area').style.opacity = '1';
+            document.getElementById('next-record').style.opacity = '0.5';
+            document.getElementById('prev-record-hidden').style.visibility = 'hidden';
+            document.getElementById('prev-record-hidden').style.top = '100px';
+            document.getElementById('prev-record-hidden').style.opacity = '0';
+
+            setTimeout(() => {
+                animatedElements.forEach(id => {
+                    document.getElementById(id).style.transition = '';
+                });
+                animrunning = false;
+            }, 50);
+        }
+
+        function nextField() {
+            if (currentCol < 7) {
+                currentCol++;
+            } else {
+                currentCol = 0;
+            }
+            updateInputArea();
+        }
+
+        function prevField() {
+            if (currentCol > 0) {
+                currentCol--;
+            } else {
+                currentCol = 7;
+            }
+            updateInputArea();
+        }
+
+        // Add event listeners for navigation buttons
+        document.getElementById('next-rec').addEventListener('click', nextRec);
+        document.getElementById('prev-rec').addEventListener('click', prevRec);
+        document.getElementById('next-field').addEventListener('click', nextField);
+        document.getElementById('prev-field').addEventListener('click', prevField);
+
+        // Display first element in input area
+        updateInputArea();
+    </script>
 </body>
 </html>

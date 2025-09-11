@@ -12,11 +12,8 @@
     .list-container {
       position: relative;
       height: calc(var(--item-height) * 7);
-      width: 100%;
      }
-  table {
-    width: 100%;
-  }
+  table {margin-left: auto;margin-right: auto;}
 
     .list-item {
       position: absolute;
@@ -87,7 +84,7 @@
         -webkit-overflow-scrolling: touch;
       }
       table {
-        width: 100%;
+        min-width: 300px;
         font-size: 14px;
       }
       .list-item td {
@@ -136,10 +133,10 @@
     const headerRow = document.querySelector('.header-row');
     const itemHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--item-height'));
 
-    // Define column widths in percentages (first element is for serial number column)
-    const columnWidths = [15, 85]; // Adjust widths as needed
+    // Define column widths in an array (first element is for serial number column)
+    const columnWidths = [20, 250]; // Adjust widths as needed
     const MaxChars = [-1,      8];// Maximum characters for each column
-    const headerArray = ['Sr', 'Maturity Date']; // Header array
+    const headerArray = ['Sr', 'Maturity Date']; // Header array    
     const numColumns = columnWidths.length;
 
     const items = Array.from({length: 9}, () => 
@@ -214,12 +211,12 @@
       const cells = listBody.querySelectorAll('td');
       cells.forEach((cell, index) => {
         const columnIndex = index % numColumns;
-        cell.style.width = `${columnWidths[columnIndex]}%`;
+        cell.style.width = `${columnWidths[columnIndex]}px`;
       });
-
+      
       const headerCells = headerRow.querySelectorAll('th');
       headerCells.forEach((cell, index) => {
-        cell.style.width = `${columnWidths[index]}%`;
+        cell.style.width = `${columnWidths[index]}px`;
       });
     }
 
@@ -435,7 +432,7 @@ function deleteRow() {
       table { border-collapse: collapse; }
       th, td { border: 1px solid black; padding: 5px; }
       ${columnWidths.map((width, index) => `
-        th:nth-child(${index + 1}), td:nth-child(${index + 1}) { width: ${width}%; }
+        th:nth-child(${index + 1}), td:nth-child(${index + 1}) { width: ${width}px; }
       `).join('')}
     </style>
   </head>
