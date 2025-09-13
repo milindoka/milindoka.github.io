@@ -253,9 +253,6 @@
     // Keyboard functionality
     const keys = document.querySelectorAll('.key');
     let isShift = false;
-    let isNumberMode = false;
-    const letterKeys = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'];
-    const numberKeys = ['1','2','3','4','5','6','7','8','9','0','@','#','$','%','&','*','(',')','\'','.',',','?','!','-','+','=','/'];
 
     keys.forEach(key => {
       key.addEventListener('click', () => {
@@ -285,36 +282,8 @@
             }
           });
           return;
-        } else if (keyText === '123' || keyText === 'ABC') {
-          if (!isNumberMode) {
-            isNumberMode = true;
-            // Change to numbers
-            const allKeys = document.querySelectorAll('.key');
-            let idx = 0;
-            allKeys.forEach(k => {
-              if (!k.classList.contains('special')) {
-                k.textContent = numberKeys[idx] || k.textContent;
-                idx++;
-              }
-            });
-            // Change 123 to ABC
-            const numKey = [...allKeys].find(k => k.textContent === '123');
-            if (numKey) numKey.textContent = 'ABC';
-          } else {
-            isNumberMode = false;
-            // Change back to letters
-            const allKeys = document.querySelectorAll('.key');
-            let idx = 0;
-            allKeys.forEach(k => {
-              if (!k.classList.contains('special')) {
-                k.textContent = letterKeys[idx] || k.textContent;
-                idx++;
-              }
-            });
-            // Change ABC to 123
-            const abcKey = [...allKeys].find(k => k.textContent === 'ABC');
-            if (abcKey) abcKey.textContent = '123';
-          }
+        } else if (keyText === '123') {
+          // Switch to numbers, but for simplicity, do nothing
           return;
         }
 
