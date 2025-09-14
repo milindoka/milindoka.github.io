@@ -374,16 +374,7 @@
           }
           return;
         } else if (keyText === 'Enter') {
-          // Next field navigation
-          if (currentField === 7) {
-            // Last field, go to first field and next record
-            currentField = 0;
-            animateList();
-          } else {
-            // Next field
-            changeField(1);
-          }
-          return;
+          char = '\n';
         } else if (keyText === 'Shift') {
           if (capsLockTimeout) {
             // Double click detected
