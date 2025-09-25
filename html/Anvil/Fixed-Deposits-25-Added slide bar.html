@@ -423,27 +423,25 @@
     }
 
     function jumpToRecord(recordNumber) {
+      if (isAnimating) return;
       // Convert slider value (1-21) to currentIndex (0-20)
       const newIndex = recordNumber - 1;
       if (newIndex === currentIndex) return;
 
-      // Direct jump without animation
-      currentIndex = newIndex;
-      updateListItems();
-      updateSliderPosition();
+      // Calculate how many steps to move
+      const steps = (newIndex - currentIndex + items.length) % items.length;
 
-      // Ensure the central item is properly selected after jump
-      const listItems = document.querySelectorAll('.list-item');
-      listItems.forEach(item => {
-        if (parseFloat(item.style.opacity) === 1) {
-          item.classList.add('central');
-        } else {
-          item.classList.remove('central');
+      if (steps <= items.length / 2) {
+        // Move forward
+        for (let i = 0; i < steps; i++) {
+          setTimeout(() => animateList(), i * 600);
         }
-      });
-
-      // Ensure keyboard functionality works after jump
-      isAnimating = false;
+      } else {
+        // Move backward
+        for (let i = 0; i < items.length - steps; i++) {
+          setTimeout(() => animateListDown(), i * 600);
+        }
+      }
     }
 
     recordSlider.addEventListener('change', (e) => {

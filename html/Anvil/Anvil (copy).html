@@ -236,16 +236,13 @@
   <div id="list-container" class="list-container">
   </div>
 
-  <!-- Navigation slider below scrolling area -->
-  <div class="slider-container" style="margin-top: -45px; margin-bottom: 50px; position: relative; padding: 0 40px;">
-    <input type="range" id="record-slider" min="1" max="21" value="20" style="width: 100%; height: 20px; cursor: pointer; background: #ddd; outline: none; border-radius: 10px; -webkit-appearance: none;">
-    <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 12px; color: #666;">
-      <span>1</span>
-      <span>21</span>
-    </div>
+  <!-- Navigation buttons below scrolling area -->
+  <div class="button-container" style="margin-top: -40px; margin-bottom: 50px;">
+    <button id="left-nav-btn" class="arrow-btn" style="width: 30px; height: 30px; font-size: 16px; margin-right: auto;">⇠</button>
+    <button id="right-nav-btn" class="arrow-btn" style="width: 30px; height: 30px; font-size: 16px; margin-left: auto;">⇢</button>
   </div>
 
-  <div class="keyboard" style="margin-top: 0px;">
+  <div class="keyboard" style="margin-top: -40px;">
     <div class="keyboard-row">
       <div class="key">q</div>
       <div class="key">w</div>
@@ -291,7 +288,8 @@
   <script>
   
     const listContainer = document.getElementById('list-container');
-    const recordSlider = document.getElementById('record-slider');
+    const leftNavBtn = document.getElementById('left-nav-btn');
+    const rightNavBtn = document.getElementById('right-nav-btn');
     const clearBtn = document.getElementById('clear-btn');
     const nextFieldBtn = document.getElementById('next-field-btn');
     const prevFieldBtn = document.getElementById('prev-field-btn');
@@ -416,56 +414,9 @@
 
     createListItems();
 
-    // Navigation slider functionality
-    function updateSliderPosition() {
-      // Convert currentIndex (0-20) to slider value (1-21)
-      recordSlider.value = currentIndex + 1;
-    }
-
-    function jumpToRecord(recordNumber) {
-      // Convert slider value (1-21) to currentIndex (0-20)
-      const newIndex = recordNumber - 1;
-      if (newIndex === currentIndex) return;
-
-      // Direct jump without animation
-      currentIndex = newIndex;
-      updateListItems();
-      updateSliderPosition();
-
-      // Ensure the central item is properly selected after jump
-      const listItems = document.querySelectorAll('.list-item');
-      listItems.forEach(item => {
-        if (parseFloat(item.style.opacity) === 1) {
-          item.classList.add('central');
-        } else {
-          item.classList.remove('central');
-        }
-      });
-
-      // Ensure keyboard functionality works after jump
-      isAnimating = false;
-    }
-
-    recordSlider.addEventListener('change', (e) => {
-      jumpToRecord(parseInt(e.target.value));
-    });
-
-    // Update slider when records change
-    const originalAnimateList = animateList;
-    const originalAnimateListDown = animateListDown;
-
-    animateList = function() {
-      originalAnimateList();
-      setTimeout(updateSliderPosition, 550);
-    };
-
-    animateListDown = function() {
-      originalAnimateListDown();
-      setTimeout(updateSliderPosition, 550);
-    };
-
-    // Initialize slider position
-    updateSliderPosition();
+    // Navigation buttons below scrolling area
+    leftNavBtn.addEventListener('click', animateListDown); // Previous record
+    rightNavBtn.addEventListener('click', animateList); // Next record
     function changeField(direction) {
       if (isAnimating) return;
       isAnimating = true;
