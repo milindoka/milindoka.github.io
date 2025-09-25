@@ -18,7 +18,7 @@
       height: calc(var(--item-height) * 5);
       width: var(--item-width);
       margin: 20px auto;
-      overflow: hidden;
+      overflow: visible;
     }
     .list-item {
       position: absolute;
@@ -49,7 +49,7 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
-      margin: 20px auto;
+      margin: 25px auto;
       width: 100%;
       max-width: 400px;
     }
@@ -135,9 +135,28 @@
       flex: 1;
     }
     .header {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .left-group {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
+    }
+    #field-title {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #next-field-btn {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
     .hamburger-menu {
       position: relative;
@@ -197,32 +216,33 @@
 </head>
 <body>
   <div class="header">
-    <div class="hamburger-menu">
-      <div class="hamburger-icon">☰</div>
-      <div class="menu-dropdown">
-        <div class="menu-item" id="load-data">Load Data</div>
-        <div class="menu-item" id="save-data">Save Data</div>
-        <div class="menu-item" id="insert-above">Insert Above</div>
-        <div class="menu-item" id="insert-below">Insert Below</div>
-        <div class="menu-item" id="copy-upper">Copy Upper</div>
-        <div class="menu-item" id="sort">Sort</div>
+    <div class="left-group">
+      <div class="hamburger-menu">
+        <div class="hamburger-icon">☰</div>
+        <div class="menu-dropdown">
+          <div class="menu-item" id="load-data">Load Data</div>
+          <div class="menu-item" id="save-data">Save Data</div>
+          <div class="menu-item" id="insert-above">Insert Above</div>
+          <div class="menu-item" id="insert-below">Insert Below</div>
+          <div class="menu-item" id="copy-upper">Copy Upper</div>
+          <div class="menu-item" id="sort">Sort</div>
+        </div>
       </div>
+      <button id="prev-field-btn" class="arrow-btn" style="margin-left: 40px; width: 15px; height: 15px; font-size: 12px;">←</button>
     </div>
     <h2 id="field-title">Field 1</h2>
+    <button id="next-field-btn" class="arrow-btn" style="width: 15px; height: 15px; font-size: 12px;">→</button>
   </div>
-  <div id="list-container" class="list-container"></div>
-  <div class="circular-panel">
-    <button id="prev-field-btn" class="arrow-btn left">←</button>
-    <button id="next-field-btn" class="arrow-btn right">→</button>
-    <button id="animate-btn" class="arrow-btn up">↑</button>
-    <button id="animate-down-btn" class="arrow-btn down">↓</button>
+  <div id="list-container" class="list-container">
   </div>
-  <div class="button-container">
-    <button id="clear-btn">Clear</button>
-    <button id="save-file-btn">Save File</button>
-    <button id="load-file-btn">Load File</button>
+
+  <!-- Navigation buttons below scrolling area -->
+  <div class="button-container" style="margin-top: 40px; margin-bottom: 50px;">
+    <button id="left-nav-btn" class="arrow-btn" style="width: 30px; height: 30px; font-size: 16px; margin-right: auto;">⇠</button>
+    <button id="right-nav-btn" class="arrow-btn" style="width: 30px; height: 30px; font-size: 16px; margin-left: auto;">⇢</button>
   </div>
-  <div class="keyboard">
+
+  <div class="keyboard" style="margin-top: 40px;">
     <div class="keyboard-row">
       <div class="key">q</div>
       <div class="key">w</div>
@@ -268,8 +288,8 @@
   <script>
   
     const listContainer = document.getElementById('list-container');
-    const animateBtn = document.getElementById('animate-btn');
-    const animateDownBtn = document.getElementById('animate-down-btn'); // NEW
+    const leftNavBtn = document.getElementById('left-nav-btn');
+    const rightNavBtn = document.getElementById('right-nav-btn');
     const clearBtn = document.getElementById('clear-btn');
     const nextFieldBtn = document.getElementById('next-field-btn');
     const prevFieldBtn = document.getElementById('prev-field-btn');
@@ -393,8 +413,10 @@
     }
 
     createListItems();
-    animateBtn.addEventListener('click', animateList);
-    animateDownBtn.addEventListener('click', animateListDown); // NEW
+
+    // Navigation buttons below scrolling area
+    leftNavBtn.addEventListener('click', animateListDown); // Previous record
+    rightNavBtn.addEventListener('click', animateList); // Next record
     function changeField(direction) {
       if (isAnimating) return;
       isAnimating = true;

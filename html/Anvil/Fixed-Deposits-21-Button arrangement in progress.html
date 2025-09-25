@@ -18,7 +18,7 @@
       height: calc(var(--item-height) * 5);
       width: var(--item-width);
       margin: 20px auto;
-      overflow: hidden;
+      overflow: visible;
     }
     .list-item {
       position: absolute;
@@ -84,8 +84,8 @@
     }
     .circular-panel {
       position: relative;
-      width: 120px;
-      height: 120px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background-color: #f0f0f0;
       margin: 20px auto;
@@ -93,13 +93,13 @@
     }
     .arrow-btn {
       position: absolute;
-      width: 40px;
-      height: 40px;
+      width: 20px;
+      height: 20px;
       border: none;
       background-color: #fff;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 20px;
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -109,22 +109,22 @@
       background-color: #e0e0e0;
     }
     .arrow-btn.left {
-      left: -10px;
+      left: -5px;
       top: 50%;
       transform: translateY(-50%);
     }
     .arrow-btn.right {
-      right: -10px;
+      right: -5px;
       top: 50%;
       transform: translateY(-50%);
     }
     .arrow-btn.up {
-      top: -10px;
+      top: -5px;
       left: 50%;
       transform: translateX(-50%);
     }
     .arrow-btn.down {
-      bottom: -10px;
+      bottom: -5px;
       left: 50%;
       transform: translateX(-50%);
     }
@@ -135,9 +135,28 @@
       flex: 1;
     }
     .header {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .left-group {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
+    }
+    #field-title {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #next-field-btn {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
     .hamburger-menu {
       position: relative;
@@ -197,31 +216,28 @@
 </head>
 <body>
   <div class="header">
-    <div class="hamburger-menu">
-      <div class="hamburger-icon">☰</div>
-      <div class="menu-dropdown">
-        <div class="menu-item" id="load-data">Load Data</div>
-        <div class="menu-item" id="save-data">Save Data</div>
-        <div class="menu-item" id="insert-above">Insert Above</div>
-        <div class="menu-item" id="insert-below">Insert Below</div>
-        <div class="menu-item" id="copy-upper">Copy Upper</div>
-        <div class="menu-item" id="sort">Sort</div>
+    <div class="left-group">
+      <div class="hamburger-menu">
+        <div class="hamburger-icon">☰</div>
+        <div class="menu-dropdown">
+          <div class="menu-item" id="load-data">Load Data</div>
+          <div class="menu-item" id="save-data">Save Data</div>
+          <div class="menu-item" id="insert-above">Insert Above</div>
+          <div class="menu-item" id="insert-below">Insert Below</div>
+          <div class="menu-item" id="copy-upper">Copy Upper</div>
+          <div class="menu-item" id="sort">Sort</div>
+        </div>
       </div>
+      <button id="prev-field-btn" class="arrow-btn" style="margin-left: 40px; width: 15px; height: 15px; font-size: 12px;">←</button>
     </div>
     <h2 id="field-title">Field 1</h2>
+    <button id="next-field-btn" class="arrow-btn" style="width: 15px; height: 15px; font-size: 12px;">→</button>
   </div>
-  <div id="list-container" class="list-container"></div>
-  <div class="circular-panel">
-    <button id="prev-field-btn" class="arrow-btn left">←</button>
-    <button id="next-field-btn" class="arrow-btn right">→</button>
-    <button id="animate-btn" class="arrow-btn up">↑</button>
-    <button id="animate-down-btn" class="arrow-btn down">↓</button>
+  <div id="list-container" class="list-container">
+    <button id="animate-btn" class="arrow-btn" style="position: absolute; right: 0; top: 100%; width: 15px; height: 15px; font-size: 12px;">↑</button>
+    <button id="animate-down-btn" class="arrow-btn" style="position: absolute; left: 0; top: 100%; width: 15px; height: 15px; font-size: 12px;">↓</button>
   </div>
-  <div class="button-container">
-    <button id="clear-btn">Clear</button>
-    <button id="save-file-btn">Save File</button>
-    <button id="load-file-btn">Load File</button>
-  </div>
+
   <div class="keyboard">
     <div class="keyboard-row">
       <div class="key">q</div>

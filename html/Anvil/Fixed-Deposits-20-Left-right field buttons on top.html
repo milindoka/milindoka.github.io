@@ -18,7 +18,7 @@
       height: calc(var(--item-height) * 5);
       width: var(--item-width);
       margin: 20px auto;
-      overflow: visible;
+      overflow: hidden;
     }
     .list-item {
       position: absolute;
@@ -49,7 +49,7 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
-      margin: 25px auto;
+      margin: 20px auto;
       width: 100%;
       max-width: 400px;
     }
@@ -233,16 +233,17 @@
     <h2 id="field-title">Field 1</h2>
     <button id="next-field-btn" class="arrow-btn" style="width: 15px; height: 15px; font-size: 12px;">→</button>
   </div>
-  <div id="list-container" class="list-container">
+  <div id="list-container" class="list-container"></div>
+  <div class="circular-panel">
+    <button id="animate-btn" class="arrow-btn up">↑</button>
+    <button id="animate-down-btn" class="arrow-btn down">↓</button>
   </div>
-
-  <!-- Navigation buttons below scrolling area -->
-  <div class="button-container" style="margin-top: 40px; margin-bottom: 50px;">
-    <button id="left-nav-btn" class="arrow-btn" style="width: 30px; height: 30px; font-size: 16px; margin-right: auto;">⇠</button>
-    <button id="right-nav-btn" class="arrow-btn" style="width: 30px; height: 30px; font-size: 16px; margin-left: auto;">⇢</button>
+  <div class="button-container">
+    <button id="clear-btn">Clear</button>
+    <button id="save-file-btn">Save File</button>
+    <button id="load-file-btn">Load File</button>
   </div>
-
-  <div class="keyboard" style="margin-top: 40px;">
+  <div class="keyboard">
     <div class="keyboard-row">
       <div class="key">q</div>
       <div class="key">w</div>
@@ -288,8 +289,8 @@
   <script>
   
     const listContainer = document.getElementById('list-container');
-    const leftNavBtn = document.getElementById('left-nav-btn');
-    const rightNavBtn = document.getElementById('right-nav-btn');
+    const animateBtn = document.getElementById('animate-btn');
+    const animateDownBtn = document.getElementById('animate-down-btn'); // NEW
     const clearBtn = document.getElementById('clear-btn');
     const nextFieldBtn = document.getElementById('next-field-btn');
     const prevFieldBtn = document.getElementById('prev-field-btn');
@@ -413,10 +414,8 @@
     }
 
     createListItems();
-
-    // Navigation buttons below scrolling area
-    leftNavBtn.addEventListener('click', animateListDown); // Previous record
-    rightNavBtn.addEventListener('click', animateList); // Next record
+    animateBtn.addEventListener('click', animateList);
+    animateDownBtn.addEventListener('click', animateListDown); // NEW
     function changeField(direction) {
       if (isAnimating) return;
       isAnimating = true;
