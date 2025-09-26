@@ -253,7 +253,6 @@
   <div class="slider-container" style="margin-top: -45px; margin-bottom: 50px; position: relative; display: flex; align-items: center; gap: 10px;">
     <button id="prev-record-btn" style="max-width:fit-content;font-size: xx-large;margin-left: 20px;">&nbsp&nbsp<&nbsp&nbsp</button>
     <input type="range" id="record-slider" min="1" max="21" value="1" style="flex: 1; height: 20px; cursor: pointer; background: #ddd; outline: none; border-radius: 10px; -webkit-appearance: none;">
-    <span id="slider-value" style="font-size: 16px; margin-left: 10px; min-width: 20px;">1</span>
     <button id="next-record-btn" style="max-width:fit-content;font-size:xx-large;margin-right: 20px;">&nbsp&nbsp>&nbsp&nbsp</button>
     <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666; position: absolute; bottom: -25px; left: 30px; right: 30px;">
       <span>1</span>
@@ -444,9 +443,7 @@
     // Navigation slider functionality
     function updateSliderPosition() {
       // Central record is (currentIndex + 2) % items.length + 1
-      const value = ((currentIndex + 2) % items.length) + 1;
-      recordSlider.value = value;
-      document.getElementById('slider-value').textContent = value;
+      recordSlider.value = ((currentIndex + 2) % items.length) + 1;
     }
 
     function jumpToRecord(recordNumber) {
@@ -469,10 +466,6 @@
       // Ensure keyboard functionality works after jump
       isAnimating = false;
     }
-
-    recordSlider.addEventListener('input', (e) => {
-      document.getElementById('slider-value').textContent = e.target.value;
-    });
 
     recordSlider.addEventListener('change', (e) => {
       jumpToRecord(parseInt(e.target.value));
