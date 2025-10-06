@@ -769,7 +769,18 @@
         }
       });
       Object.assign(editedItems, newEditedItems);
+
+      // Update slider max value and labels
+      const newMax = items.length;
+      recordSlider.max = newMax;
+      const sliderLabels = document.querySelectorAll('.slider-container > div > span');
+      if (sliderLabels.length >= 2) {
+        sliderLabels[0].textContent = '1';
+        sliderLabels[1].textContent = newMax.toString();
+      }
+
       updateListItems();
+      updateSliderPosition();
       menuDropdown.style.display = 'none';
     });
 
@@ -799,7 +810,18 @@
         }
       });
       Object.assign(editedItems, newEditedItems);
+
+      // Update slider max value and labels
+      const newMax = items.length;
+      recordSlider.max = newMax;
+      const sliderLabels = document.querySelectorAll('.slider-container > div > span');
+      if (sliderLabels.length >= 2) {
+        sliderLabels[0].textContent = '1';
+        sliderLabels[1].textContent = newMax.toString();
+      }
+
       updateListItems();
+      updateSliderPosition();
       menuDropdown.style.display = 'none';
     });
 
