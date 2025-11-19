@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌿 The Register (PBR)</title>
+    <style>
+        /* [Insert the complete CSS from index.html here] */
+
+        /* --- Additional CSS for Register Page --- */
+        .register-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .filter-bar {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .filter-bar input[type="text"], .filter-bar select {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .species-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .species-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            text-decoration: none; /* Make the card a clickable link */
+            color: var(--color-text);
+        }
+
+        .species-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .species-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-content h3 {
+            color: var(--color-primary);
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.4em;
+        }
+
+        .card-content p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--color-secondary);
+            color: var(--color-text);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* (Include the full CSS from index.html here for standalone file) */
+        
+        /* The following is a placeholder for the full CSS from index.html */
+        
+        :root {
+            --color-primary: #1E604D;
+            --color-secondary: #D4AF37;
+            --color-background: #F8F7F3;
+            --color-text: #333;
+            --color-light-text: #fff;
+            --color-accent: #A0522D;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--color-primary);
+            color: var(--color-light-text);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--color-light-text);
+            text-decoration: none;
+        }
+
+        nav a {
+            color: var(--color-light-text);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--color-secondary);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        footer {
+            background-color: var(--color-primary);
+            color: var(--color-light-text);
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: var(--color-secondary);
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+            }
+            nav {
+                margin-top: 15px;
+            }
+            nav a {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">🌿 BURAMBAD PBR</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="register.html">The Register</a>
+            <a href="village.html">The Village</a>
+            <a href="contribute.html">Contribute</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="register-header">
+                <h1 style="color: var(--color-primary);">The Biodiversity Register</h1>
+                <p>A comprehensive list of Burambad's documented species and associated traditional knowledge.</p>
+                <a href="#" style="color: var(--color-accent); font-weight: bold;">[Download Full PBR PDF]</a>
+            </section>
+
+            <section class="filter-bar">
+                <input type="text" placeholder="Search by name (local/scientific)...">
+                <select>
+                    <option>Filter by Type</option>
+                    <option value="flora">Flora (Plants)</option>
+                    <option value="fauna">Fauna (Animals)</option>
+                </select>
+                <select>
+                    <option>Filter by Habitat</option>
+                    <option value="coastal">Coastal/Marine</option>
+                    <option value="forest">Forest</option>
+                    <option value="farm">Farm/Agriculture</option>
+                </select>
+            </section>
+
+            <section class="species-grid">
+                <a href="#" class="species-card" id="flora">
+                    <img src="https://picsum.photos/350/200?tree" alt="Hapus Mango Tree">
+                    <div class="card-content">
+                        <h3>हापूस (Hapus)</h3>
+                        <p><em>Mangifera indica 'Alphonso'</em></p>
+                        <p>Status: **Economically Significant**</p>
+                        <p class="tag">Farm/Agriculture</p>
+                    </div>
+                </a>
+
+                <a href="#" class="species-card" id="fauna">
+                    <img src="https://picsum.photos/350/200?fish" alt="Pomfret Fish">
+                    <div class="card-content">
+                        <h3>सरंगा (Saranga)</h3>
+                        <p><em>Pampus argenteus (Silver Pomfret)</em></p>
+                        <p>Status: **Commonly Fished**</p>
+                        <p class="tag">Coastal/Marine</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="species-card">
+                    <img src="https://picsum.photos/350/200?herb" alt="Adulsa Plant">
+                    <div class="card-content">
+                        <h3>अडुळसा (Adulsa)</h3>
+                        <p><em>Justicia adhatoda</em></p>
+                        <p>Status: **Medicinal/Abundant**</p>
+                        <p class="tag">Traditional Knowledge</p>
+                    </div>
+                </a>
+
+                <a href="#" class="species-card">
+                    <img src="https://picsum.photos/350/200?bird" alt="Malabar Pied Hornbill">
+                    <div class="card-content">
+                        <h3>माल बार धनेश</h3>
+                        <p><em>Anthracoceros coronatus</em></p>
+                        <p>Status: **Rare/Protected**</p>
+                        <p class="tag">Forest</p>
+                    </div>
+                </a>
+                
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Burambad Biodiversity Management Committee | Design inspiredcopy; 2025 Burambad Biodiversity Management Committee | Taluka: Sangameshwar, District: Ratnagiri | Design inspired by Konkan Coast.</p>
+        <p>Managed under the Biological Diversity Act, 2002.</p>
+    </footer>
+</body>
+</html>
