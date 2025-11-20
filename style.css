@@ -1,0 +1,252 @@
+/* --- Konkan Inspired CSS --- */
+:root {
+    --color-primary: #1E604D; /* Deep Forest Green */
+    --color-secondary: #D4AF37; /* Mustard Yellow */
+    --color-background: #F8F7F3; /* Earthy Beige */
+    --color-text: #333;
+    --color-light-text: #fff;
+    --color-accent: #A0522D; /* Terracotta/Sienna */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--color-primary);
+    color: var(--color-light-text);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--color-light-text);
+    text-decoration: none;
+}
+
+nav a {
+    color: var(--color-light-text);
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 500;
+    transition: color 0.3s;
+    padding: 5px 0;
+    border-bottom: 2px solid transparent;
+}
+
+nav a:hover, nav a.active {
+    color: var(--color-secondary);
+    border-bottom-color: var(--color-secondary);
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* --- Homepage Specific --- */
+.hero {
+    background: url('./Img/Lotus Pond.jpeg') center/cover no-repeat;
+    color: var(--color-light-text);
+    text-align: center;
+    padding: 150px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4); /* Dark Overlay */
+    z-index: -1;
+}
+
+.hero h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.hero p {
+    font-size: 1.5em;
+    font-style: italic;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.intro, .quick-links-section {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.intro h2 {
+    color: var(--color-primary);
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.quick-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.quick-links a {
+    background-color: var(--color-accent);
+    color: var(--color-light-text);
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.quick-links a:hover {
+    background-color: #C07C4C; /* Lighter Accent */
+    transform: translateY(-2px);
+}
+
+/* --- Village & Contribute Page Specific --- */
+.section-title {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-secondary);
+    padding-bottom: 10px;
+    margin-top: 40px;
+}
+
+.content-block {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.bmc-member {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-left: 5px solid var(--color-accent);
+    background-color: #f9f9f9;
+}
+
+.bmc-member img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid var(--color-primary);
+}
+
+.contribution-steps ol {
+    list-style: none;
+    counter-reset: step-counter;
+    padding-left: 0;
+}
+
+.contribution-steps li {
+    counter-increment: step-counter;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    padding-left: 40px;
+    position: relative;
+}
+
+.contribution-steps li::before {
+    content: counter(step-counter);
+    background-color: var(--color-primary);
+    color: var(--color-light-text);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* --- Register Page Specific --- */
+/* (Styles for register page would go here if they were unique) */
+
+/* --- Footer --- */
+footer {
+    background-color: var(--color-primary);
+    color: var(--color-light-text);
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 50px;
+    font-size: 0.9em;
+}
+
+footer a {
+    color: var(--color-secondary);
+    text-decoration: none;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+    }
+    nav {
+        margin-top: 15px;
+    }
+    nav a {
+        margin: 0 10px;
+    }
+    .hero {
+        padding: 100px 20px;
+    }
+    .hero h1 {
+        font-size: 2em;
+    }
+    .hero p {
+        font-size: 1.2em;
+    }
+    .quick-links a {
+        flex-basis: 100%;
+        margin: 5px 0;
+    }
+    .bmc-member {
+        flex-direction: column;
+        text-align: center;
+    }
+    .bmc-member img {
+        margin: 0 0 10px 0;
+    }
+}
