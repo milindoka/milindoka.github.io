@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+
+@media print {
+            @page {
+                size: a4;  /* Set to auto for automatic mode */
+                margin-top: 0;   /* Set margins to 0 */
+                margin-bottom:0;
+                margin-right:1cm;
+            }
+        }
+
+
+
+html,body{
+        height:29.7cm;
+        width:21cm;
+       margin:0.5cm;
+       margin-right : 0.5cm;
+        font-size: 15px;
+        font-family:"Times New Roman";
+
+    }
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  margin-left:-5px;
+  margin-right:-5px;
+}
+.gap {
+  float: left;
+  width: 1px;
+  height:27cm;
+}
+
+.column {
+  float: left;
+  width: 19%;
+  padding: 5px;
+}
+
+
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+
+table.roll,td.roll {
+  border: 1px solid black;
+  border-collapse: collapse;
+  vertical-align: middle;
+  text-align:center;
+}
+
+tr.roll {
+ height : 26px;
+ }
+
+ table.roll tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+
+</style>
+</head>
+<body>
+<center id="schoolcollege1">XYZ College</center>
+<center id="schoolcollege2">Mumbai</center>
+<table style="width:100%;">
+<tr>
+  <td id="clasdiv">Class-Div : FY-A </td>
+  <td id="subject">Subject : MAT</td>
+  <td id="examiner">Examiner : MO</td>
+</tr>
+<tr>
+  <td id="examination">Examination : Prelim</td>
+  <td id="max">Total Marks : 50</td>
+  <td id="det">Date : 01/01/24</td>
+</tr>
+</table>
+
+<div class="row">
+  <div class="gap">
+    <p>&nbsp</p>
+  </div>
+
+  <div class="column">
+     <table class="roll" id="T01" >
+     <tr  class="roll" >
+      <td class="roll" width="70%">ROLL</td>
+      <td class="roll" width="30%">MRK</td>
+      </tr>
+      </table>
+   </div>
+  
+  <div class="column">
+     <table class="roll" id="T02">
+     <tr  class="roll" >
+      <td class="roll" width="70%">ROLL</td>
+      <td class="roll" width="30%">MRK</td>
+      </tr>
+      </table>   
+   </div>
+  
+  
+  <div class="column">
+     <table class="roll" id="T03">
+     <tr  class="roll" >
+      <td class="roll" width="70%">ROLL</td>
+      <td class="roll" width="30%">MRK</td>
+      </tr>
+      </table>   
+   </div>
+  
+  <div class="column">
+     <table class="roll" id="T04">
+     <tr  class="roll" >
+      <td class="roll" width="70%">ROLL</td>
+      <td class="roll" width="30%">MRK</td>
+      </tr>
+      </table>   
+   </div>
+  
+  
+  <div class="column">
+     <table class="roll" id="T05">
+     <tr  class="roll" >
+      <td class="roll" width="70%">ROLL</td>
+      <td class="roll" width="30%">MRK</td>
+      </tr>
+      </table>   
+   </div>
+  
+  </div>
+<br><br>
+
+<div class="footer">
+  <table style="width:100%;">
+    <tr>
+      <td id="pagetotal">Page Total : </td>
+      <td style="text-align:right">Examiner's Signature : _____________</td>
+    </tr>
+    </table>
+
+</div>
+
+
+<script>
+
+window.addEventListener('load', createTable);
+
+function createTable() 
+{
+
+   schoolcollege1=sessionStorage.getItem('schoolcollege1');
+   schoolcollege2=sessionStorage.getItem('schoolcollege2');
+   clas=sessionStorage.getItem('clas');
+   deev=sessionStorage.getItem('deev');
+   subject=sessionStorage.getItem('subject');
+   examination=sessionStorage.getItem('examination');
+   max=sessionStorage.getItem('max');
+   stream=sessionStorage.getItem('stream');
+   det=sessionStorage.getItem('det');
+   examiner=sessionStorage.getItem('examiner');
+   document.getElementById('schoolcollege1').textContent = schoolcollege1;
+   document.getElementById('schoolcollege2').textContent = schoolcollege2;
+   document.getElementById('clasdiv').textContent = clas + ' : ' + deev;
+   document.getElementById('subject').textContent = subject;
+   document.getElementById('examination').textContent = examination;
+   document.getElementById('max').textContent = max;
+   document.getElementById('det').textContent = det;
+   document.getElementById('examiner').textContent = examiner;
+
+   sessionString=sessionStorage.getItem("mrkArray");
+   var arr = JSON.parse(sessionString);
+   var totalroll = arr.length
+
+   ////    var totalroll = Math.floor(Math.random() * 190) + 10;
+   /////arr.push(i.toString().padStart(3, '0')); //padding with 0
+
+    for (i = 0; i < totalroll; i++) 
+    var entriesPerTable = 40;
+    var tablesNeeded = Math.ceil(totalroll / entriesPerTable);
+
+    for (var t = 1; t <= 5; t++) {
+        var tableId = 'T0' + t;
+        var table = document.getElementById(tableId);
+        
+        if (t <= tablesNeeded) {
+            var startIndex = (t - 1) * entriesPerTable;
+            var endIndex = Math.min(startIndex + entriesPerTable, totalroll);
+            
+            for (var r = startIndex; r < endIndex; r++) {
+                var x = table.insertRow(-1);
+                x.className = "roll";
+                var y = x.insertCell(0);
+                y.className = "roll";
+                y.innerHTML = arr[r].split(":")[0].trim();;
+                y = x.insertCell(1);
+                y.className = "roll";
+                y.innerHTML = arr[r].split(":")[1].trim();
+            }
+        } else {
+            // Hide unused tables
+            table.style.display = 'none';
+        }
+    }
+}
+
+
+</script>
+
+</body>
+</html>

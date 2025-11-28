@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="jquery-3-7-1.js"></script>  
+<script>   
+var topindex=0;   ///centre line index
+var start='M03001';
+var end='M03020';
+
+///&#x27F3 refresh
+let animrunning=0;
+ var arr = [];
+ 
+tempstart=start;
+////  fill roll array
+for(jj=0;jj<200;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+
+var len=arr.length;        
+
+ for (var i = 0; i < len; i++) 
+  {  arr[i]=arr[i]+' : ';
+     // window.alert(arr[i]);
+    }
+    
+window.addEventListener('load', InitRoll);
+////////////////////////////////////////////
+$(document).ready(function(){  
+    
+    $("#up").click(function(){ 
+
+      if(animrunning==1) return;   
+          animrunning=1;
+          
+    document.getElementById("child11").style.visibility = "hidden";    
+    document.getElementById("child12").style.visibility = "hidden";
+    document.getElementById("child13").style.visibility = "hidden";
+    document.getElementById("child14").style.visibility = "hidden";
+    document.getElementById("child15").style.visibility = "hidden";
+    document.getElementById("child16").style.visibility = "hidden";
+
+        $("#child1").animate({top: '20px',opacity:0.0}); 
+        $("#child2").animate({top: '60px',opacity:0.1});  
+        $("#child3").animate({top: '100px',opacity:0.3});  
+        $("#child4").animate({top: '140px',opacity:1.0});  
+        $("#child5").animate({top: '180px',opacity:0.3});  
+         $("#child6").animate({top: '220px',opacity:0.1});      
+           topindex=(topindex+1)%len;            
+        $(child6).promise().done(newval);
+         });  
+  ///------------Down------
+        $("#dn").click(function(){ 
+
+      if(animrunning==1) return;   
+          animrunning=1;
+          
+   // document.getElementById("child11").style.visibility = "hidden";    
+    document.getElementById("child12").style.visibility = "hidden";
+    document.getElementById("child13").style.visibility = "hidden";
+    document.getElementById("child14").style.visibility = "hidden";
+    document.getElementById("child15").style.visibility = "hidden";
+    document.getElementById("child16").style.visibility = "hidden";
+ 
+       $("#child0").animate({top: '60px',opacity:0.1}); 
+        $("#child1").animate({top: '100px',opacity:0.3}); 
+        $("#child2").animate({top: '140px',opacity:1.0});  
+        $("#child3").animate({top: '180px',opacity:0.3});  
+        $("#child4").animate({top: '220px',opacity:0.1});  
+        $("#child5").animate({top: '260px',opacity:0.0});  
+           topindex=(topindex-1)%len;   
+            if(topindex==-1) topindex=len-1;         
+           $(child5).promise().done(newval);
+    });  
+    
+     
+ 
+
+});  ////end of doc ready function
+
+function newval()
+{        
+                                             document.getElementById("child0").style.visibility = "hidden";
+                                            document.getElementById("child1").style.visibility = "hidden";
+                                             document.getElementById("child2").style.visibility = "hidden";
+					     document.getElementById("child3").style.visibility = "hidden";
+					     document.getElementById("child4").style.visibility = "hidden";
+					      document.getElementById("child5").style.visibility = "hidden";
+					      document.getElementById("child6").style.visibility = "hidden";
+	
+	                                    prev1=topindex-1; prev2=topindex-2;   prev3=topindex-3;                               
+                                          if(topindex==0) {prev1=len-1; prev2=len-2; prev3=len-3;}
+                                          if(topindex==1) {prev2=len-1; prev3=len-2;}
+       				          if(topindex==2)   { prev3=len-1;}
+                 
+                                          document.getElementById("child0").innerHTML = arr[prev3]; 
+                                          document.getElementById("child1").innerHTML = arr[prev2]; 
+                                          document.getElementById("child2").innerHTML = arr[prev1]; 
+                                          document.getElementById("child3").innerHTML = arr[topindex]; 
+                                          document.getElementById("child4").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child5").innerHTML = arr[(topindex+2)%len];    
+                                         document.getElementById("child6").innerHTML =  arr[(topindex+3)%len];   
+                                          
+                                          document.getElementById("child10").innerHTML = arr[prev3]; 
+                                          document.getElementById("child11").innerHTML = arr[prev2]; 
+                                          document.getElementById("child12").innerHTML = arr[prev1]; 
+                                          document.getElementById("child13").innerHTML = arr[topindex]; 
+                                          document.getElementById("child14").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child15").innerHTML = arr[(topindex+2)%len];    
+                                         document.getElementById("child16").innerHTML =  arr[(topindex+3)%len];   
+                                                                                             
+                               resetAnim();
+   }
+
+
+function resetAnim()
+{
+ $("#child10").animate({top: '20px',opacity:0.0});  
+ $("#child11").animate({top: '60px',opacity:0.1});  
+ $("#child12").animate({top: '100px',opacity:0.3});  
+ $("#child13").animate({top: '140px',opacity:1.0});  
+ $("#child14").animate({top: '180px',opacity:0.3});  
+ $("#child15").animate({top: '220px',opacity:0.1});  
+$("#child16").animate({top: '260px',opacity:0.0});
+ 
+  document.getElementById("child11").style.visibility = "visible";
+  document.getElementById("child12").style.visibility = "visible";
+  document.getElementById("child13").style.visibility = "visible"
+  document.getElementById("child14").style.visibility = "visible";
+  document.getElementById("child15").style.visibility = "visible";
+
+ $("#child0").animate({top: '20px',opacity:0.0});  
+ $("#child1").animate({top: '60px',opacity:0.1});  
+ $("#child2").animate({top: '100px',opacity:0.3});  
+ $("#child3").animate({top: '140px',opacity:1.0});  
+ $("#child4").animate({top: '180px',opacity:0.3});  
+ $("#child5").animate({top: '220px',opacity:0.1});  
+ $("#child6").animate({top: '260px',opacity:0.0});
+ 
+ $(child6).promise().done(setVisible);
+}
+
+function setVisible()
+{    document.getElementById("child0").style.visibility = "visible";
+      document.getElementById("child1").style.visibility = "visible";
+      document.getElementById("child2").style.visibility = "visible";
+      document.getElementById("child3").style.visibility = "visible";				     
+      document.getElementById("child4").style.visibility = "visible";
+      document.getElementById("child5").style.visibility = "visible";
+      document.getElementById("child6").style.visibility = "visible";
+
+  document.getElementById("child11").style.visibility = "hidden"; 
+  document.getElementById("child12").style.visibility = "hidden";
+  document.getElementById("child13").style.visibility = "hidden"
+  document.getElementById("child14").style.visibility = "hidden";
+  document.getElementById("child15").style.visibility = "hidden";
+//document.getElementById("child16").style.visibility = "hidden";
+  animrunning=0;
+  slider.value=topindex;
+/// 
+}
+///////////////////////////////
+function nextChar(c) {
+    return String.fromCharCode(c.charCodeAt(0) + 1);
+}
+
+function isDigit(val) {
+  return String(+val).charAt(0) == val;
+}
+
+function IncrementAlphanumeric(roll)
+{ an = roll.split("");
+  i = an.length - 1;
+
+ while (true)
+        {  // if(an[i]<'0' || an[i]>'9') return new String(an);
+             if (!isDigit(an[i]))  { window.alert("!digit"); return an.join("");}
+
+            if (i <0)   { window.alert("Maxed out number"); return;}
+             
+//             an[i]++;
+
+            if (an[i] == '9')
+            {
+                an[i] = '0';
+                i--;
+                continue;
+            }
+          an[i]=nextChar(an[i]);
+
+            return an.join("");
+        }
+}
+function InitRoll()
+{
+
+
+                                          ///initialise roll number display
+  //                        window.alert('s');                
+                                          len=arr.length;
+                                          document.getElementById("child1").innerHTML = arr[len-2]; 
+                                          document.getElementById("child2").innerHTML = arr[len-1]; 
+                                          document.getElementById("child3").innerHTML = arr[topindex]; 
+                                          document.getElementById("child4").innerHTML = arr[topindex+1]; 
+                                          document.getElementById("child5").innerHTML = arr[topindex+2];    
+//window.alert('e');
+                                        
+                                          document.getElementById("child11").innerHTML = arr[len-2]; 
+                                          document.getElementById("child12").innerHTML = arr[len-1]; 
+                                          document.getElementById("child13").innerHTML = arr[topindex]; 
+                                          document.getElementById("child14").innerHTML = arr[topindex+1]; 
+                                          document.getElementById("child15").innerHTML = arr[topindex+2];                      
+
+slider.value=topindex;
+flash();
+}
+
+function onbtn(kee)
+{  if(animrunning) return;
+   result = arr[topindex].indexOf(":");
+       left = arr[topindex].substring(result);
+       if(kee=="X") {arr[topindex]=arr[topindex].substring(0,result)+": "; 
+                                 document.getElementById("child3").innerHTML = arr[topindex];         
+                                       flash();return;
+                               }
+       if(kee=='AB' || kee=='100') {   arr[topindex]=arr[topindex].substring(0,result+2)+kee;     
+                                     document.getElementById("child3").innerHTML = arr[topindex];                                                            
+                                   const button1 = document.getElementById('up').click();
+
+                                   return;
+                                   }
+   
+   if(left.length==2) {  
+                                      arr[topindex]=arr[topindex]+kee;     
+                           
+                                        document.getElementById("child3").innerHTML = arr[topindex];         
+                                       flash();
+                                               
+                                     return;
+                                   }
+   if(left.length==3)  
+   { arr[topindex]=arr[topindex]+kee;     
+      document.getElementById("child3").innerHTML = arr[topindex];                                              
+      const button1 = document.getElementById('up').click();
+      }
+
+   if(left.length>3)  
+   { arr[topindex]=arr[topindex].substring(0,result+2)+kee;     
+      document.getElementById("child3").innerHTML = arr[topindex];                                              
+    flash();
+    }
+
+}
+
+/// this micro 1px left-right animation is required to flush first digit from browser buffer
+///without this animation first digit display is delayed sometimes till second digit is entered.
+/// animation forces browser to display first digit it immediately.
+function flash()
+{
+ $(document).ready(function() {
+                                       $('#child3').animate({
+                       			left : "79px"
+  					}, 1)
+				$('#child3').animate({
+                       			left: "80px"
+  					}, 1)
+						
+					});
+}
+
+function  OnNewRoll()
+{
+
+start = document.getElementById("firstroll").value.toUpperCase();
+end = document.getElementById("lastroll").value.toUpperCase(); 
+
+topindex=0;
+ arr=[];  /// intialize basic roll array
+tempstart=start;
+////  fill roll array
+for(jj=0;jj<200;jj++)  {arr.push(tempstart);  if(tempstart==end)  break;  tempstart=IncrementAlphanumeric(tempstart); }
+
+len=arr.length;        
+slider.max=len-1;
+
+ for (var i = 0; i < len; i++) 
+  {  arr[i]=arr[i]+' : ';
+     // window.alert(arr[i]);
+    }
+//alert(arr[len-2]);
+
+
+InitRoll();  ///refresh browser with modified roll array
+// const button1 = document.getElementById('button1').click();
+
+}
+
+function FirstBlank()
+{ len=arr.length;
+for (var i = 0; i < len; i++) 
+  {   result = arr[i].indexOf(":");
+       left = arr[i].substring(result);
+       if(left.length==2) { topindex=(i-1)%len; slider.value=topindex; mouseUp(); return;  }
+    }
+}
+</script>
+
+<style>
+body {margin: 20px;
+  margin-right:26px;} 
+
+.container {
+position:relative;
+width:100%;
+max-width:480px;
+height:1000px;
+margin-left:auto;
+margin-right:auto;
+margin-bottom:auto;
+border: 4px solid lightgreen;
+}
+
+/*   --------slider ------*/
+
+.slidecontainer {
+  width: 100%;
+ }
+
+.slider {
+ 
+  margin-top:230px;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+   background :lightgreen;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+
+/* ----   slider class end --------------*/
+
+table.roll { 
+                border-collapse: collapse;
+                font-size : 22px;
+                width : 100%;
+                max-width : 480px;
+                margin-left: auto;
+                margin-right: auto;
+                border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+table.roll tr { max-height: 40px;
+                text-align : center;
+                background-color: #F2FAFA
+ }
+ 
+
+.numgrid {
+   
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 3px;
+  align-items: center;
+  justify-content: center;
+
+ 
+}
+
+.numgrid div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  color: #007bff;
+  padding: 15px 20px;
+  min-width: 25px;
+  min-height: 35px;
+  font-size: 18px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 19px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.numgrid div:active {
+  background-color: #007bff;
+  color: white;
+  transform: scale(0.95);
+  transition: all 0.1s ease;
+}
+
+.grid-container {
+ margin-top:250px;
+  display: grid;
+  height:290px;
+  width: 100%;
+  gap: 5px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  background-color: #bae6e3;
+  margin-left:auto;
+  margin-right:auto;
+  padding:0px;
+  
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  justify-content:center;
+  font-size: 22px;
+  align-items:center;
+
+}
+
+#up {
+  position: absolute;
+   top: 65px;
+   left:15px;
+   width: 35px;
+   height:35px;
+   transform: rotate(-90deg);
+}
+
+#dn {
+  position: absolute;
+   top: 212px;
+   left: 15px;
+   width: 35px;
+   height:35px;
+   transform: rotate(90deg);
+}
+
+.c0 {
+ position: absolute;
+  height: 38px;
+  width: 475px;
+  font-size:26px;
+  top: 20px;
+  left:80px;
+  opacity:0.0;
+}
+
+.c1 {
+ position: absolute;
+  height: 38px;
+  width: 475px;
+  font-size:26px;
+  top:60px;
+  left:80px;
+  opacity:0.1;
+}
+
+.c2 {
+ position: absolute;
+  height: 38px;
+  width: 475px;
+  font-size:26px;
+  top:100px;
+  left:80px;
+  opacity:0.3;
+}
+
+.c3 {
+ position: absolute;
+  height: 38px;
+  width: 475px;
+  font-size:26px;
+  top:140px;
+  left:80px;
+  opacity:1.0;
+}
+
+.c4{
+ position: absolute;
+  height: 38px;
+  width: 475px;
+  font-size:26px;
+  top:180px;
+  left:80px;
+  opacity:0.3;
+}
+
+.c5 {
+ position: absolute;
+  height: 38px;
+  width: 475px;
+  font-size:26px;
+  top:220px;
+  left:80px;
+  opacity:0.1;
+}
+
+.c6 {
+ position: absolute;
+  height: 38px;
+  width: 475px;
+  font-size:26px;
+  top:260px;
+  left:80px;
+  opacity:0.0;
+}
+
+.c10 {
+ position: absolute;
+  height: 38px;
+  width: 475px;
+  font-size:26px;
+  top:-265px;
+  left:80px;
+  opacity:0.0;
+}
+
+
+.input1{
+height:100%;
+border:none;
+font-size:24px;
+}
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-family: inherit;
+  background: transparent;
+  min-height: 20px;
+  
+  color: #007bff;
+  }
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 80px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+table.pref
+{width : 100%;
+  position: absolute;
+  margin-top : 640px;
+  border : 1px solid;
+  border-collapse: collapse;
+}
+
+table.pref td { font-size : 14px;  height : 30px; border:1px solid; }
+/*remove input number arrows*/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.focused-input {
+  background-color: #e6f3ff;
+}
+
+#mcqInputs input[type="text"],
+#mcqInputs input[type="number"] {
+  width: calc(100% - 10px);
+  box-sizing: border-box;
+  margin-right: 10px;
+}
+
+#mcqInputs {
+  padding: 0 5px;
+}
+
+
+.pg input {
+  .h-formfield-uppercase input
+   {
+  text-transform: uppercase;
+  &::placeholder {
+    text-transform: none;
+  } 
+}
+}
+
+
+</style>
+</head>
+<body>
+<div class="container">
+<button id="up" style="font-size:24px;">&#10147 </button> 
+<button id="dn" style="font-size:24px;">&#10147 </button> 
+
+<div class=c0 id="child0">M03018 :</div>
+<div class=c1 id="child1">M03019 :</div>
+<div class=c2 id="child2">M03020 :</div>
+<div class=c3 id="child3">M03001 : </div>
+<div class=c4 id="child4">M03002 :</div>
+<div class=c5 id="child5">M03003 :</div>
+<div class=c6 id="child6">M03004 :</div>
+
+<div class=c0 id="child10">M03018 :</div>
+<div class=c1 id="child11">M03019 :</div>
+<div class=c2 id="child12">M03020 :</div>
+<div class=c3 id="child13">M03001 : </div>
+<div class=c4 id="child14">M03002 :</div>
+<div class=c5 id="child15">M03003 :</div>
+<div class=c6 id="child16">M03004 :</div>
+
+<table  class="roll" border="1"  style="user-select: none"> 
+<tr  id="seatno">
+<td style="width:45%;padding-right:8px"><input class="input1" style="height: 25px;width:100%;font-size:24px;text-transform: uppercase;" type="text" id="firstroll"  maxlength="10" value="M03001" >
+</td>
+<td style="width:30px;" onclick="OnNewRoll()"><img src = "refresh.svg" alt="Refresh"/>
+</td><td style="width:45%;padding-right:8px" ><input class="input1" value="M03020" style="height: 25px;width:100%;font-size:24px; text-transform: uppercase;" type="text" id="lastroll"  maxlength="10" ></td></tr>
+</table>
+
+<div style="position: absolute; top: 40px; right: 5px; z-index: 1000;">
+  <button id="printButton" onclick="printMarklist()" style="padding:5px;width:100px;margin-right: 5px;">Print</button>
+</div>
+<div style="position: absolute; top: 90px; right: 10px; z-index: 1000;">
+    <button style="padding:5px;width:100px;" id="mcqButton" onclick="toggleMCQMode()">MCQ</button>
+</div>
+
+
+
+
+<table  class="pref"> 
+<tr><td style="width : 50%">Examiner </td><td><input type="text"  size="8" value="MO" id="examiner"></td></tr>
+<tr><td>Class</td><td><input type="text" size="22" value="FY" id="clas" ></td></tr>
+<tr><td>Div</td><td><input type="text" size="22" value="A" id="deev"></td></tr>
+<tr><td>Stream : &ensp;</td><td><input type="text" size="12" value="Science" id="stream"></td></tr>
+<tr><td>Subject : &ensp;</td><td><input type="text" size="5" value="Maths" id="subject"></td></tr>
+<tr><td>Examination : &ensp;</td><td><input type="text" size="10" value="English" id="examination"></td></tr>
+<tr><td>Max Marks : &ensp;</td><td><input type="text" size="10" value="50" id="max"></td></tr>
+<tr><td>Date : &ensp;</td><td><input type="text" size="10" value="01/01/24" id="det"></td></tr>
+<tr><td>School/College : &ensp;</td><td><input type="text" size="22" value="XYZ College" id="schoolcollege1"></td></tr>
+<tr><td>Address : &ensp;</td><td><input type="text" size="22" value="Mumbai" id="schoolcollege2"></td></tr> 
+</table>
+
+
+<script>
+function mouseUp() {
+    len = arr.length;
+    prev1 = topindex - 1;
+    prev2 = topindex - 2;
+    prev3 = topindex - 3;
+    if (topindex == 0) { prev1 = len - 1; prev2 = len - 2; prev3 = len - 3; }
+    if (topindex == 1) { prev2 = len - 1; prev3 = len - 2; }
+    if (topindex == 2) { prev3 = len - 1; }
+
+    // Update the displayed roll numbers
+    updateDisplayedRolls();
+
+    // Perform the sliding animation
+    $("#child1").animate({ top: '20px', opacity: 0.0 });
+    $("#child2").animate({ top: '60px', opacity: 0.1 });
+    $("#child3").animate({ top: '100px', opacity: 0.3 });
+    $("#child4").animate({ top: '140px', opacity: 1.0 });
+    $("#child5").animate({ top: '180px', opacity: 0.3 });
+    $("#child6").animate({ top: '220px', opacity: 0.1 });
+
+    topindex = (topindex + 1) % len;
+    $(child6).promise().done(newval);
+}
+
+function updateDisplayedRolls() {
+    document.getElementById("child0").innerHTML = arr[prev3];
+    document.getElementById("child1").innerHTML = arr[prev2];
+    document.getElementById("child2").innerHTML = arr[prev1];
+    document.getElementById("child3").innerHTML = arr[topindex];
+    document.getElementById("child4").innerHTML = arr[(topindex + 1) % len];
+    document.getElementById("child5").innerHTML = arr[(topindex + 2) % len];
+    document.getElementById("child6").innerHTML = arr[(topindex + 3) % len];
+
+    document.getElementById("child10").innerHTML = arr[prev3];
+    document.getElementById("child11").innerHTML = arr[prev2];
+    document.getElementById("child12").innerHTML = arr[prev1];
+    document.getElementById("child13").innerHTML = arr[topindex];
+    document.getElementById("child14").innerHTML = arr[(topindex + 1) % len];
+    document.getElementById("child15").innerHTML = arr[(topindex + 2) % len];
+    document.getElementById("child16").innerHTML = arr[(topindex + 3) % len];
+}
+
+ </script>
+
+<div class="slidecontainer">
+  <input type="range" min="0" max="19" value="50" class="slider" id="myRange"  onmouseup="mouseUp()">
+</div>
+
+<div class="numgrid" >
+  <div  style="user-select: none" id="btn1" onclick="onbtn('1')">1</div>
+  <div style="user-select: none" id="btn2" onclick="onbtn('2')" >2</div>
+  <div style="user-select: none" id="btn3" onclick="onbtn('3')" >3</div>
+  <div style="user-select: none" id="btnback" onclick="onbtn('X')" >X</div>
+  <div style="user-select: none" id="btn4" onclick="onbtn('4')" >4</div>
+  <div style="user-select: none" id="btn5" onclick="onbtn('5')" >5</div>
+  <div style="user-select: none" id="btn6" onclick="onbtn('6')" >6</div>
+  <div style="user-select: none" id="btnnew" onclick="FirstBlank()" >Blank</div>
+  <div style="user-select: none" id="btn7" onclick="onbtn('7')" >7</div>
+  <div style="user-select: none" id="btn8" onclick="onbtn('8')" >8</div>
+  <div style="user-select: none" id="btn9" onclick="onbtn('9')" >9</div>
+  <div class="upload-btn-wrapper">
+  <button class="btn">Open</button>
+  <input type="file" name="file" accept=".mrk" id="file" />
+</div>
+  <div style="user-select: none" id="btn0" onclick="onbtn('0')" >0</div>
+  <div style="user-select: none" id="btnAB" onclick="onbtn('AB')" >AB</div>
+  <div style="user-select: none" id="btn100" onclick="onbtn('100')" >100</div>
+  <div style="user-select: none" id="btnsave" onclick="SaveFile()" >Save</div>
+</div>
+
+
+
+<div id="mcqInputs" style="display: none;">
+   <div style="position: absolute; top: 140px; right: 5px; z-index: 1000;">
+  <button id="pushButton" onclick="transferMarks()" style="padding:5px;width:100px;margin-right: 5px;">Push</button>
+</div>
+   <span id="scoreDisplay" style="width:30px;padding-left:12px;padding-top:5px;padding-bottom:4px;
+       border:1px solid black;background-color:#e7e7e7; color:black; 
+       position : absolute; top: 140px; right: 118px; z-index: 1000;" 
+       >0</span>
+  <div style="margin-bottom: 10px;">
+    <span class="pg">
+    <input type="text" placeholder="Studets Answers eg ABADCBA..." id="studentAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" maxlength="25" 
+    style="font-family: monospace; width: 100%; font-size: 18px;" readonly>
+  </div>
+  <div style="margin-bottom: 10px;">
+    <input type="text" placeholder="Correct Answers eg DABCADB..." id="correctAnswers" onclick="setFocus(this)" onkeypress="return validateMCQInput(event)" 
+    maxlength="25" style="font-family: monospace; width: 100%; font-size: 18px;" readonly>
+  </div>
+  </span>
+  <div style="margin-bottom: 10px;">
+    
+    <input type="text"  placeholder="Marks Awarded eg 2422321..." id="marksAwarded" onclick="setFocus(this)" onkeypress="return validateMarksInput(event)" maxlength="25" 
+    style="font-family: monospace; width: 100%; font-size: 18px;" readonly>  </div>
+  <div style="margin-bottom: 10px;">
+    
+    <input type="text" placeholder="Optional Negative Marks eg 1211111..." id="negativeMarks" onclick="setFocus(this)" onkeypress="return validateMarksInput(event)" maxlength="25" 
+    style="font-family: monospace; width: 100%; font-size: 18px;" readonly>  
+</div>
+
+
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+
+  <style>
+    .mcq-button {
+      font-size: 18px;
+      padding: 15px 20px;
+      min-width: 80px;
+      min-height: 60px;
+      border-radius: 8px;
+      border: 2px solid #007bff;
+      background-color: #f8f9fa;
+      color: #007bff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+  .mcq-button:active {
+  background-color: #007bff;
+  color: white;
+  transform: scale(0.95);
+  transition: all 0.1s ease;
+}
+  </style>
+
+  <button class="mcq-button" onclick="handleButtonClick(this)">A</button>
+  <button class="mcq-button" onclick="handleButtonClick(this)">B</button>
+  <button class="mcq-button" onclick="handleButtonClick(this)">C</button>
+  <button class="mcq-button" onclick="handleButtonClick(this)">D</button>
+  <button class="mcq-button" onclick="handleButtonClick(this)">1</button>
+  <button class="mcq-button" onclick="handleButtonClick(this)">2</button>
+  <button class="mcq-button" onclick="handleButtonClick(this)">3</button>
+  <button class="mcq-button" onclick="handleButtonClick(this)">4</button>
+  <button class="mcq-button" onclick="addMCQAnswer('-')">Skip (-)</button>
+  <button class="mcq-button" onclick="backspaceMCQAnswer()">Back Space</button>
+  <button class="mcq-button" onclick="clearFocusedInput()">Clear</button>
+  <button class="mcq-button" onclick="onbtn('AB')">AB</button>
+
+</div>
+
+ 
+
+
+
+
+
+</div>
+
+
+
+</div>
+<script> 
+var slider = document.getElementById("myRange");
+
+slider.oninput = function() {
+topindex= Number(this.value); 
+                                             
+	                                    prev1=topindex-1; prev2=topindex-2;   prev3=topindex-3;                               
+                                          if(topindex==0) {prev1=len-1; prev2=len-2; prev3=len-3;}
+                                          if(topindex==1) {prev2=len-1; prev3=len-2;}
+       				          if(topindex==2)   { prev3=len-1;}
+                 
+                                          document.getElementById("child0").innerHTML = arr[prev3]; 
+                                          document.getElementById("child1").innerHTML = arr[prev2]; 
+                                          document.getElementById("child2").innerHTML = arr[prev1]; 
+                                          document.getElementById("child3").innerHTML = arr[topindex]; 
+                                          document.getElementById("child4").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child5").innerHTML = arr[(topindex+2)%len];    
+                                         document.getElementById("child6").innerHTML =  arr[(topindex+3)%len];   
+                                          
+                                          document.getElementById("child10").innerHTML = arr[prev3]; 
+                                          document.getElementById("child11").innerHTML = arr[prev2]; 
+                                          document.getElementById("child12").innerHTML = arr[prev1]; 
+                                          document.getElementById("child13").innerHTML = arr[topindex]; 
+                                          document.getElementById("child14").innerHTML = arr[(topindex+1)%len]; 
+                                          document.getElementById("child15").innerHTML = arr[(topindex+2)%len];    
+                                         document.getElementById("child16").innerHTML =  arr[(topindex+3)%len];   
+
+
+ }
+
+function SaveFile()
+{
+    var text = "\n";
+    text=text+"Schoolname01\n";
+    text=text+"Schoolname02\n";
+    text=text+"\n\n";
+    text=text+"========ML-V-01========\n";   
+    text=text+"\n";
+    text=text+"Set 01 : AACDAADCDABADCBBADCDBABCD\n";
+    text=text+"Set 01 : 3323222222232322222222222\n";
+    text=text+"Set 01 : 1111111111111111111111111\n";
+    text=text+"\n";
+    text=text+"=========ML-V-01========\n";
+    text=text+"\n";
+    text=text+"Examiner : "+ document.getElementById("examiner").value+ "\n";
+    text=text+"Class : "+ document.getElementById("clas").value+ "\n";
+    text=text+"Div : "+ document.getElementById("deev").value+ "\n";
+    text=text+"Stream : "+ document.getElementById("stream").value+ "\n";
+    text=text+"Subject : "+ document.getElementById("subject").value+ "\n";
+    text=text+"Examination : "+ document.getElementById("examination").value+ "\n";
+    text=text+"Max Marks : "+ document.getElementById("max").value+ "\n";
+    text=text+"Date : "+ document.getElementById("det").value+ "\n";
+    text=text+"\n";
+    text=text+"=========ML-V-01========\n";
+    text=text+"\n";
+    text=text+" Roll   Marks\n";
+    text=text+"\n";
+    var arrlen=arr.length;        
+
+    for (var i = 0; i < len; i++) 
+      text=text+arr[i]+'\n';
+    
+    text=text+"\n";
+    text=text+"=========END========\n";
+    
+    filename = document.getElementById("examination").value+'-'
+             + document.getElementById("subject").value +'-'
+             + document.getElementById("clas").value+'-'
+             + document.getElementById("examiner").value
+             +".mrk";
+
+    download(filename,text);
+}
+
+ 
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+
+
+  document.getElementById('file').onchange = function()
+    {
+  arr = [];
+  var file = this.files[0];
+  var reader = new FileReader();
+  reader.onload = function(progressEvent){    
+    var lines = this.result.split(/\r\n|\n/);
+   for(var line = 0; line < lines.length-1; line++)
+   {  
+      templine=lines[line];
+      result = templine.includes(":");
+      if(result)
+      { 
+        if(templine.includes("Set")) continue;
+
+
+        if(templine.includes("Examiner"))     
+        {
+          document.getElementById("examiner").value=templine.split(":")[1].trim();
+          continue;
+        }
+        if(templine.includes("Class"))
+        {
+          document.getElementById("clas").value=templine.split(":")[1].trim();
+          continue;
+        }
+
+        if(templine.includes("Div"))
+        {
+          document.getElementById("deev").value=templine.split(":")[1].trim();
+          continue;
+        }
+        if(templine.includes("Stream")) 
+        {
+          document.getElementById("stream").value=templine.split(":")[1].trim();
+          continue;
+        }
+        if(templine.includes("Subject"))
+        {
+          document.getElementById("subject").value=templine.split(":")[1].trim();
+          continue;
+        }
+        if(templine.includes("Examination"))
+        {
+          document.getElementById("examination").value=templine.split(":")[1].trim();
+          //window.alert(templine.split(":")[1].trim());
+          continue;
+        }
+        if(templine.includes("Max Marks"))
+        {
+          document.getElementById("max").value=templine.split(":")[1].trim();
+          continue;
+        }
+        if(templine.includes("Date"))
+        {
+          document.getElementById("det").value=templine.split(":")[1].trim();
+          continue;
+        }
+        
+        arr.push(templine);
+        //window.alert(templine);
+
+        //tt=line.split(":")[1].trim();
+
+      }
+         //window.alert(lines[line]);
+    }
+    topindex=0;
+  len=arr.length;
+   document.getElementById("firstroll").value=arr[0].split(":")[0].trim();
+   document.getElementById("lastroll").value=arr[len-1].split(":")[0].trim();
+   //lastroll=arr[len-1].split(":")[0].trim();
+  
+  InitRoll();
+  };
+  reader.readAsText(file);
+  //window.alert(txt);
+  
+};
+
+let focusedInput = null;
+
+function setFocus(element) {
+  if (focusedInput) {
+    focusedInput.classList.remove('focused-input');
+  }
+  focusedInput = element;
+  focusedInput.classList.add('focused-input');
+}
+
+function addMCQAnswer(answer) {
+  if (focusedInput) {
+    focusedInput.value += answer.toUpperCase();
+    calculateScore();
+    
+  }
+}
+
+function addMCQMarks(mark) {
+  if (focusedInput) {
+    focusedInput.value += mark;
+    calculateScore();
+  }
+}
+
+function backspaceMCQAnswer() {
+  if (focusedInput) {
+    focusedInput.value = focusedInput.value.slice(0, -1);
+    calculateScore();
+  }
+}
+
+function toggleMCQMode() {
+  var mcqInputs = document.getElementById('mcqInputs');
+  var mcqButton = document.getElementById('mcqButton');
+  var numgrid = document.querySelector('.numgrid');
+  
+  if (mcqInputs.style.display === 'none') {
+    mcqInputs.style.display = 'block';
+    numgrid.style.display = 'none';
+    mcqButton.textContent = 'MCQ Close';
+    setFocus(document.getElementById('studentAnswers')); // Set initial focus
+  } else {
+    mcqInputs.style.display = 'none';
+    numgrid.style.display = 'grid';
+    mcqButton.textContent = 'MCQ';
+    if (focusedInput) {
+      focusedInput.classList.remove('focused-input');
+      focusedInput = null;
+    }
+  }
+}
+
+
+function transferMarks() {
+  var scoreText = document.getElementById('scoreDisplay').textContent;
+    var score = Math.max(0, parseInt(scoreText)); // Ensure positive integer
+    var formattedScore = score < 10 ? '0' + score : score.toString(); // Format as two digits
+    var currentRoll = arr[topindex].split(':')[0].trim();
+    arr[topindex] = currentRoll + ' : ' + formattedScore;
+    document.getElementById('child3').innerHTML = arr[topindex];
+    mouseUp();
+    //toggleMCQMode();
+    doneMCQ();
+}
+
+
+function doneMCQ() {
+    calculateScore();
+    let studentAnswersInput = document.getElementById('studentAnswers');
+    setFocus(studentAnswersInput);
+    studentAnswersInput.value = '';
+}
+
+
+
+function clearFocusedInput() {
+    if (focusedInput) {
+        focusedInput.value = '';
+       calculateScore();
+    }
+}
+
+function validateMCQInput(event) {
+    var keyCode = event.which ? event.which : event.keyCode;
+    var char = String.fromCharCode(keyCode).toUpperCase();
+    return /[ABCD-]/.test(char);
+}
+
+function validateMarksInput(event) {
+    var keyCode = event.which ? event.which : event.keyCode;
+    var char = String.fromCharCode(keyCode);
+    return /[1234]/.test(char);
+}
+
+function handleButtonClick(button) {
+    if (!focusedInput) return;
+    
+    var value = button.textContent;
+    var currentValue = focusedInput.value;
+    
+    if (focusedInput.id === 'studentAnswers' || focusedInput.id === 'correctAnswers') {
+        if (['A', 'B', 'C', 'D','-'].includes(value)) {
+            focusedInput.value = currentValue + value;
+        }
+    } else if (focusedInput.id === 'marksAwarded' || focusedInput.id === 'negativeMarks') {
+        if (['1', '2', '3', '4'].includes(value)) {
+            focusedInput.value = currentValue + value;
+        }
+    } else {
+        focusedInput.value = currentValue + value;
+    }
+    
+    calculateScore(); // Add this line to call calculateScore after updating the input
+    
+}
+
+function calculateScore() {
+  console.log('Calculating fn called...');
+    var studentAnswers = document.getElementById('studentAnswers').value.toUpperCase();
+    var correctAnswers = document.getElementById('correctAnswers').value.toUpperCase();
+    var marksAwarded = document.getElementById('marksAwarded').value;
+    var negativeMarks = document.getElementById('negativeMarks').value;
+
+    console.log('Student Answers:', studentAnswers);
+    console.log('Correct Answers:', correctAnswers);
+    console.log('Marks Awarded:', marksAwarded);
+    console.log('Negative Marks:', negativeMarks);
+    var score = 0;
+    var minLength = Math.min(studentAnswers.length, correctAnswers.length, marksAwarded.length);
+
+    for (var i = 0; i < minLength; i++) {
+      
+    console.log('Processing answer', i);
+    // rest of the loop
+   
+
+        if (studentAnswers[i] === correctAnswers[i]) {
+            score += parseInt(marksAwarded[i] || 0);
+        } else if (studentAnswers[i] !== '-' && correctAnswers[i] !== '-' && negativeMarks && negativeMarks.trim() !== '') {
+            score -= parseInt(negativeMarks[i] || 0);
+        }
+    }
+
+    document.getElementById('scoreDisplay').textContent = score;
+    console.log('Score:', score);
+}
+
+
+
+function printMarklist() 
+{
+ 
+sessionStorage.setItem("mrkArray", JSON.stringify(arr));
+
+schoolcollege1=document.getElementById("schoolcollege1").value;
+schoolcollege2=document.getElementById("schoolcollege2").value;
+examiner=document.getElementById("examiner").value;
+clas=document.getElementById("clas").value;
+deev=document.getElementById("deev").value;
+stream=document.getElementById("stream").value;
+subject=document.getElementById("subject").value;
+examination=document.getElementById("examination").value;
+max=document.getElementById("max").value;
+det=document.getElementById("det").value;
+
+sessionStorage.setItem("schoolcollege1", schoolcollege1);
+sessionStorage.setItem("schoolcollege2",schoolcollege2);
+sessionStorage.setItem("clas", clas);
+sessionStorage.setItem("deev", deev);
+sessionStorage.setItem("stream", stream);
+sessionStorage.setItem("subject", subject);
+sessionStorage.setItem("examination", examination);
+sessionStorage.setItem("max", max);
+sessionStorage.setItem("det", det);
+sessionStorage.setItem("examiner", examiner);
+
+ //open printML html file
+
+window.location.href = "PrintML.htm";
+ 
+}
+
+
+document.getElementById('studentAnswers').addEventListener('input', calculateScore);
+document.getElementById('correctAnswers').addEventListener('input', calculateScore);
+document.getElementById('marksAwarded').addEventListener('input', calculateScore);
+document.getElementById('negativeMarks').addEventListener('input', calculateScore);
+
+</script>
+</body>
+</html>
+
