@@ -66,6 +66,10 @@ const speciesData = [
     { img: 'bidi-leaf-tree.svg', localName: 'आपटा', scientific: 'Bauhinia racemosa' },
     { img: 'hapus.svg', localName: 'आंबा', scientific: 'Mangifera indica' },
     { img: 'saranga.svg', localName: 'सरंगा', scientific: 'Pampus argenteus (Silver Pomfret)' },
+    { img: 'Grand_Crinum_Lily_भुईशिरड.jpeg', localName: 'भुईशिरड', scientific: 'Crinum asiaticum' },
+    { img: 'Hibiscus_tiliacius_बेलपटा.jpeg', localName: 'बेलपटा', scientific: 'Hibiscus tiliaceus' },
+    { img: 'Little_Bell_Morning_Glory_इवळी_भोंवरी .jpeg', localName: 'इवळी भोंवरी', scientific: 'Ipomoea triloba' },
+    { img: 'Spreading_Canscora_किलवर.jpeg', localName: 'किलवर', scientific: 'Canscora diffusa' },
 ];
 
 // Function to create slug from scientific name
@@ -79,22 +83,23 @@ function createSlug(name) {
 
 // HTML template
 function generateHTML(species) {
+    const imgPath = species.img.endsWith('.svg') ? `./Images/${species.img}` : `./${species.img}`;
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${species.localName} (${species.scientific}) - 🌿 The Register (PBR)</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <header>
-        <a href="index.html" class="logo">🌿 BURAMBAD PBR</a>
+        <a href="../index.html" class="logo">🌿 BURAMBAD PBR</a>
         <nav>
-            <a href="index.html">Home</a>
-            <a href="register.html" class="active">The Register</a>
-            <a href="village.html">The Village</a>
-            <a href="contribute.html">Contribute</a>
+            <a href="../index.html">Home</a>
+            <a href="../register.html" class="active">The Register</a>
+            <a href="../village.html">The Village</a>
+            <a href="../contribute.html">Contribute</a>
         </nav>
     </header>
 
@@ -103,7 +108,7 @@ function generateHTML(species) {
             <section class="species-detail">
                 <h1>${species.localName} (${species.scientific})</h1>
                 <p><em>${species.scientific}</em></p>
-                <img src="./Img/placeholders/${species.img}" alt="${species.localName}" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+                <img src="${imgPath}" alt="${species.localName}" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
                 <div class="text-info">
                     <!-- Text info to be added later -->
                     <p>Placeholder for text information about ${species.localName}.</p>
