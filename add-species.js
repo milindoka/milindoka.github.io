@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const exifr = require('exifr');
 
 // Function to parse filename
 function parseFilename(filename) {
@@ -70,37 +71,56 @@ const modelPath = 'species/achyranthis-aspera.html';
 let modelContent = fs.readFileSync(modelPath, 'utf8');
 
 // Process each new image
-newImages.forEach(filename => {
-    const { latin, english, marathi } = parseFilename(filename);
-    const displayName = getDisplayName(latin, english);
-    const pageName = createPageName(latin);
+(async () => {
+    for (const filename of newImages) {
+        const { latin, english, marathi } = parseFilename(filename);
+        const displayName = getDisplayName(latin, english);
+        const pageName = createPageName(latin);
 
-    // Create HTML page
-    let pageContent = modelContent
-        .replace('आघाडा (Achyranthis aspera) - 🌿 The Register (PBR)', `${marathi} (${latin}) - 🌿 The Register (PBR)`)
-        .replace('<h1>आघाडा (Achyranthis aspera)</h1>', `<h1>${marathi} (${latin})</h1>`)
-        .replace('<em>Achyranthis aspera</em>', `<em>${latin}</em>`)
-        .replace('src="./Images/Achyranthis_aspera_अघाडा_आघाडा.jpeg"', `src="./Images/${filename}"`)
-        .replace('alt="आघाडा"', `alt="${marathi}"`)
-        .replace('Placeholder for text information about आघाडा.', `Placeholder for text information about ${marathi}.`);
+        // Extract creation date from image EXIF
+        let recordedDate = 'Unknown';
+        try {
+            const exif = await exifr.parse(path.join(imagesDir, filename), { pick: ['DateTimeOriginal', 'CreateDate', 'ModifyDate'] });
+            const dateValue = exif?.DateTimeOriginal || exif?.CreateDate || exif?.ModifyDate;
+            if (dateValue) {
+                const date = new Date(dateValue);
+                recordedDate = date.toLocaleDateString('en-IN', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+        } catch (error) {
+            console.log(`Could not extract date from ${filename}: ${error.message}`);
+        }
 
-    fs.writeFileSync(path.join('species', pageName), pageContent);
+        // Create HTML page
+        let pageContent = modelContent
+            .replace('आघाडा (Achyranthis aspera) - 🌿 The Register (PBR)', `${marathi} (${latin}) - 🌿 The Register (PBR)`)
+            .replace('<h1>आघाडा (Achyranthis aspera)</h1>', `<h1>${marathi} (${latin})</h1>`)
+            .replace('<em>Achyranthis aspera</em>', `<em>${latin}</em>`)
+            .replace('src="./Images/Achyranthis_aspera_अघाडा_आघाडा.jpeg"', `src="./Images/${filename}"`)
+            .replace('alt="आघाडा"', `alt="${marathi}"`)
+            .replace('Placeholder for text information about आघाडा.', `Placeholder for text information about ${marathi}.`);
 
-    // Add to register.html
-    const cardHTML = `
-                 <a href="species/${pageName}" class="species-card">
-                    <img src="species/Images/${filename}" alt="${marathi}">
-                    <div class="card-content">
-                        <h3>${marathi} (${displayName})</h3>
-                        <p><em>${latin}</em></p>
-                        <p>Status: Recorded</p>
-                        <p class="tag">Flora</p>
-                    </div>
-                </a>`;
+        fs.writeFileSync(path.join('species', pageName), pageContent);
 
-    registerContent = registerContent.replace(/(<section class="species-grid">[\s\S]*?)(\s*<\/section>)/, `$1${cardHTML}$2`);
-});
+        // Add to register.html
+        const cardHTML = `
+                     <a href="species/${pageName}" class="species-card">
+                        <img src="species/Images/${filename}" alt="${marathi}">
+                        <div class="card-content">
+                            <h3>${marathi} (${displayName})</h3>
+                            <p><em>${latin}</em></p>
+                            <p>Recorded on: ${recordedDate}</p>
+                            <p class="tag">Flora</p>
+                        </div>
+                    </a>`;
 
-fs.writeFileSync(registerPath, registerContent);
+        registerContent = registerContent.replace(/(<section class="species-grid">[\s\S]*?)(\s*<\/section>)/, `$1${cardHTML}$2`);
+    }
 
-console.log(`Added ${newImages.length} new species.`);
+    fs.writeFileSync(registerPath, registerContent);
+
+    console.log(`Added ${newImages.length} new species.`);
+})();
