@@ -67,7 +67,7 @@ if (newImages.length === 0) {
 }
 
 // Read model HTML
-const modelPath = 'species/achyranthis-aspera.html';
+const modelPath = 'species/achyranthes-aspera.html';
 let modelContent = fs.readFileSync(modelPath, 'utf8');
 
 // Process each new image
