@@ -6,29 +6,18 @@ const exifr = require('exifr');
 function parseFilename(filename) {
     const base = filename.replace('.jpeg', '').replace('.jpg', '');
     const parts = base.split('=').map(s => s.replace(/_/g, ' '));
-    let scientific = parts[0];
-    let english = parts[1] || scientific;
-    let marathi = parts[2] || parts[1] || scientific;
-
-    // Clean scientific: remove trailing numbers
-    scientific = scientific.replace(/\d+$/, '');
-
-    // Known corrections for misspellings
-    const corrections = {
-        'Achyranthis aspera': 'Achyranthes aspera',
-        'Chromolaena odorat': 'Chromolaena odorata',
-        'Justica adhatoda': 'Justicia adhatoda',
-        'Mucaana pruriens': 'Mucuna pruriens',
-        'Bridellia retusa': 'Bridelia retusa',
-        'Hydrophila auriculata': 'Hygrophila auriculata',
-        // Add more corrections as needed
-    };
-
-    if (corrections[scientific]) {
-        scientific = corrections[scientific];
+    let latin, english, marathi;
+    if (parts.length === 3) {
+        [latin, english, marathi] = parts;
+    } else if (parts.length === 2) {
+        [latin, marathi] = parts;
+        english = latin;
+    } else {
+        latin = parts[0];
+        english = latin;
+        marathi = latin;
     }
-
-    return { latin: scientific, english, marathi };
+    return { latin, english, marathi };
 }
 
 // Function to create display name
@@ -107,10 +96,10 @@ let modelContent = fs.readFileSync(modelPath, 'utf8');
 
         // Create HTML page
         let pageContent = modelContent
-            .replace('आघाडा (Achyranthes aspera) - 🌿 The Register (PBR)', `${marathi} (${latin}) - 🌿 The Register (PBR)`)
-            .replace('<h1>आघाडा (Achyranthes aspera)</h1>', `<h1>${marathi} (${latin})</h1>`)
-            .replace('<em>Achyranthes aspera</em>', `<em>${latin}</em>`)
-            .replace('src="./Images/Achyranthes_aspera_अघाडा_आघाडा.jpeg"', `src="./Images/${filename}"`)
+            .replace('आघाडा (Achyranthis aspera) - 🌿 The Register (PBR)', `${marathi} (${latin}) - 🌿 The Register (PBR)`)
+            .replace('<h1>आघाडा (Achyranthis aspera)</h1>', `<h1>${marathi} (${latin})</h1>`)
+            .replace('<em>Achyranthis aspera</em>', `<em>${latin}</em>`)
+            .replace('src="./Images/Achyranthis_aspera_अघाडा_आघाडा.jpeg"', `src="./Images/${filename}"`)
             .replace('alt="आघाडा"', `alt="${marathi}"`)
             .replace('Placeholder for text information about आघाडा.', `Placeholder for text information about ${marathi}.`);
 
