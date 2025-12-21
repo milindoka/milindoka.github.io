@@ -204,7 +204,7 @@ createTable();
 
 const today = new Date();
 document.getElementById("det").value=formatDate(today);
-document.getElementById("oralpract").value='HSC-Oral-Feb-'+today.getFullYear();
+document.getElementById("oralpract").value='HSC-Oral-Feb-'+(today.getFullYear()%100);
 
 function formatDate(D){
     var pad = function(num) {
