@@ -106,8 +106,11 @@ let modelContent = fs.readFileSync(modelPath, 'utf8');
 
         // Create HTML page
         let pageContent = modelContent
+            .replace('<title>आघाडा (Achyranthis aspera) - 🌿 The Register (PBR)</title>', `<title>${marathi} (${latin}) - 🌿 The Register (PBR)</title>`)
             .replace('आघाडा (Achyranthes aspera) - 🌿 The Register (PBR)', `${marathi} (${latin}) - 🌿 The Register (PBR)`)
+            .replace('<h1>आघाडा (Achyranthis aspera)</h1>', `<h1>${marathi} (${latin})</h1>`)
             .replace('<h1>आघाडा (Achyranthes aspera)</h1>', `<h1>${marathi} (${latin})</h1>`)
+            .replace('<em>Achyranthis aspera</em>', `<em>${latin}</em>`)
             .replace('<em>Achyranthes aspera</em>', `<em>${latin}</em>`)
             .replace('src="./Images/Achyranthes_aspera_अघाडा_आघाडा.jpeg"', `src="./Images/${filename}"`)
             .replace('alt="आघाडा"', `alt="${marathi}"`)
