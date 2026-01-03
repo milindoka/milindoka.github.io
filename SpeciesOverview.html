@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .menu-bar {
+            background-color: #f0f0f0;
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        .menu {
+            display: inline-block;
+            position: relative;
+            margin-right: 20px;
+        }
+        .menu > button {
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .menu > button:hover {
+            background-color: #e0e0e0;
+        }
+        .submenu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            min-width: 120px;
+            z-index: 1;
+        }
+        .submenu button {
+            display: block;
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .submenu button:hover {
+            background-color: #f0f0f0;
+        }
+        .table-container {
+            overflow: auto;
+            max-height: 80vh;
+            max-width: 100vw;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        .sr-column {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            width: 50px;
+        }
+        .editable-cell {
+            cursor: text;
+        }
+        .editable-cell:focus {
+            outline: 2px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <div class="menu">
+            <button id="file-menu">File</button>
+            <div class="submenu" id="file-submenu">
+                <button id="new-file">New</button>
+                <button id="load-file">Load</button>
+                <button id="save-file">Save</button>
+            </div>
+        </div>
+        <div class="menu">
+            <button id="edit-menu">Edit</button>
+            <div class="submenu" id="edit-submenu">
+                <button id="add-row">Add Row</button>
+                <button id="delete-row">Delete Row</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table id="data-table">
+            <thead id="table-head">
+                <!-- Headers will be generated here -->
+            </thead>
+            <tbody id="table-body">
+                <!-- Rows will be generated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <input type="file" id="file-input" style="display: none;" accept=".html">
+
+    <script>
+        // Configuration
+        const columnTitles = ["Latin Name", "English Name", "Marathi Name", "Perennial",
+         "Fencing", "Ornamental", "Seed", "Cuttings", "IUCN Status"];
+        const initialRowCount = 10;
+
+        let currentRowCount = initialRowCount;
+
+        // DOM elements
+        const table = document.getElementById('data-table');
+        const tableHead = document.getElementById('table-head');
+        const tableBody = document.getElementById('table-body');
+        const fileInput = document.getElementById('file-input');
+
+        // Menu elements
+        const fileMenu = document.getElementById('file-menu');
+        const fileSubmenu = document.getElementById('file-submenu');
+        const editMenu = document.getElementById('edit-menu');
+        const editSubmenu = document.getElementById('edit-submenu');
+
+        // Menu button elements
+        const newFileBtn = document.getElementById('new-file');
+        const loadFileBtn = document.getElementById('load-file');
+        const saveFileBtn = document.getElementById('save-file');
+        const addRowBtn = document.getElementById('add-row');
+        const deleteRowBtn = document.getElementById('delete-row');
+
+        // Initialize table
+        function initializeTable() {
+            generateHeaders();
+            generateRows(initialRowCount);
+            updateSerialNumbers();
+        }
+
+        // Generate table headers
+        function generateHeaders() {
+            const headerRow = document.createElement('tr');
+
+            // Sr column
+            const srHeader = document.createElement('th');
+            srHeader.textContent = 'Sr';
+            srHeader.className = 'sr-column';
+            headerRow.appendChild(srHeader);
+
+            // Data columns
+            columnTitles.forEach(title => {
+                const th = document.createElement('th');
+                th.textContent = title;
+                headerRow.appendChild(th);
+            });
+
+            tableHead.innerHTML = '';
+            tableHead.appendChild(headerRow);
+        }
+
+        // Generate table rows
+        function generateRows(count) {
+            tableBody.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const row = document.createElement('tr');
+
+                // Sr column
+                const srCell = document.createElement('td');
+                srCell.className = 'sr-column';
+                srCell.textContent = (i + 1).toString();
+                row.appendChild(srCell);
+
+                // Data columns
+                columnTitles.forEach(() => {
+                    const cell = document.createElement('td');
+                    cell.className = 'editable-cell';
+                    cell.contentEditable = 'true';
+                    cell.textContent = '';
+                    row.appendChild(cell);
+                });
+
+                tableBody.appendChild(row);
+            }
+            currentRowCount = count;
+        }
+
+        // Update serial numbers
+        function updateSerialNumbers() {
+            const rows = tableBody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                const srCell = row.querySelector('.sr-column');
+                srCell.textContent = (index + 1).toString();
+            });
+        }
+
+        // Handle keyboard navigation
+        function handleKeyNavigation(event) {
+            if (event.target.classList.contains('editable-cell')) {
+                const cell = event.target;
+                const row = cell.parentElement;
+                const cellIndex = Array.from(row.children).indexOf(cell);
+                let nextCell = null;
+
+                switch (event.key) {
+                    case 'ArrowUp':
+                        event.preventDefault();
+                        const prevRow = row.previousElementSibling;
+                        if (prevRow) {
+                            nextCell = prevRow.children[cellIndex];
+                        }
+                        break;
+                    case 'ArrowDown':
+                        event.preventDefault();
+                        const nextRow = row.nextElementSibling;
+                        if (nextRow) {
+                            nextCell = nextRow.children[cellIndex];
+                        }
+                        break;
+                    case 'ArrowLeft':
+                        event.preventDefault();
+                        if (cellIndex > 1) { // Skip Sr column
+                            nextCell = row.children[cellIndex - 1];
+                        }
+                        break;
+                    case 'ArrowRight':
+                        event.preventDefault();
+                        if (cellIndex < row.children.length - 1) {
+                            nextCell = row.children[cellIndex + 1];
+                        }
+                        break;
+                }
+
+                if (nextCell && nextCell.classList.contains('editable-cell')) {
+                    nextCell.focus();
+                    // Move cursor to end of content
+                    const range = document.createRange();
+                    const selection = window.getSelection();
+                    range.selectNodeContents(nextCell);
+                    range.collapse(false);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            }
+        }
+
+        // Menu functionality
+        function toggleSubmenu(submenu) {
+            const allSubmenus = document.querySelectorAll('.submenu');
+            allSubmenus.forEach(menu => {
+                if (menu !== submenu) {
+                    menu.style.display = 'none';
+                }
+            });
+            submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function addRow() {
+            const newRow = document.createElement('tr');
+
+            // Sr column
+            const srCell = document.createElement('td');
+            srCell.className = 'sr-column';
+            newRow.appendChild(srCell);
+
+            // Data columns
+            columnTitles.forEach(() => {
+                const cell = document.createElement('td');
+                cell.className = 'editable-cell';
+                cell.contentEditable = 'true';
+                cell.textContent = '';
+                newRow.appendChild(cell);
+            });
+
+            tableBody.appendChild(newRow);
+            updateSerialNumbers();
+            currentRowCount++;
+        }
+
+        function deleteRow() {
+            if (currentRowCount > 1) {
+                const lastRow = tableBody.lastElementChild;
+                tableBody.removeChild(lastRow);
+                currentRowCount--;
+            }
+        }
+
+        function newFile() {
+            if (confirm('Are you sure you want to create a new file? All unsaved changes will be lost.')) {
+                generateRows(initialRowCount);
+                updateSerialNumbers();
+            }
+        }
+
+        function loadFile() {
+            fileInput.click();
+        }
+
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    // Parse the HTML content and extract table data
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(content, 'text/html');
+                    const loadedTable = doc.querySelector('#data-table');
+
+                    if (loadedTable) {
+                        // Extract column titles
+                        const loadedHeaders = loadedTable.querySelectorAll('th');
+                        const newColumnTitles = [];
+                        for (let i = 1; i < loadedHeaders.length; i++) { // Skip Sr column
+                            newColumnTitles.push(loadedHeaders[i].textContent);
+                        }
+
+                        // Update column titles and regenerate table
+                        window.columnTitles = newColumnTitles;
+                        generateHeaders();
+
+                        // Extract row data
+                        const loadedRows = loadedTable.querySelectorAll('tbody tr');
+                        tableBody.innerHTML = '';
+
+                        loadedRows.forEach((loadedRow, index) => {
+                            const newRow = document.createElement('tr');
+
+                            // Sr column
+                            const srCell = document.createElement('td');
+                            srCell.className = 'sr-column';
+                            srCell.textContent = (index + 1).toString();
+                            newRow.appendChild(srCell);
+
+                            // Data columns
+                            const loadedCells = loadedRow.querySelectorAll('td');
+                            for (let i = 1; i < loadedCells.length; i++) { // Skip Sr column
+                                const cell = document.createElement('td');
+                                cell.className = 'editable-cell';
+                                cell.contentEditable = 'true';
+                                cell.textContent = loadedCells[i].textContent;
+                                newRow.appendChild(cell);
+                            }
+
+                            tableBody.appendChild(newRow);
+                        });
+
+                        currentRowCount = loadedRows.length;
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function saveFile() {
+            // Generate HTML content
+            const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .sr-column {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Saved Table Data</h1>
+    ${table.outerHTML}
+</body>
+</html>`;
+
+            // Create blob and download
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'table_data.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Event listeners
+        document.addEventListener('keydown', handleKeyNavigation);
+
+        fileMenu.addEventListener('click', () => toggleSubmenu(fileSubmenu));
+        editMenu.addEventListener('click', () => toggleSubmenu(editSubmenu));
+
+        newFileBtn.addEventListener('click', newFile);
+        loadFileBtn.addEventListener('click', loadFile);
+        saveFileBtn.addEventListener('click', saveFile);
+        addRowBtn.addEventListener('click', addRow);
+        deleteRowBtn.addEventListener('click', deleteRow);
+
+        fileInput.addEventListener('change', handleFileLoad);
+
+        // Close submenus when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.menu')) {
+                document.querySelectorAll('.submenu').forEach(menu => {
+                    menu.style.display = 'none';
+                });
+            }
+        });
+
+        // Initialize the table when the page loads
+        initializeTable();
+    </script>
+</body>
+</html>
