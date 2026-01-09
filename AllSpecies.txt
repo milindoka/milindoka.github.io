@@ -1,0 +1,90 @@
+Achyranthes aspera,Achyranthes Aspera,आघाडा
+Chromolaena odorata,Chromolaena odorata,तीव्रगंधा
+Barleria cristata,Pink Barleria,कोरांटी
+Zanthoxylum rhetsa,Indian Ivy Rue,तिरफळ
+Pavetta indica,Pavetta indica,नाडुकली
+Tecoma stans,Tecoma stans,टेकोमा
+Thunbergia erecta,Thunbergia erecta,थुंबर्गिया
+Barleria cristata,White Barleria,पांढरी कोरांटी
+Zingiber cernuum,Zingiber cernuum,रानआले
+Justicia adhatoda,Adulsa,अडुळसा
+Cynarospermum asperrimum,Cynarospermum asperrimum,डिकणा
+Gliricidia sepium,Gliricidia sepium,गिरीपुष्प
+Hibiscus tiliacius,Hibiscus tiliacius,बेलपटा
+Spreading Canscora,Spreading Canscora,किलवर
+Ipomoea triloba,Little Bell Morning Glory,इवळी भोंवरी
+Grand Crinum Lily,Grand Crinum Lily,भुईशिरड
+Commelina benghalensis,Bengal Dayflower,केना
+Elephantopus scaber,Elephantopus scaber,हस्तीपात
+Jasminum multiflorum,Star Jasmine,कुंद
+Bridelia retusa,Spinous Kino Tree,असाणा
+Ziziphus oenopolia,Jackle Jujube,येरूणी
+Triumfetta rhomboidea,Burr Bush,झिंझर्डी
+Celosia argentea,Silver Cockscomb,कुरडू
+Dillenia pentagyna,Dog Teak,पिवळा करमळ-छोटा करमळ
+Lantana camara,Lantana,घाणेरी-टणटणी
+Syndrella nodiflora,Cindrella Weed,सिंड्रेला
+Cheilocostus speciosus,Crepe Ginger,पेव
+Cinnamomum verum,Cinnamon,दालचिनी
+Nymphaea pubescens,White Water Lily,लिली
+Volkameria imermis,Indian Privet,वनजाई
+Eranthemum roseum,Rosy Eranthemum,रान आबोली
+Achyranthes bidentata,Ox Knee,आघाडा
+Carissa carandas,Karanda,करवंद
+Aethaloessa calidalis,Aethaloessa Calidalis,लाल गोधडी
+Blumea lacera,Lettuce-Leaf Blumea,भांबु्र्डी,बुरंडो
+Hygrophila auriculata,Marsh Barbel,एखरा,गोक्षुर
+Junonia atlites,Grey Pancy,राखी भिरभिरी
+Mimusops elengi,Spanish Cherry,बकुळ
+Strobilanthes pavala,Shade-loving Coneflower,मोरपंखी
+Mucuna pruriens,Velvet Bean,खाजकुयली
+Baleria prionitis,Porcupine Flower,पिवळी कोरांटी
+Leea macrophylla,Large Leaf Leea,दिंडा
+Excoecaria agallocha,Blinding Tree,गेवा
+Air Potato,Dioscorea Bulbifera,कडु करंडा
+Peperomia pellucida,Shiny Bush,टोयाकांधा
+Ficus benghalensis,Banyan Tree,वड
+Samanea saman,Rain Tree,पर्जन्य वृक्ष
+Selaginella delicatula,Delicate Spikemoss,स्पाईकमॉस
+Unknown,Unknown3,Unknown3
+Vitex negundo,Five-leaved Chaste Tree,निर्गुडी
+Bombax ceiba,Red Silk Cotton Tree,काटेसावर
+Acmella radicans,White-spot Flower,शुभ्रडागी
+Caryota urens,Jaggery Palm,भेरली माड
+Lablab purpureus,Hyacinth Bean,घेवडा
+Mimosa pudica,Touch-me-not,लाजाळू
+Pogostemon deccanensis,Jambli Manjiri,जांभळी मंजिरी
+Urena lobata,Caesar Weed,चिकटभेंडी
+Vachellia Nilotica,Gum Arabic Tree,बाभुळ
+Paramorsimus sp.,Leafy Mimic Katydid,पानरूप झिंगट
+Pteris biaurita,Thinleaf Brake,दुहेरी धायटी
+Sphagneticola trilobata,Trailing Daisy,त्रिखंडीसुर्य
+Hyblaea puera,Teak Defoliator,साखाऊ
+Abelmoschus manihot,Aibika,रानभेंडी
+Euphorbia neriifolia,Indian Spurge,मिंगुट
+Megathyrsus maximus,Guinea Grass,गिनि गवत
+Sida rhombifolia,Cuban Jute,सहदेवी
+Bambusa bambos,Indian Thorny Bamboo,कळक,माणगा,वेळू
+Crassocephalum crepidioides,Redflower Ragleaf,नागोंडा
+Curcuma longa,Turmeric,हळद
+Dicliptera paniculata,Panicled Foldwing,काकजंघा, पित्तपापडा
+Euphorbia tithymaloides,Devil's Backbone,चपलफुल
+Ficus exasperata,Sandpaper Tree,करवत
+Flueggea leucopyrus,Indian Snow Berry,पांढरफळी
+Oplismenus undulatifolius,Wavyleaf Basketgrass,लहरी
+Tectona grandis,Teak,सागवान
+Acacia auriculiformis,Earpod Wattle,कर्णबाभूळ
+Cyathocline purpurea,Gangotra,गंगोत्र
+Ixora coccinea,Jungle Flame,बाकोळी
+Chrysanthemum indicum,Indian Chrysanthemum,शेवंती
+Hedychium coronarium,Butterfly Ginger Lily,सोनटक्का
+Bauhinia racemosa,Bidi-Leaf Tree,आपटा
+Distimake vitifolius,Grape-Leaf Wood Rose,नवली
+Tagetes erecta,Mexican Merigold,झेंडू
+Cynodon dactylon,Bermuda Grass,दुर्वा
+Unknown,Unknown2,अनोळखी2
+Musa bulbisiana,Banana,केळे
+Bougainvillea spectabilis,Great Bogunvillea,बोगनवेल
+Calliandra haematocephala,Scarlet Powder-Puff,रक्तपुष्प
+Ipomoea carnea,Bush Morning Glory,बेशरम
+Spiny Bottle Brush,Haplanthodes Verticillata,जांभळा जकारा
