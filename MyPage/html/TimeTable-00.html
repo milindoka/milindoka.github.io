@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Time Table App</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+        }
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .left {
+            background-color: #e0f7fa; /* Light Cyan */
+            border-right: 1px solid #ccc;
+        }
+        .right {
+            background-color: #fff3e0; /* Light Orange/Peach */
+        }
+        .divider {
+            width: 10px;
+            background-color: #ccc;
+            cursor: ew-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .divider::before {
+            content: '⋮⋮';
+            color: #666;
+            font-size: 20px;
+            transform: rotate(90deg);
+        }
+        .value-display {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #00796b;
+        }
+        #masterTable {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #masterTable th, #masterTable td {
+            border: 1px solid #b2dfdb; /* Cyan border */
+            padding: 4px;
+            text-align: center;
+        }
+        #masterTable th {
+            background-color: #00bcd4; /* Cyan header */
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        .editable-cell {
+            width: 100%;
+            box-sizing: border-box;
+            border: none;
+            text-align: center;
+            padding: 8px 4px;
+            background-color: transparent;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        .editable-cell:focus {
+            outline: 2px solid #ff9800; /* Orange focus */
+            background-color: #ffe0b2; /* Light orange background on focus */
+        }
+        .editable-cell[readonly] {
+            background-color: #f0f0f0; /* Light gray background for non-editable cells */
+        }
+        
+        /* Teacher Timetable Styling */
+        #timetableDisplay table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #timetableDisplay th, #timetableDisplay td {
+            border: 1px solid #ffcc80; /* Light orange border */
+            padding: 10px;
+            text-align: center;
+        }
+        #timetableDisplay th {
+            background-color: #ff9800; /* Orange header */
+            color: white;
+            font-size: 16px;
+        }
+        #timetableDisplay .class-cell {
+            background-color: #fff8e1; /* Very light orange for class cells */
+            font-weight: 600;
+            color: #d84315; /* Dark orange text */
+        }
+        #timetableDisplay .free-cell {
+            background-color: #e0e0e0; /* Light gray for free periods */
+            color: #616161;
+            font-style: italic;
+        }
+        #timetableDisplay .time-cell {
+            font-weight: bold;
+            background-color: #ffebcc;
+        }
+
+        /* Additional simple styling classes */
+        .header-left {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #00796b;
+        }
+        .controls {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .input-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+        .input {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            width: 100%;
+            max-width: 20rem;
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .input-small {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            width: 100%;
+            max-width: 7rem;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .input:focus {
+            outline: 2px solid #f97316;
+        }
+        .btn-primary {
+            background-color: #f97316;
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #ea580c;
+        }
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .btn-green {
+            background-color: #22c55e;
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-green:hover {
+            background-color: #16a34a;
+        }
+        .btn-blue {
+            background-color: #3b82f6;
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-blue:hover {
+            background-color: #2563eb;
+        }
+        .btn-purple {
+            background-color: #a855f7;
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-purple:hover {
+            background-color: #9333ea;
+        }
+        .center-buttons {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+        .btn-gray {
+            background-color: #374151;
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-gray:hover {
+            background-color: #1f2937;
+        }
+        .btn-red {
+            background-color: #ef4444;
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-red:hover {
+            background-color: #dc2626;
+        }
+        .header-right {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #d84315;
+        }
+        .full-width {
+            width: 100%;
+        }
+        .center-text {
+            text-align: center;
+            color: #4b5563;
+            margin-top: 2.5rem;
+        }
+        .error-text {
+            text-align: center;
+            color: #ef4444;
+            margin-top: 2.5rem;
+            font-weight: 500;
+        }
+        .header-teacher {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-align: center;
+            color: #d84315;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .clash-info {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #e91e63;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background-color: #fce4ec;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="panel left">
+        <h2 class="header-left">Master Time Table Editor</h2>
+
+        <div class="controls">
+            <div class="input-row">
+                <input type="text" id="teacherCodeInput" maxlength="2" placeholder="Enter Teacher Code (e.g., MO)" class="input-small">
+                <button id="generateBtn" class="btn-primary">
+                    Generate Time Table
+                </button>
+            </div>
+        </div>
+
+        <div class="button-row">
+            <button onclick="loadDefaultData()" class="btn-green">Load Sample Data</button>
+            <button onclick="newTimeTable()" class="btn-red">New Time Table</button>
+            <button onclick="saveToFile()" class="btn-blue">Save Table</button>
+            <input type="file" id="fileInput" accept=".html" style="display: none;">
+            <button onclick="loadFromFile()" class="btn-purple">Load Table</button>
+            <button onclick="printCurrent()" class="btn-gray">Print Current</button>
+            <button onclick="printAllTeachers()" class="btn-gray">Print All Teachers</button>
+            <button onclick="printAllClasses()" class="btn-gray">Print All Classes</button>
+        </div>
+
+        <div class="center-buttons">
+            <button onclick="addRow()" class="btn-gray">Add Time Slot</button>
+            <button onclick="addClassRow()" class="btn-blue">Add Class Row</button>
+            <button onclick="deleteRow()" class="btn-red">Delete Last Slot</button>
+        </div>
+
+        <table id="masterTable">
+            <thead>
+                <tr>
+                    <th>Time/Section</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="panel right">
+        <div id="timetableDisplay" class="full-width">
+            <p class="center-text">
+                Enter a teacher code and click 'Generate Time Table' to see their personalized schedule here.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDefaultData(); // Load sample data on startup
+            document.getElementById('generateBtn').addEventListener('click', generateTeacherTimetable);
+            addKeyboardNavigation(); // Add keyboard navigation to inputs
+        });
+
+        const COLUMNS = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        // --- Core Time Table Generation Logic ---
+
+        /**
+         * Parses the master table, extracts the schedule for a specific teacher, and returns the HTML.
+         */
+        function getTeacherTimetableHTML(teacherCode) {
+            let html = '';
+            
+            if (teacherCode.length !== 2) {
+                html = `<p class="error-text">
+                    Please enter a valid two-character teacher code (e.g., MO, CN).
+                </p>`;
+                return html;
+            }
+
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            
+            if (rows.length === 0) {
+                html = `<p class="center-text">
+                    Master Time Table is empty. Please load or input data first.
+                </p>`;
+                return html;
+            }
+
+            // 1. Extract and Structure Master Data
+            const timeSlots = [];
+            let currentSlot = null;
+
+            // Iterate over every two rows (Time Row and Section/Class Rows)
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                
+                // First cell contains either Time (10:00-11:00) or Section (FY-A)
+                const firstCell = cells[0].value.trim();
+
+                // Check if this is a new Time Slot Row (e.g., 10:00-11:00)
+                if (firstCell.includes('-') && firstCell.includes(':')) {
+                    if (currentSlot) {
+                        timeSlots.push(currentSlot);
+                    }
+                    currentSlot = {
+                        time: firstCell,
+                        sections: []
+                    };
+                } 
+                // Check if this is a Section Row (e.g., FY-A)
+                else if (currentSlot && firstCell !== '' && firstCell.toUpperCase() !== 'LUNCH') {
+                    const sectionSchedule = {
+                        section: firstCell,
+                        schedule: {}
+                    };
+                    
+                    // Iterate through Mon to Sat (indices 1 to 6)
+                    for (let j = 1; j < COLUMNS.length; j++) {
+                        sectionSchedule.schedule[COLUMNS[j]] = cells[j].value.trim();
+                    }
+                    currentSlot.sections.push(sectionSchedule);
+                }
+            }
+            // Push the last slot
+            if (currentSlot) {
+                timeSlots.push(currentSlot);
+            }
+
+            // 2. Build the Teacher's Personal Schedule
+            const teacherSchedule = {};
+            const counts = {}; // For subcounts
+            let clashCount = 0; // Initialize clash counter
+
+            timeSlots.forEach(slot => {
+                const time = slot.time;
+                teacherSchedule[time] = {};
+
+                COLUMNS.slice(1).forEach(day => { // Iterate Mon through Sat
+                    let assignments = [];
+
+                    slot.sections.forEach(sectionData => {
+                        const classValue = sectionData.schedule[day]; // e.g., 'MAT(MO),ECO(ZP)'
+
+                        const parts = classValue.split(',');
+                        parts.forEach(part => {
+                            const trimmed = part.trim();
+                            if (trimmed.match(new RegExp(`\\(${teacherCode}\\)$`, 'i'))) {
+                                const subject = trimmed.split('(')[0];
+                                assignments.push(`${subject} (${sectionData.section})`);
+                            }
+                        });
+                    });
+
+                    const sectionInfo = assignments.length > 0 ? assignments.join('<br>') : 'Free';
+                    teacherSchedule[time][day] = sectionInfo;
+
+                    // Count clashes: if more than one assignment in this time slot and day
+                    if (assignments.length > 1) {
+                        clashCount++;
+                    }
+
+                    // Collect counts
+                    if (assignments.length > 0) {
+                        assignments.forEach(ass => {
+                            const parts = ass.split(' (');
+                            const subject = parts[0];
+                            const section = parts[1].slice(0, -1);
+                            if (!counts[section]) counts[section] = {};
+                            counts[section][subject] = (counts[section][subject] || 0) + 1;
+                        });
+                    }
+                });
+            });
+
+            // 3. Render the Output Table
+            const timeSlotsKeys = Object.keys(teacherSchedule);
+
+            // Calculate period count
+            let periodCount = 0;
+            timeSlotsKeys.forEach(time => {
+                COLUMNS.slice(1).forEach(day => {
+                    if (teacherSchedule[time][day] !== 'Free') {
+                        periodCount++;
+                    }
+                });
+            });
+
+            html += `<p class="clash-info">Clashes : ${clashCount}</p>`;
+
+            html += `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>${teacherCode}-${periodCount}</th>
+                            ${COLUMNS.slice(1).map(day => `<th>${day}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            if (timeSlotsKeys.length === 0) {
+                html = `<p class="error-text">
+                    No time slots defined in the Master Table.
+                </p>`;
+            } else {
+                timeSlotsKeys.forEach(time => {
+                    html += `<tr><td class="time-cell">${time}</td>`;
+                    COLUMNS.slice(1).forEach(day => {
+                        const content = teacherSchedule[time][day];
+                        const cellClass = content === 'Free' ? 'free-cell' : 'class-cell';
+                        html += `<td class="${cellClass}">${content.replace(/,/g, '<br>')}</td>`;
+                    });
+                    html += `</tr>`;
+                });
+            }
+
+            html += `</tbody></table>`;
+
+            // Add summary table
+            let summaryHTML = '<table style="margin-top: 20px;"><thead><tr><th>Section</th><th>Subject</th><th>Periods</th></tr></thead><tbody>';
+            for (let section in counts) {
+                for (let subject in counts[section]) {
+                    summaryHTML += `<tr><td>${section}</td><td>${subject}</td><td>${counts[section][subject]}</td></tr>`;
+                }
+            }
+            summaryHTML += '</tbody></table>';
+            html += summaryHTML;
+
+            return html;
+        }
+
+        /**
+         * Parses the master table, extracts the schedule for a specific teacher, and displays it.
+         */
+        function generateTeacherTimetable() {
+            const teacherCode = document.getElementById('teacherCodeInput').value.trim().toUpperCase();
+            const displayDiv = document.getElementById('timetableDisplay');
+            displayDiv.innerHTML = getTeacherTimetableHTML(teacherCode);
+        }
+
+        /**
+         * Parses the master table, extracts the schedule for a specific section, and displays it.
+         */
+        function generateClassTimetable(sectionName) {
+            const displayDiv = document.getElementById('timetableDisplay');
+            
+            if (sectionName.length === 0) {
+                displayDiv.innerHTML = `<p class="error-text">
+                    Please enter a valid section name.
+                </p>`;
+                return;
+            }
+
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            
+            if (rows.length === 0) {
+                displayDiv.innerHTML = `<p class="center-text">
+                    Master Time Table is empty. Please load or input data first.
+                </p>`;
+                return;
+            }
+
+            const classSchedule = {};
+            const counts = {}; // For subcounts
+            let currentTimeSlot = null;
+
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                // Check for Time Slot Row (e.g., 10:00-11:00)
+                if (firstCell.includes('-') && firstCell.includes(':')) {
+                    currentTimeSlot = firstCell; // Update the current time slot
+                    classSchedule[currentTimeSlot] = null; // Initialize slot
+                }
+                // Check for Section Row (e.g., FY-A) and if it matches the target section
+                else if (currentTimeSlot && firstCell.toUpperCase() === sectionName.toUpperCase()) {
+                    const dailySchedule = {};
+                    // Iterate through Mon to Sat (indices 1 to 6)
+                    for (let j = 1; j < COLUMNS.length; j++) {
+                        const classValue = cells[j].value.trim();
+                        // Store the result for this Time/Day
+                        dailySchedule[COLUMNS[j]] = classValue || 'Free';
+                        // Collect counts
+                        if (classValue && classValue !== 'Free') {
+                            const subject = classValue.split('(')[0];
+                            counts[subject] = (counts[subject] || 0) + 1;
+                        }
+                    }
+                    classSchedule[currentTimeSlot] = dailySchedule;
+                    currentTimeSlot = null; // Reset current time slot to avoid mis-association with following rows
+                }
+            });
+
+            // Calculate total periods
+            let totalPeriods = 0;
+            for (let subject in counts) {
+                totalPeriods += counts[subject];
+            }
+
+            // 3. Render the Output Table
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>${sectionName.toUpperCase()}-${totalPeriods}</th>
+                            ${COLUMNS.slice(1).map(day => `<th>${day}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            const timeSlotsKeys = Object.keys(classSchedule);
+            if (timeSlotsKeys.length === 0) {
+                html = `<p class="error-text">
+                    Section **${sectionName.toUpperCase()}** not found in the Master Table.
+                </p>`;
+            } else {
+                timeSlotsKeys.forEach(time => {
+                    const schedule = classSchedule[time];
+                    if (schedule) {
+                        html += `<tr><td class="time-cell">${time}</td>`;
+                        COLUMNS.slice(1).forEach(day => {
+                            const content = schedule[day];
+                            const isFree = content.toUpperCase() === 'FREE' || content === '';
+                            // Use light cyan colors for the class timetable for visual distinction
+                            const cellClass = isFree ? 'free-cell' : 'class-cell';
+                            html += `<td class="${cellClass}" style="background-color: ${isFree ? '#e0f7fa' : '#b2ebf2'}; color: #00796b; font-weight: ${isFree ? 'normal' : '600'};">${(content || 'Free').replace(/,/g, '<br>')}</td>`;
+                        });
+                        html += `</tr>`;
+                    }
+                });
+            }
+
+            html += `</tbody></table>`;
+
+            // Add summary table
+            let summaryHTML = '<table style="margin-top: 20px;"><thead><tr><th>Section</th><th>Subject</th><th>Periods</th></tr></thead><tbody>';
+            for (let subject in counts) {
+                summaryHTML += `<tr><td>${sectionName.toUpperCase()}</td><td>${subject}</td><td>${counts[subject]}</td></tr>`;
+            }
+            summaryHTML += '</tbody></table>';
+            html += summaryHTML;
+
+            displayDiv.innerHTML = html;
+        }
+
+
+        // --- Keyboard Navigation Function ---
+
+        function addKeyboardNavigation() {
+            const inputs = document.querySelectorAll('.editable-cell');
+            inputs.forEach((input, index) => {
+                input.addEventListener('keydown', handleKey);
+                // Attach handleFocus to all cells (including the first column)
+                input.addEventListener('focus', handleFocus); 
+            });
+        }
+
+        function handleKey(event) {
+            const key = event.key;
+            if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key)) return;
+
+            event.preventDefault();
+
+            const inputs = Array.from(document.querySelectorAll('.editable-cell'));
+            const currentIndex = inputs.indexOf(event.target);
+            const rowLength = COLUMNS.length; // 7
+            const totalInputs = inputs.length;
+            let newIndex;
+
+            if (key === 'ArrowLeft') {
+                const col = currentIndex % rowLength;
+                if (col === 0) {
+                    newIndex = currentIndex + rowLength - 1;
+                } else {
+                    newIndex = currentIndex - 1;
+                }
+            } else if (key === 'ArrowRight') {
+                const col = currentIndex % rowLength;
+                if (col === rowLength - 1) {
+                    newIndex = currentIndex - rowLength + 1;
+                } else {
+                    newIndex = currentIndex + 1;
+                }
+            } else if (key === 'ArrowUp') {
+                newIndex = currentIndex - rowLength;
+                if (newIndex < 0) {
+                    newIndex += totalInputs;
+                }
+            } else if (key === 'ArrowDown') {
+                newIndex = currentIndex + rowLength;
+                if (newIndex >= totalInputs) {
+                    newIndex -= totalInputs;
+                }
+            }
+
+            // Skip readonly cells for all arrow key movements
+            let targetIndex = newIndex;
+            const isVertical = key === 'ArrowUp' || key === 'ArrowDown';
+            const step = isVertical ? (key === 'ArrowUp' ? -rowLength : rowLength) : (key === 'ArrowLeft' ? -1 : 1);
+            if (inputs[targetIndex] && inputs[targetIndex].readOnly) {
+                let originalIndex = currentIndex;
+                do {
+                    targetIndex += step;
+                    if (isVertical) {
+                        if (targetIndex < 0) targetIndex += totalInputs;
+                        if (targetIndex >= totalInputs) targetIndex -= totalInputs;
+                    } else {
+                        // For horizontal, wrap within row
+                        const rowStart = Math.floor(currentIndex / rowLength) * rowLength;
+                        const rowEnd = rowStart + rowLength - 1;
+                        if (targetIndex < rowStart) targetIndex = rowEnd;
+                        if (targetIndex > rowEnd) targetIndex = rowStart;
+                    }
+                } while (inputs[targetIndex].readOnly && targetIndex !== originalIndex); // Prevent infinite loop
+            }
+
+            inputs[targetIndex].focus();
+        }
+
+        // Function to handle focus on editable cells
+        function handleFocus(event) {
+            const input = event.target;
+
+            // If the cell is non-editable (readonly), move focus to the next row's cell in the same column
+            if (input.readOnly) {
+                const cell = input.closest('td');
+                const row = cell.closest('tr');
+                const tableBody = row.closest('tbody');
+                const rows = Array.from(tableBody.querySelectorAll('tr'));
+                const currentRowIndex = rows.indexOf(row);
+                if (currentRowIndex < rows.length - 1) {
+                    const nextRow = rows[currentRowIndex + 1];
+                    const nextCell = nextRow.cells[cell.cellIndex];
+                    if (nextCell) {
+                        const nextInput = nextCell.querySelector('.editable-cell');
+                        if (nextInput) {
+                            nextInput.focus();
+                            return; // Prevent further processing
+                        }
+                    }
+                }
+            }
+
+            const value = input.value.trim();
+            const cell = input.closest('td');
+            const colIndex = cell.cellIndex;
+
+            // Logic for Day columns (Mon-Sat, colIndex > 0)
+            if (colIndex > 0) {
+                const teacherMatches = value.match(/\((..)\)/g);
+                if (teacherMatches && teacherMatches.length > 1) {
+                    // Split class: show timetables for all teachers vertically
+                    const teachers = teacherMatches.map(m => m.slice(1, -1).toUpperCase());
+                    let html = '';
+                    teachers.forEach(teacher => {
+                        html += getTeacherTimetableHTML(teacher);
+                    });
+                    document.getElementById('timetableDisplay').innerHTML = html;
+                } else {
+                    // Single teacher: original logic
+                    const match = value.match(/^(.+)\((..)\)$/); // e.g., MAT(MO)
+                    if (match) {
+                        const teacherCode = match[2].toUpperCase();
+                        document.getElementById('teacherCodeInput').value = teacherCode;
+                        generateTeacherTimetable();
+                    }
+                }
+            }
+            // Logic for First column (Time/Section, colIndex == 0)
+            else if (colIndex === 0) {
+                // Check if the value is NOT a time slot (e.g., '10:00-11:00') - meaning it's a section name
+                if (!value.includes('-') || !value.includes(':')) {
+                    const sectionName = value.toUpperCase();
+                    if (sectionName !== '' && sectionName.toUpperCase() !== 'LUNCH') {
+                        // Run the new function to generate the class timetable
+                        generateClassTimetable(sectionName);
+                    }
+                }
+            }
+        }
+
+
+        // --- Auxiliary Functions (Kept from original file) ---
+
+        function loadDefaultData() {
+            const defaultData = [
+                // Time Slot Row, Section Row 1 (FY-A), Section Row 2 (FY-B)
+                ['10:00-11:00', '', '', '', '', '', ''],
+                ['FY-A', 'MAT(MO),ECO(ZP)', 'CHE(CN)', 'MAT(MO)', 'MAT(MO)', 'CHE(CN)', 'MAT(MO)'],
+                ['FY-B', 'PHY(TM)', 'MAT(MO)', 'PHY(TM)', 'CHE(CN)', 'MAT(MO)', 'PHY(TM)'],
+                ['11:00-12:00', '', '', '', '', '', ''],
+
+                ['FY-A', 'MAT(MO)', 'PHY(TM)', 'PHY(TM)', 'CHE(CN)', 'CHE(CN)', 'PHY(TM)'],
+                ['FY-B', 'MAT(MO)', 'MAT(MO)', 'PHY(TM)', 'MAT(MO)', 'MAT(MO)', 'MAT(MO)'],
+               
+                ['12:00-01:00', '', '', '', '', '', ''],
+                ['FY-A', 'CHE(CN)', 'PHY(TM)', 'MAT(MO)', 'MAT(MO)', 'PHY(TM)', 'CHE(CN)'],
+                ['FY-B', 'MAT(MO)', 'MAT(MO)', 'CHE(CN)', 'PHY(TM)', 'MAT(MO)', 'PHY(TM)'],
+                
+                // Lunch Break Row (just for separation, not counted as classes)
+                ['01:00-02:00', 'LUNCH', 'LUNCH', 'LUNCH', 'LUNCH', 'LUNCH', 'LUNCH', 'LUNCH'],
+
+                ['02:00-03:00', '', '', '', '', '', ''],
+                ['FY-A', 'PHY(TM)', 'MAT(MO)', 'CHE(CN)', 'PHY(TM)', 'MAT(MO)', 'MAT(MO)'],
+                ['FY-B', 'CHE(CN)', 'PHY(TM)', 'MAT(MO)', 'PHY(TM)', 'PHY(TM)', 'CHE(CN)'],
+            ];
+
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            masterTableBody.innerHTML = ''; // Clear existing rows
+            
+            defaultData.forEach((rowData, index) => {
+                const newRow = masterTableBody.insertRow();
+                const isTimeSlotRow = rowData[0].includes('-') && rowData[0].includes(':');
+                for (let i = 0; i < COLUMNS.length; i++) {
+                    const newCell = newRow.insertCell();
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'editable-cell';
+                    input.value = rowData[i] !== undefined ? rowData[i] : '';
+                    if (isTimeSlotRow && i > 0) {
+                        input.readOnly = true; // Make day cells non-editable for time slot rows
+                        input.placeholder = '';
+                    } else {
+                        input.placeholder = i === 0 ? (isTimeSlotRow ? 'Time Slot' : 'Section Name') : 'SUB(TR)';
+                    }
+                    newCell.appendChild(input);
+                    input.addEventListener('keydown', handleKey);
+                    // All cells now have the focus listener
+                    input.addEventListener('focus', handleFocus);
+                }
+            });
+            addKeyboardNavigation(); // Re-add listeners after loading
+        }
+
+        function newTimeTable() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            masterTableBody.innerHTML = ''; // Clear all rows
+            const displayDiv = document.getElementById('timetableDisplay');
+            displayDiv.innerHTML = `<p class="center-text">
+                Enter a teacher code and click 'Generate Time Table' to see their personalized schedule here.
+            </p>`;
+            document.getElementById('teacherCodeInput').value = ''; // Clear input field
+        }
+
+        
+        // Simplified row handling for this specific master table format (Time Row followed by one or more Section Rows)
+        function addRow() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const newRowTime = masterTableBody.insertRow();
+            const newRowSection = masterTableBody.insertRow();
+
+            // Row 1: Time Slot Header (e.g., 03:00-04:00)
+            for (let i = 0; i < COLUMNS.length; i++) {
+                const newCell = newRowTime.insertCell();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'editable-cell';
+                input.value = i === 0 ? 'XX:XX-XX:XX' : '';
+                if (i > 0) {
+                    input.readOnly = true;
+                    input.placeholder = '';
+                } else {
+                    input.placeholder = 'Time Slot';
+                }
+                newCell.appendChild(input);
+                input.addEventListener('keydown', handleKey);
+                input.addEventListener('focus', handleFocus);
+            }
+
+            // Row 2: First Section (e.g., FY-A)
+            for (let i = 0; i < COLUMNS.length; i++) {
+                const newCell = newRowSection.insertCell();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'editable-cell';
+                input.value = i === 0 ? 'FY-C' : '';
+                input.placeholder = i === 0 ? 'Section Name' : 'SUB(TR)';
+                newCell.appendChild(input);
+                input.addEventListener('keydown', handleKey);
+                input.addEventListener('focus', handleFocus);
+            }
+        }
+
+        function addClassRow() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const newRow = masterTableBody.insertRow();
+
+            // Add a single section row
+            for (let i = 0; i < COLUMNS.length; i++) {
+                const newCell = newRow.insertCell();
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'editable-cell';
+                input.value = '';
+                input.placeholder = i === 0 ? 'Section Name' : 'SUB(TR)';
+                newCell.appendChild(input);
+                input.addEventListener('keydown', handleKey);
+                input.addEventListener('focus', handleFocus);
+            }
+        }
+        
+        function deleteRow() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = masterTableBody.querySelectorAll('tr');
+            if (rows.length > 0) {
+                // Determine if the last row is a time slot or a section row
+                // This is a simplification; ideally, you'd delete a whole time slot block (Time row + all Section rows)
+                masterTableBody.deleteRow(rows.length - 1);
+            }
+        }
+
+
+        // --- File I/O Functions (Simplified for Canvas) ---
+
+        function saveToFile() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = masterTableBody.querySelectorAll('tr');
+            const data = [];
+
+            rows.forEach(row => {
+                const rowData = Array.from(row.querySelectorAll('.editable-cell')).map(input => input.value);
+                data.push(rowData);
+            });
+
+            // Create a temporary HTML document structure to encapsulate the table data with improved appearance
+            const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Master Time Table Data</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; }
+        table { border-collapse: collapse; width: 100%; margin: 0 auto; }
+        th, td { border: 1px solid black; padding: 8px; text-align: center; }
+        th { background-color: #f0f0f0; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Master Time Table</h1>
+    <table id="masterTableData">
+        <thead>
+            <tr>
+                <th>Time/Section</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${data.map(rowData =>
+                `<tr>${rowData.map(cell => `<td>${cell.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/,/g, '<br>')}</td>`).join('')}</tr>`
+            ).join('')}
+        </tbody>
+    </table>
+</body>
+</html>
+            `.trim();
+
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'master_timetable.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function loadFromFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.html';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const htmlString = event.target.result;
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(htmlString, 'text/html');
+                        const dataTable = doc.getElementById('masterTableData');
+
+                        if (dataTable) {
+                            const masterTableBody = document.querySelector('#masterTable tbody');
+                            masterTableBody.innerHTML = ''; // Clear existing rows
+
+                            const allRows = Array.from(dataTable.querySelectorAll('tr'));
+                            let dataRows = allRows;
+
+                            // Check if the first row is the header row
+                            if (allRows.length > 0) {
+                                const firstRowCells = Array.from(allRows[0].querySelectorAll('td, th'));
+                                if (firstRowCells.length === COLUMNS.length && firstRowCells[0].textContent === 'Time/Section') {
+                                    dataRows = allRows.slice(1); // Skip the header row
+                                }
+                            }
+
+                            dataRows.forEach(dataRow => {
+                                const rowCells = Array.from(dataRow.querySelectorAll('td'));
+                                if (rowCells.length === COLUMNS.length) {
+                                    const rowValues = rowCells.map(cell => cell.textContent);
+
+                                    const newRow = masterTableBody.insertRow();
+                                    const isTimeSlotRow = rowValues[0].includes('-') && rowValues[0].includes(':');
+                                    for (let i = 0; i < COLUMNS.length; i++) {
+                                        const newCell = newRow.insertCell();
+                                        const input = document.createElement('input');
+                                        input.type = 'text';
+                                        input.className = 'editable-cell';
+                                        input.value = rowValues[i];
+                                        if (isTimeSlotRow && i > 0) {
+                                            input.readOnly = true;
+                                            input.placeholder = '';
+                                        } else {
+                                            input.placeholder = i === 0 ? (isTimeSlotRow ? 'Time Slot' : 'Section Name') : 'SUB(TR)';
+                                        }
+                                        newCell.appendChild(input);
+                                        input.addEventListener('keydown', handleKey);
+                                        input.addEventListener('focus', handleFocus);
+                                    }
+                                } else {
+                                    console.error("Skipping malformed row during load: expected " + COLUMNS.length + " cells, got " + rowCells.length);
+                                }
+                            });
+                            addKeyboardNavigation(); // Add listeners after loading from file
+                        } else {
+                            alert("Error: The loaded file does not contain a recognizable timetable data table.");
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        /**
+         * Extracts all unique teacher codes from the master table
+         */
+        function getAllTeacherCodes() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            const teachers = new Set();
+
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                // Skip time slots and lunch rows
+                if ((firstCell.includes('-') && firstCell.includes(':')) || firstCell.toUpperCase() === 'LUNCH') {
+                    return;
+                }
+
+                // Extract teacher codes from day columns
+                for (let j = 1; j < cells.length; j++) {
+                    const cellValue = cells[j].value.trim();
+                    // Find all teacher codes like (MO), (CN), (TM), (ZP)
+                    const matches = cellValue.match(/\(([A-Z]{2})\)/g);
+                    if (matches) {
+                        matches.forEach(match => {
+                            teachers.add(match.slice(1, -1));
+                        });
+                    }
+                }
+            });
+
+            return Array.from(teachers).sort();
+        }
+
+        /**
+         * Extracts all unique section names from the master table
+         */
+        function getAllSections() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            const sections = new Set();
+
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                // Skip time slots and lunch rows, extract section names
+                if (!((firstCell.includes('-') && firstCell.includes(':')) || firstCell.toUpperCase() === 'LUNCH') && firstCell !== '') {
+                    sections.add(firstCell.toUpperCase());
+                }
+            });
+
+            return Array.from(sections).sort();
+        }
+
+        /**
+         * Prints all teacher timetables serially in a single document
+         */
+        function printAllTeachers() {
+            const teachers = getAllTeacherCodes();
+            
+            if (teachers.length === 0) {
+                alert('No teachers found in the master timetable.');
+                return;
+            }
+
+            let combinedHTML = '';
+            teachers.forEach((teacher, index) => {
+                combinedHTML += getTeacherTimetableHTML(teacher);
+                if (index < teachers.length - 1) {
+                    combinedHTML += '<div style="page-break-after: always; margin-top: 40px;"></div>';
+                }
+            });
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Print All Teachers Timetables</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        table { border-collapse: collapse; width: 100%; margin: 20px auto; }
+                        th, td { border: 1px solid black; padding: 8px; text-align: center; }
+                        th { background-color: #f0f0f0; font-weight: bold; }
+                        .time-cell { font-weight: bold; background-color: #ffebcc; }
+                        .class-cell { background-color: #fff8e1; font-weight: 600; color: #d84315; }
+                        .free-cell { background-color: #e0e0e0; color: #616161; font-style: italic; }
+                        @media print {
+                            .page-break { page-break-after: always; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${combinedHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        /**
+         * Prints all class timetables serially in a single document
+         */
+        function printAllClasses() {
+            const sections = getAllSections();
+            
+            if (sections.length === 0) {
+                alert('No sections found in the master timetable.');
+                return;
+            }
+
+            let combinedHTML = '';
+            sections.forEach((section, index) => {
+                combinedHTML += getClassTimetableHTML(section);
+                if (index < sections.length - 1) {
+                    combinedHTML += '<div style="page-break-after: always; margin-top: 40px;"></div>';
+                }
+            });
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Print All Classes Timetables</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        table { border-collapse: collapse; width: 100%; margin: 20px auto; }
+                        th, td { border: 1px solid black; padding: 8px; text-align: center; }
+                        th { background-color: #f0f0f0; font-weight: bold; }
+                        .time-cell { font-weight: bold; background-color: #ffebcc; }
+                        .class-cell { background-color: #fff8e1; font-weight: 600; color: #d84315; }
+                        .free-cell { background-color: #e0e0e0; color: #616161; font-style: italic; }
+                        @media print {
+                            .page-break { page-break-after: always; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${combinedHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        /**
+         * Generates HTML for a class/section timetable (used by printAllClasses)
+         */
+        function getClassTimetableHTML(sectionName) {
+            if (sectionName.length === 0) {
+                return `<p class="error-text">Please enter a valid section name.</p>`;
+            }
+
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            
+            if (rows.length === 0) {
+                return `<p class="center-text">Master Time Table is empty. Please load or input data first.</p>`;
+            }
+
+            const classSchedule = {};
+            const counts = {};
+            let currentTimeSlot = null;
+
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                if (firstCell.includes('-') && firstCell.includes(':')) {
+                    currentTimeSlot = firstCell;
+                    classSchedule[currentTimeSlot] = null;
+                } else if (currentTimeSlot && firstCell.toUpperCase() === sectionName.toUpperCase()) {
+                    const dailySchedule = {};
+                    for (let j = 1; j < COLUMNS.length; j++) {
+                        const classValue = cells[j].value.trim();
+                        dailySchedule[COLUMNS[j]] = classValue || 'Free';
+                        if (classValue && classValue !== 'Free') {
+                            const subject = classValue.split('(')[0];
+                            counts[subject] = (counts[subject] || 0) + 1;
+                        }
+                    }
+                    classSchedule[currentTimeSlot] = dailySchedule;
+                    currentTimeSlot = null;
+                }
+            });
+
+            let totalPeriods = 0;
+            for (let subject in counts) {
+                totalPeriods += counts[subject];
+            }
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>${sectionName.toUpperCase()}-${totalPeriods}</th>
+                            ${COLUMNS.slice(1).map(day => `<th>${day}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            const timeSlotsKeys = Object.keys(classSchedule);
+            if (timeSlotsKeys.length === 0) {
+                html = `<p class="error-text">Section <strong>${sectionName.toUpperCase()}</strong> not found in the Master Table.</p>`;
+            } else {
+                timeSlotsKeys.forEach(time => {
+                    const schedule = classSchedule[time];
+                    if (schedule) {
+                        html += `<tr><td class="time-cell">${time}</td>`;
+                        COLUMNS.slice(1).forEach(day => {
+                            const content = schedule[day];
+                            const isFree = content.toUpperCase() === 'FREE' || content === '';
+                            const cellClass = isFree ? 'free-cell' : 'class-cell';
+                            html += `<td class="${cellClass}" style="background-color: ${isFree ? '#e0f7fa' : '#b2ebf2'}; color: #00796b; font-weight: ${isFree ? 'normal' : '600'};">${(content || 'Free').replace(/,/g, '<br>')}</td>`;
+                        });
+                        html += `</tr>`;
+                    }
+                });
+            }
+
+            html += `</tbody></table>`;
+
+            let summaryHTML = '<table style="margin-top: 20px;"><thead><tr><th>Section</th><th>Subject</th><th>Periods</th></tr></thead><tbody>';
+            for (let subject in counts) {
+                summaryHTML += `<tr><td>${sectionName.toUpperCase()}</td><td>${subject}</td><td>${counts[subject]}</td></tr>`;
+            }
+            summaryHTML += '</tbody></table>';
+            html += summaryHTML;
+
+            return html;
+        }
+
+        function printCurrent() {
+            const content = document.getElementById('timetableDisplay').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Print Timetable</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        table { border-collapse: collapse; width: 100%; margin: 0 auto; }
+                        th, td { border: 1px solid black; padding: 8px; text-align: center; }
+                        th { background-color: #f0f0f0; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+</body>
+</html>
