@@ -294,7 +294,7 @@
         .clash-info {
             font-size: 1.2rem;
             font-weight: bold;
-            text-align: center;
+            text-align: left;
             color: #e91e63;
             margin-bottom: 1rem;
             padding: 0.5rem;
@@ -368,6 +368,7 @@
             loadDefaultData(); // Load sample data on startup
             document.getElementById('generateBtn').addEventListener('click', generateTeacherTimetable);
             addKeyboardNavigation(); // Add keyboard navigation to inputs
+            addDividerDrag(); // Add divider drag functionality
         });
 
         const COLUMNS = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -497,7 +498,54 @@
                 });
             });
 
-            html += `<p class="clash-info">Clashes : ${clashCount}</p>`;
+            // Calculate gap count (free periods excluding beginning and end)
+            let gapCount = 0;
+            COLUMNS.slice(1).forEach(day => {
+                const dayPeriods = [];
+                timeSlotsKeys.forEach(time => {
+                    dayPeriods.push(teacherSchedule[time][day] === 'Free' ? 'Free' : 'Busy');
+                });
+
+                let firstBusy = -1;
+                let lastBusy = -1;
+                for (let i = 0; i < dayPeriods.length; i++) {
+                    if (dayPeriods[i] === 'Busy') {
+                        if (firstBusy === -1) firstBusy = i;
+                        lastBusy = i;
+                    }
+                }
+
+                if (firstBusy !== -1 && lastBusy !== -1) {
+                    for (let i = firstBusy + 1; i < lastBusy; i++) {
+                        if (dayPeriods[i] === 'Free') gapCount++;
+                    }
+                }
+            });
+
+            // Calculate doubles count (sections assigned multiple times on the same day)
+            let doublesCount = 0;
+            COLUMNS.slice(1).forEach(day => {
+                const dayAssignments = {};
+                timeSlotsKeys.forEach(time => {
+                    const content = teacherSchedule[time][day];
+                    if (content !== 'Free') {
+                        const lines = content.split('<br>');
+                        lines.forEach(line => {
+                            const parts = line.split(' (');
+                            if (parts.length > 1) {
+                                const section = parts[1].slice(0, -1);
+                                if (!dayAssignments[section]) dayAssignments[section] = 0;
+                                dayAssignments[section]++;
+                            }
+                        });
+                    }
+                });
+                Object.values(dayAssignments).forEach(count => {
+                    if (count > 1) doublesCount++;
+                });
+            });
+
+            html += `<p class="clash-info">Clashes : ${clashCount} &nbsp;&nbsp;&nbsp; Gaps : ${gapCount} &nbsp;&nbsp;&nbsp; Doubles : ${doublesCount}</p>`;
 
             html += `
                 <table>
@@ -1312,6 +1360,43 @@
             `);
             printWindow.document.close();
             printWindow.print();
+        }
+
+        // --- Divider Drag Functionality ---
+
+        function addDividerDrag() {
+            const divider = document.querySelector('.divider');
+            const leftPanel = document.querySelector('.left');
+            const rightPanel = document.querySelector('.right');
+            let isDragging = false;
+
+            divider.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                document.body.style.cursor = 'ew-resize';
+                document.body.style.userSelect = 'none'; // Prevent text selection
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const totalWidth = window.innerWidth;
+                const dividerWidth = divider.offsetWidth;
+                const leftWidth = e.clientX - dividerWidth / 2;
+
+                if (leftWidth > 200 && leftWidth < totalWidth - 200) { // Min widths
+                    leftPanel.style.flex = `0 0 ${leftWidth}px`;
+                    rightPanel.style.flex = '1 1 auto';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                }
+            });
         }
     </script>
 </body>
