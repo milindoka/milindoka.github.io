@@ -233,6 +233,17 @@
             margin-bottom: 1rem;
             gap: 1rem;
         }
+        .message-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            color: #00796b;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
         .btn-gray {
             background-color: #374151;
             color: white;
@@ -308,7 +319,6 @@
 <body>
 
     <div class="panel left">
-        <h2 class="header-left">Master Time Table Editor</h2>
 
         <div class="controls">
             <div class="input-row">
@@ -328,6 +338,7 @@
             <button onclick="printCurrent()" class="btn-gray">Print Current</button>
             <button onclick="printAllTeachers()" class="btn-gray">Print All Teachers</button>
             <button onclick="printAllClasses()" class="btn-gray">Print All Classes</button>
+            <button id="removeClashesBtn" onclick="removeClashes()" class="btn-red">Remove Clashes</button>
         </div>
 
         <div class="center-buttons">
@@ -336,10 +347,12 @@
             <button onclick="deleteRow()" class="btn-red">Delete Last Slot</button>
         </div>
 
+        <div id="messageDiv" class="message-display">File : Demo Time Table</div>
+
         <table id="masterTable">
             <thead>
                 <tr>
-                    <th>Time/Section</th>
+                    <th>Master</th>
                     <th>Mon</th>
                     <th>Tue</th>
                     <th>Wed</th>
@@ -485,12 +498,15 @@
                 });
             });
 
-            // 3. Render the Output Table
+            // Filter out time slots where all days are 'Free'
             const timeSlotsKeys = Object.keys(teacherSchedule);
+            const filteredTimes = timeSlotsKeys.filter(time => {
+                return COLUMNS.slice(1).some(day => teacherSchedule[time][day] !== 'Free');
+            });
 
             // Calculate period count
             let periodCount = 0;
-            timeSlotsKeys.forEach(time => {
+            filteredTimes.forEach(time => {
                 COLUMNS.slice(1).forEach(day => {
                     if (teacherSchedule[time][day] !== 'Free') {
                         periodCount++;
@@ -502,7 +518,7 @@
             let gapCount = 0;
             COLUMNS.slice(1).forEach(day => {
                 const dayPeriods = [];
-                timeSlotsKeys.forEach(time => {
+                filteredTimes.forEach(time => {
                     dayPeriods.push(teacherSchedule[time][day] === 'Free' ? 'Free' : 'Busy');
                 });
 
@@ -526,7 +542,7 @@
             let doublesCount = 0;
             COLUMNS.slice(1).forEach(day => {
                 const dayAssignments = {};
-                timeSlotsKeys.forEach(time => {
+                filteredTimes.forEach(time => {
                     const content = teacherSchedule[time][day];
                     if (content !== 'Free') {
                         const lines = content.split('<br>');
@@ -558,12 +574,12 @@
                     <tbody>
             `;
 
-            if (timeSlotsKeys.length === 0) {
+            if (filteredTimes.length === 0) {
                 html = `<p class="error-text">
                     No time slots defined in the Master Table.
                 </p>`;
             } else {
-                timeSlotsKeys.forEach(time => {
+                filteredTimes.forEach(time => {
                     html += `<tr><td class="time-cell">${time}</td>`;
                     COLUMNS.slice(1).forEach(day => {
                         const content = teacherSchedule[time][day];
@@ -672,12 +688,16 @@
             `;
 
             const timeSlotsKeys = Object.keys(classSchedule);
-            if (timeSlotsKeys.length === 0) {
+            const filteredTimes = timeSlotsKeys.filter(time => {
+                const schedule = classSchedule[time];
+                return schedule && COLUMNS.slice(1).some(day => schedule[day] !== 'Free');
+            });
+            if (filteredTimes.length === 0) {
                 html = `<p class="error-text">
                     Section **${sectionName.toUpperCase()}** not found in the Master Table.
                 </p>`;
             } else {
-                timeSlotsKeys.forEach(time => {
+                filteredTimes.forEach(time => {
                     const schedule = classSchedule[time];
                     if (schedule) {
                         html += `<tr><td class="time-cell">${time}</td>`;
@@ -893,6 +913,7 @@
                 }
             });
             addKeyboardNavigation(); // Re-add listeners after loading
+            document.getElementById('messageDiv').textContent = 'File : Demo Time Table';
         }
 
         function newTimeTable() {
@@ -903,6 +924,7 @@
                 Enter a teacher code and click 'Generate Time Table' to see their personalized schedule here.
             </p>`;
             document.getElementById('teacherCodeInput').value = ''; // Clear input field
+            document.getElementById('messageDiv').textContent = 'File : New Time Table';
         }
 
         
@@ -1092,6 +1114,7 @@
                                 }
                             });
                             addKeyboardNavigation(); // Add listeners after loading from file
+                            document.getElementById('messageDiv').textContent = 'File : ' + file.name;
                         } else {
                             alert("Error: The loaded file does not contain a recognizable timetable data table.");
                         }
@@ -1397,6 +1420,186 @@
                     document.body.style.userSelect = '';
                 }
             });
+        }
+
+        // --- Clash Removal Functionality ---
+
+        let isRemovingClashes = false;
+        let stopRemoval = false;
+
+        function removeClashes() {
+            const btn = document.getElementById('removeClashesBtn');
+            if (isRemovingClashes) {
+                stopRemoval = true;
+                return;
+            }
+            isRemovingClashes = true;
+            stopRemoval = false;
+            btn.textContent = 'Stop Removal';
+            const clashes = findAllClashes();
+            resolveClashes(clashes, 0);
+        }
+
+        function findAllClashes() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            const clashes = [];
+            const timeSlots = [];
+            let currentSlot = null;
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                if (firstCell.includes('-') && firstCell.includes(':')) {
+                    if (currentSlot) timeSlots.push(currentSlot);
+                    currentSlot = {time: firstCell, sections: []};
+                } else if (currentSlot && firstCell !== '' && firstCell.toUpperCase() !== 'LUNCH') {
+                    const section = {section: firstCell, days: {}};
+                    for (let j = 1; j < COLUMNS.length; j++) {
+                        section.days[COLUMNS[j]] = cells[j].value.trim();
+                    }
+                    currentSlot.sections.push(section);
+                }
+            }
+            if (currentSlot) timeSlots.push(currentSlot);
+
+            const allTeachers = getAllTeacherCodes();
+            allTeachers.forEach(teacher => {
+                timeSlots.forEach(slot => {
+                    COLUMNS.slice(1).forEach(day => {
+                        let count = 0;
+                        slot.sections.forEach(section => {
+                            const cellValue = section.days[day];
+                            const parts = cellValue.split(',');
+                            parts.forEach(part => {
+                                if (part.trim().match(new RegExp(`\\(${teacher}\\)`, 'i'))) {
+                                    count++;
+                                }
+                            });
+                        });
+                        if (count > 1) {
+                            clashes.push({teacher, time: slot.time, day, count});
+                        }
+                    });
+                });
+            });
+            return clashes;
+        }
+
+        function resolveClashes(clashes, index) {
+            if (index >= clashes.length || stopRemoval) {
+                isRemovingClashes = false;
+                document.getElementById('removeClashesBtn').textContent = 'Remove Clashes';
+                return;
+            }
+            const clash = clashes[index];
+            if (tryResolveClash(clash)) {
+                setTimeout(() => resolveClashes(clashes, index + 1), 0);
+            } else {
+                setTimeout(() => resolveClashes(clashes, index + 1), 0);
+            }
+        }
+
+        function tryResolveClash(clash) {
+            const {teacher, time, day} = clash;
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            const clashingCells = [];
+
+            let currentTime = null;
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                if (firstCell.includes('-') && firstCell.includes(':')) {
+                    currentTime = firstCell;
+                } else if (currentTime === time && firstCell !== '' && firstCell.toUpperCase() !== 'LUNCH') {
+                    const section = firstCell;
+                    const cellValue = cells[COLUMNS.indexOf(day)].value.trim();
+                    const parts = cellValue.split(',');
+                    parts.forEach((part, pIndex) => {
+                        if (part.trim().match(new RegExp(`\\(${teacher}\\)`, 'i'))) {
+                            clashingCells.push({rowIndex: i, cellIndex: COLUMNS.indexOf(day), partIndex: pIndex, section, parts});
+                        }
+                    });
+                }
+            }
+
+            if (clashingCells.length <= 1) return true; // no clash
+
+            // For each extra clashing cell, swap its teacher with another teacher in the section
+            for (let i = 1; i < clashingCells.length; i++) {
+                const cell = clashingCells[i];
+                const section = cell.section;
+                const sectionCells = [];
+                for (let k = 0; k < rows.length; k++) {
+                    const row = rows[k];
+                    const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                    const firstCell = cells[0].value.trim();
+                    if (firstCell === section) {
+                        for (let j = 1; j < COLUMNS.length; j++) {
+                            const cellValue = cells[j].value.trim();
+                            const parts = cellValue.split(',');
+                            parts.forEach((part, pIndex) => {
+                                const match = part.trim().match(/^(.+)\((..)\)$/);
+                                if (match) {
+                                    sectionCells.push({rowIndex: k, cellIndex: j, partIndex: pIndex, subject: match[1], teacher: match[2], fullPart: part.trim()});
+                                }
+                            });
+                        }
+                    }
+                }
+
+                // Find the first other teacher in the section
+                for (let other of sectionCells) {
+                    if (other.teacher !== teacher) {
+                        const oldClash = cell.parts[cell.partIndex];
+                        const oldOther = other.fullPart;
+                        const newClash = oldClash.replace(new RegExp(`\\(${teacher}\\)`, 'i'), `(${other.teacher})`);
+                        const newOther = oldOther.replace(new RegExp(`\\(${other.teacher}\\)`, 'i'), `(${teacher})`);
+
+                        cell.parts[cell.partIndex] = newClash;
+                        rows[cell.rowIndex].querySelectorAll('.editable-cell')[cell.cellIndex].value = cell.parts.join(',');
+
+                        const otherParts = rows[other.rowIndex].querySelectorAll('.editable-cell')[other.cellIndex].value.split(',');
+                        otherParts[other.partIndex] = newOther;
+                        rows[other.rowIndex].querySelectorAll('.editable-cell')[other.cellIndex].value = otherParts.join(',');
+
+                        // Swap done, break
+                        break;
+                    }
+                }
+            }
+            return true; // resolved by swapping extra assignments
+        }
+
+        function hasClash(clash) {
+            const {teacher, time, day} = clash;
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            let count = 0;
+            let currentTime = null;
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                if (firstCell.includes('-') && firstCell.includes(':')) {
+                    currentTime = firstCell;
+                } else if (currentTime === time && firstCell !== '' && firstCell.toUpperCase() !== 'LUNCH') {
+                    const cellValue = cells[COLUMNS.indexOf(day)].value.trim();
+                    const parts = cellValue.split(',');
+                    parts.forEach(part => {
+                        if (part.trim().match(new RegExp(`\\(${teacher}\\)`, 'i'))) {
+                            count++;
+                        }
+                    });
+                }
+            }
+            return count > 1;
         }
     </script>
 </body>
