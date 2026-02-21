@@ -244,6 +244,27 @@
             border-radius: 0.5rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #f97316;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
         .btn-gray {
             background-color: #374151;
             color: white;
@@ -339,6 +360,7 @@
             <button onclick="printAllTeachers()" class="btn-gray">Print All Teachers</button>
             <button onclick="printAllClasses()" class="btn-gray">Print All Classes</button>
             <button id="removeClashesBtn" onclick="removeClashes()" class="btn-red">Remove Clashes</button>
+            <button id="optimizeBtn" onclick="toggleOptimization()" class="btn-green">Optimize</button>
         </div>
 
         <div class="center-buttons">
@@ -348,6 +370,11 @@
         </div>
 
         <div id="messageDiv" class="message-display">File : Demo Time Table</div>
+        
+        <div id="progressContainer" class="progress-container" style="display: none;">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div id="progressText" class="progress-text" style="display: none;">Removing clashes...</div>
 
         <table id="masterTable">
             <thead>
@@ -385,6 +412,8 @@
         });
 
         const COLUMNS = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        let currentFileName = '';
 
         // --- Core Time Table Generation Logic ---
 
@@ -561,7 +590,7 @@
                 });
             });
 
-            html += `<p class="clash-info">Clashes : ${clashCount} &nbsp;&nbsp;&nbsp; Gaps : ${gapCount} &nbsp;&nbsp;&nbsp; Doubles : ${doublesCount}</p>`;
+            html += `<p class="clash-info">Clashes : ${clashCount} &nbsp;&nbsp;&nbsp; Doubles : ${doublesCount} &nbsp;&nbsp;&nbsp; Gaps : ${gapCount}</p>`;
 
             html += `
                 <table>
@@ -918,7 +947,11 @@
                 }
             });
             addKeyboardNavigation(); // Re-add listeners after loading
-            document.getElementById('messageDiv').textContent = 'File : Demo Time Table';
+            const clashes = findAllClashes();
+            const doubles = findAllDoubles();
+            const gaps = findAllGaps();
+            document.getElementById('messageDiv').textContent = 'File : Demo Time Table [ Clashes ' + clashes.length + ' | Doubles ' + doubles + ' | Gaps ' + gaps + ' ]';
+            currentFileName = 'Demo Time Table';
         }
 
         function newTimeTable() {
@@ -929,7 +962,8 @@
                 Enter a teacher code and click 'Generate Time Table' to see their personalized schedule here.
             </p>`;
             document.getElementById('teacherCodeInput').value = ''; // Clear input field
-            document.getElementById('messageDiv').textContent = 'File : New Time Table';
+            document.getElementById('messageDiv').textContent = 'File : New Time Table [ Clashes 0 | Doubles 0 | Gaps 0 ]';
+            currentFileName = 'New Time Table';
         }
 
         
@@ -1119,7 +1153,11 @@
                                 }
                             });
                             addKeyboardNavigation(); // Add listeners after loading from file
-                            document.getElementById('messageDiv').textContent = 'File : ' + file.name;
+                            const clashes = findAllClashes();
+                            const doubles = findAllDoubles();
+                            const gaps = findAllGaps();
+                            document.getElementById('messageDiv').textContent = 'File : ' + file.name + ' [ Clashes ' + clashes.length + ' | Doubles ' + doubles + ' | Gaps ' + gaps + ' ]';
+                            currentFileName = file.name;
                         } else {
                             alert("Error: The loaded file does not contain a recognizable timetable data table.");
                         }
@@ -1185,7 +1223,7 @@
         }
 
         /**
-         * Prints all teacher timetables serially in a single document
+         * Displays all teacher timetables serially in a single document
          */
         function printAllTeachers() {
             const teachers = getAllTeacherCodes();
@@ -1228,11 +1266,10 @@
                 </html>
             `);
             printWindow.document.close();
-            printWindow.print();
         }
 
         /**
-         * Prints all class timetables serially in a single document
+         * Displays all class timetables serially in a single document
          */
         function printAllClasses() {
             const sections = getAllSections();
@@ -1275,7 +1312,6 @@
                 </html>
             `);
             printWindow.document.close();
-            printWindow.print();
         }
 
         /**
@@ -1427,6 +1463,176 @@
             });
         }
 
+        // --- Optimization Functionality ---
+
+        let isOptimizing = false;
+        let stopOptimization = false;
+        let optimizationInterval = null;
+
+        function toggleOptimization() {
+            const btn = document.getElementById('optimizeBtn');
+            if (isOptimizing) {
+                stopOptimization = true;
+                btn.textContent = 'Optimize';
+                btn.className = 'btn-green';
+                isOptimizing = false;
+                if (optimizationInterval) {
+                    clearInterval(optimizationInterval);
+                    optimizationInterval = null;
+                }
+                // Update message display after a short delay to ensure optimization has stopped
+                setTimeout(updateMessageDisplay, 100);
+            } else {
+                startOptimization();
+            }
+        }
+
+        function startOptimization() {
+            const btn = document.getElementById('optimizeBtn');
+            isOptimizing = true;
+            stopOptimization = false;
+            btn.textContent = 'Stop Optimize';
+            btn.className = 'btn-red';
+            
+            // Start optimization loop
+            optimizationInterval = setInterval(() => {
+                if (stopOptimization) {
+                    toggleOptimization();
+                    return;
+                }
+                
+                const result = performOptimizationStep();
+                if (result.complete) {
+                    toggleOptimization();
+                }
+            }, 10); // Fast optimization loop
+        }
+
+        function performOptimizationStep() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            
+            // Get current counts
+            const currentClashes = findAllClashes().length;
+            const currentDoubles = findAllDoubles();
+            const currentGaps = findAllGaps();
+            
+            // Check if optimization is complete
+            if (currentClashes === 0 && currentDoubles === 0 && currentGaps === 0) {
+                return { complete: true };
+            }
+
+            // Find all editable cells (columns 2-6, which are indices 1-5) - excluding blanks
+            const editableCells = [];
+            rows.forEach((row, rowIndex) => {
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                // Skip time slot rows and lunch rows
+                const firstCell = cells[0].value.trim();
+                if ((firstCell.includes('-') && firstCell.includes(':')) || firstCell.toUpperCase() === 'LUNCH') {
+                    return;
+                }
+                
+                // Add cells from columns 2-6 (indices 1-5) that are not blank
+                for (let colIndex = 1; colIndex <= 5; colIndex++) {
+                    if (cells[colIndex] && cells[colIndex].value.trim() !== '') {
+                        editableCells.push({
+                            rowIndex,
+                            colIndex,
+                            cell: cells[colIndex]
+                        });
+                    }
+                }
+            });
+
+            // Try random swaps
+            if (editableCells.length >= 2) {
+                const cell1 = editableCells[Math.floor(Math.random() * editableCells.length)];
+                const cell2 = editableCells[Math.floor(Math.random() * editableCells.length)];
+                
+                if (cell1 !== cell2) {
+                    const swapResult = trySwap(cell1, cell2);
+                    if (swapResult) {
+                        // Update message display with current counts
+                        updateMessageDisplay();
+                    }
+                }
+            }
+            
+            return { complete: false };
+        }
+
+        function trySwap(cell1, cell2) {
+            // Store original values
+            const originalValue1 = cell1.cell.value;
+            const originalValue2 = cell2.cell.value;
+            
+            // Don't swap if either cell is blank
+            if (originalValue1.trim() === '' || originalValue2.trim() === '') {
+                return false;
+            }
+            
+            // Perform swap
+            cell1.cell.value = originalValue2;
+            cell2.cell.value = originalValue1;
+            
+            // Get counts after swap
+            const newClashes = findAllClashes().length;
+            const newDoubles = findAllDoubles();
+            const newGaps = findAllGaps();
+            
+            // Get original counts (before swap)
+            // We need to temporarily restore to get original counts
+            cell1.cell.value = originalValue1;
+            cell2.cell.value = originalValue2;
+            const originalClashes = findAllClashes().length;
+            const originalDoubles = findAllDoubles();
+            const originalGaps = findAllGaps();
+            
+            // Restore swapped values for evaluation
+            cell1.cell.value = originalValue2;
+            cell2.cell.value = originalValue1;
+            
+            // Apply optimization rules
+            if (newClashes > originalClashes) {
+                // Rule 1: Never increase clash count
+                cell1.cell.value = originalValue1;
+                cell2.cell.value = originalValue2;
+                return false;
+            } else if (newClashes < originalClashes) {
+                // Rule 2: If swap decreases clash count, keep it
+                return true;
+            } else {
+                // Clash count stays the same, check doubles
+                if (newDoubles < originalDoubles) {
+                    // Rule 3: If doubles count decreases, keep it
+                    return true;
+                } else if (newDoubles > originalDoubles) {
+                    // Rule 4: If doubles count increases, reverse the swap
+                    cell1.cell.value = originalValue1;
+                    cell2.cell.value = originalValue2;
+                    return false;
+                } else {
+                    // Doubles count stays the same, check gaps
+                    if (newGaps > originalGaps) {
+                        // Rule 5: If gap count increases, reverse the swap
+                        cell1.cell.value = originalValue1;
+                        cell2.cell.value = originalValue2;
+                        return false;
+                    } else {
+                        // Rule 5: Otherwise keep the swap
+                        return true;
+                    }
+                }
+            }
+        }
+
+        function updateMessageDisplay() {
+            const clashes = findAllClashes().length;
+            const doubles = findAllDoubles();
+            const gaps = findAllGaps();
+            document.getElementById('messageDiv').textContent = 'File : ' + currentFileName + ' [ Clashes ' + clashes + ' | Doubles ' + doubles + ' | Gaps ' + gaps + ' ]';
+        }
+
         // --- Clash Removal Functionality ---
 
         let isRemovingClashes = false;
@@ -1446,9 +1652,19 @@
             btn.textContent = 'Stop Removal';
             originalMessage = document.getElementById('messageDiv').textContent;
             focusedCell = lastFocusedEditableCell;
+            
+            // Show progress bar
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressContainer = document.getElementById('progressContainer');
+            
+            if (progressContainer) progressContainer.style.display = 'block';
+            if (progressText) progressText.style.display = 'block';
+            if (progressBar) progressBar.style.width = '0%';
+            
             const clashes = findAllClashes();
             const totalClashes = clashes.length;
-            resolveClashes(clashes, 0, totalClashes, 0);
+            resolveClashes(clashes, 0, totalClashes, 0, 0);
         }
 
         function findAllClashes() {
@@ -1480,18 +1696,21 @@
             allTeachers.forEach(teacher => {
                 timeSlots.forEach(slot => {
                     COLUMNS.slice(1).forEach(day => {
-                        let count = 0;
+                        let assignments = [];
                         slot.sections.forEach(section => {
                             const cellValue = section.days[day];
-                            const parts = cellValue.split(',');
+                            // Handle both comma-separated and <br>-separated entries
+                            const parts = cellValue.split(/[,\n]/); // Split by comma or newline
                             parts.forEach(part => {
-                                if (part.trim().match(new RegExp(`\\(${teacher}\\)`, 'i'))) {
-                                    count++;
+                                const trimmed = part.trim();
+                                if (trimmed && trimmed.match(new RegExp(`\\(${teacher}\\)$`, 'i'))) {
+                                    assignments.push(trimmed);
                                 }
                             });
                         });
-                        if (count > 1) {
-                            clashes.push({teacher, time: slot.time, day, count});
+                        // Count as a clash if the teacher has more than one assignment in this time slot and day
+                        if (assignments.length > 1) {
+                            clashes.push({teacher, time: slot.time, day, count: assignments.length});
                         }
                     });
                 });
@@ -1499,13 +1718,186 @@
             return clashes;
         }
 
-        function resolveClashes(clashes, index, totalClashes, removed) {
-            if (index >= clashes.length || stopRemoval) {
+        function findAllDoubles() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            const timeSlots = [];
+            let currentSlot = null;
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                if (firstCell.includes('-') && firstCell.includes(':')) {
+                    if (currentSlot) timeSlots.push(currentSlot);
+                    currentSlot = {time: firstCell, sections: []};
+                } else if (currentSlot && firstCell !== '' && firstCell.toUpperCase() !== 'LUNCH') {
+                    const section = {section: firstCell, days: {}};
+                    for (let j = 1; j < COLUMNS.length; j++) {
+                        section.days[COLUMNS[j]] = cells[j].value.trim();
+                    }
+                    currentSlot.sections.push(section);
+                }
+            }
+            if (currentSlot) timeSlots.push(currentSlot);
+
+            let doublesCount = 0;
+            const allTeachers = getAllTeacherCodes();
+            allTeachers.forEach(teacher => {
+                COLUMNS.slice(1).forEach(day => {
+                    const dayAssignments = {};
+                    timeSlots.forEach(slot => {
+                        slot.sections.forEach(section => {
+                            const cellValue = section.days[day];
+                            const parts = cellValue.split(',');
+                            parts.forEach(part => {
+                                if (part.trim().match(new RegExp(`\\(${teacher}\\)`, 'i'))) {
+                                    if (!dayAssignments[section.section]) dayAssignments[section.section] = 0;
+                                    dayAssignments[section.section]++;
+                                }
+                            });
+                        });
+                    });
+                    Object.values(dayAssignments).forEach(count => {
+                        if (count > 1) doublesCount++;
+                    });
+                });
+            });
+            return doublesCount;
+        }
+
+        function findAllGaps() {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            const timeSlots = [];
+            let currentSlot = null;
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = Array.from(row.querySelectorAll('.editable-cell'));
+                const firstCell = cells[0].value.trim();
+
+                if (firstCell.includes('-') && firstCell.includes(':')) {
+                    if (currentSlot) timeSlots.push(currentSlot);
+                    currentSlot = {time: firstCell, sections: []};
+                } else if (currentSlot && firstCell !== '' && firstCell.toUpperCase() !== 'LUNCH') {
+                    const section = {section: firstCell, days: {}};
+                    for (let j = 1; j < COLUMNS.length; j++) {
+                        section.days[COLUMNS[j]] = cells[j].value.trim();
+                    }
+                    currentSlot.sections.push(section);
+                }
+            }
+            if (currentSlot) timeSlots.push(currentSlot);
+
+            // Filter out time slots where all days are 'Free' for all teachers
+            const allTeachers = getAllTeacherCodes();
+            const filteredTimeSlots = timeSlots.filter(slot => {
+                return COLUMNS.slice(1).some(day => {
+                    return slot.sections.some(section => {
+                        const cellValue = section.days[day];
+                        const parts = cellValue.split(',');
+                        return parts.some(part => {
+                            return allTeachers.some(teacher => part.trim().match(new RegExp(`\\(${teacher}\\)`, 'i')));
+                        });
+                    });
+                });
+            });
+
+            let gapCount = 0;
+            allTeachers.forEach(teacher => {
+                COLUMNS.slice(1).forEach(day => {
+                    const dayPeriods = [];
+                    filteredTimeSlots.forEach(slot => {
+                        let isFree = true;
+                        slot.sections.forEach(section => {
+                            const cellValue = section.days[day];
+                            const parts = cellValue.split(',');
+                            parts.forEach(part => {
+                                if (part.trim().match(new RegExp(`\\(${teacher}\\)`, 'i'))) {
+                                    isFree = false;
+                                }
+                            });
+                        });
+                        dayPeriods.push(isFree ? 'Free' : 'Busy');
+                    });
+
+                    let firstBusy = -1;
+                    let lastBusy = -1;
+                    for (let i = 0; i < dayPeriods.length; i++) {
+                        if (dayPeriods[i] === 'Busy') {
+                            if (firstBusy === -1) firstBusy = i;
+                            lastBusy = i;
+                        }
+                    }
+
+                    if (firstBusy !== -1 && lastBusy !== -1) {
+                        for (let i = firstBusy + 1; i < lastBusy; i++) {
+                            if (dayPeriods[i] === 'Free') gapCount++;
+                        }
+                    }
+                });
+            });
+            return gapCount;
+        }
+
+        function resolveClashes(clashes, index, totalClashes, removed, attempt = 0) {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressContainer = document.getElementById('progressContainer');
+
+            // Update progress bar
+            let progress = 0;
+            if (totalClashes > 0) {
+                progress = ((attempt * totalClashes + index) / (10 * totalClashes)) * 100;
+            }
+            if (progressBar) progressBar.style.width = Math.min(progress, 100) + '%';
+            if (progressText) progressText.textContent = `Removing clashes... (Attempt ${attempt + 1}/10)`;
+
+            if (attempt > 9) { // Maximum 10 attempts
                 isRemovingClashes = false;
                 document.getElementById('removeClashesBtn').textContent = 'Remove Clashes';
-                document.getElementById('messageDiv').textContent = 'Removed ' + removed + ' of ' + totalClashes + ' Clashes';
+                document.getElementById('messageDiv').textContent = 'Attempted clash removal (10 attempts)';
+                // Hide progress bar
+                if (progressContainer) progressContainer.style.display = 'none';
+                if (progressText) progressText.style.display = 'none';
                 setTimeout(() => {
-                    document.getElementById('messageDiv').textContent = originalMessage;
+                    const clashes = findAllClashes();
+                    const doubles = findAllDoubles();
+                    const gaps = findAllGaps();
+                    document.getElementById('messageDiv').textContent = 'File : ' + currentFileName + ' [ Clashes ' + clashes.length + ' | Doubles ' + doubles + ' | Gaps ' + gaps + ' ]';
+                }, 5000);
+                if (focusedCell) {
+                    focusedCell.focus();
+                }
+                return;
+            }
+            if (index >= clashes.length || stopRemoval) {
+                const currentClashes = findAllClashes();
+                if (currentClashes.length > 0 && attempt < 9) {
+                    // Try again with new clashes found
+                    console.log(`Attempt ${attempt + 1}: Found ${currentClashes.length} clashes, retrying...`);
+                    resolveClashes(currentClashes, 0, currentClashes.length, removed, attempt + 1);
+                    return;
+                }
+                // No more clashes or max attempts reached
+                isRemovingClashes = false;
+                document.getElementById('removeClashesBtn').textContent = 'Remove Clashes';
+                const finalClashes = findAllClashes();
+                if (finalClashes.length === 0) {
+                    document.getElementById('messageDiv').textContent = 'All clashes resolved in ' + (attempt + 1) + ' attempt(s)!';
+                } else {
+                    document.getElementById('messageDiv').textContent = 'Completed with ' + finalClashes.length + ' remaining clashes after ' + (attempt + 1) + ' attempt(s)';
+                }
+                // Hide progress bar
+                if (progressContainer) progressContainer.style.display = 'none';
+                if (progressText) progressText.style.display = 'none';
+                setTimeout(() => {
+                    const clashes = findAllClashes();
+                    const doubles = findAllDoubles();
+                    const gaps = findAllGaps();
+                    document.getElementById('messageDiv').textContent = 'File : ' + currentFileName + ' [ Clashes ' + clashes.length + ' | Doubles ' + doubles + ' | Gaps ' + gaps + ' ]';
                 }, 5000);
                 if (focusedCell) {
                     focusedCell.focus();
@@ -1516,17 +1908,61 @@
             const resolved = tryResolveClash(clash);
             if (resolved) {
                 removed++;
+                // Update counts in MessageDiv when a clash is removed
+                const currentClashes = findAllClashes();
+                const doubles = findAllDoubles();
+                const gaps = findAllGaps();
+                document.getElementById('messageDiv').textContent = 'File : ' + currentFileName + ' [ Clashes ' + currentClashes.length + ' | Doubles ' + doubles + ' | Gaps ' + gaps + ' ]';
             }
-            setTimeout(() => resolveClashes(clashes, index + 1, totalClashes, removed), 0);
+            setTimeout(() => resolveClashes(clashes, index + 1, totalClashes, removed, attempt), 0);
+        }
+
+        // Improved exchange cells logic - simple and safe version
+        function tryExchangeCells(row1, col1, row2, col2, targetClash) {
+            const masterTableBody = document.querySelector('#masterTable tbody');
+            const rows = Array.from(masterTableBody.querySelectorAll('tr'));
+            
+            if (row1 >= rows.length || row2 >= rows.length) return false;
+            
+            const cells1 = Array.from(rows[row1].querySelectorAll('.editable-cell'));
+            const cells2 = Array.from(rows[row2].querySelectorAll('.editable-cell'));
+            
+            const o1 = cells1[col1].value;
+            const o2 = cells2[col2].value;
+            
+            // Don't swap if either is blank
+            if (o1.trim() === '' || o2.trim() === '') return false;
+            
+            // Count clashes BEFORE swap
+            const clashCountBefore = findAllClashes().length;
+            
+            // Perform swap
+            cells1[col1].value = o2;
+            cells2[col2].value = o1;
+            
+            // Count clashes AFTER swap
+            const clashCountAfter = findAllClashes().length;
+            
+            // ONLY keep swap if clashes DECREASED strictly
+            if (clashCountAfter < clashCountBefore) {
+                return true;
+            }
+            
+            // Revert swap if clashes didn't decrease
+            cells1[col1].value = o1;
+            cells2[col2].value = o2;
+            return false;
         }
 
         function tryResolveClash(clash) {
             const {teacher, time, day} = clash;
             const masterTableBody = document.querySelector('#masterTable tbody');
             const rows = Array.from(masterTableBody.querySelectorAll('tr'));
-            const clashingCells = [];
-
+            
+            // 1. Find all cells involved in this specific clash
+            const clashingCellLocations = [];
             let currentTime = null;
+            
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
                 const cells = Array.from(row.querySelectorAll('.editable-cell'));
@@ -1535,26 +1971,51 @@
                 if (firstCell.includes('-') && firstCell.includes(':')) {
                     currentTime = firstCell;
                 } else if (currentTime === time && firstCell !== '' && firstCell.toUpperCase() !== 'LUNCH') {
-                    const section = firstCell;
-                    const cellValue = cells[COLUMNS.indexOf(day)].value.trim();
-                    const parts = cellValue.split(',');
-                    parts.forEach((part, pIndex) => {
-                        if (part.trim().match(new RegExp(`\\(${teacher}\\)`, 'i'))) {
-                            clashingCells.push({rowIndex: i, cellIndex: COLUMNS.indexOf(day), partIndex: pIndex, section, parts});
-                        }
-                    });
+                    const dayIndex = COLUMNS.indexOf(day);
+                    const cell = cells[dayIndex];
+                    if (cell.value.match(new RegExp(`\\(${teacher}\\)`, 'i'))) {
+                        clashingCellLocations.push({
+                            rowIndex: i,
+                            cellIndex: dayIndex,
+                            section: firstCell
+                        });
+                    }
                 }
             }
 
-            if (clashingCells.length <= 1) return true; // no clash
+            if (clashingCellLocations.length < 2) return true; // Clash already resolved
 
-            // Remove extra clashing assignments
-            for (let i = 1; i < clashingCells.length; i++) {
-                const cell = clashingCells[i];
-                cell.parts.splice(cell.partIndex, 1);
-                rows[cell.rowIndex].querySelectorAll('.editable-cell')[cell.cellIndex].value = cell.parts.join(',');
+            // 2. Try to swap clashing cells with other cells in same section (safe approach)
+            for (const clashLocation of clashingCellLocations) {
+                const { rowIndex: sourceRow, cellIndex: sourceCol, section } = clashLocation;
+                const sourceCells = Array.from(rows[sourceRow].querySelectorAll('.editable-cell'));
+
+                // Try swapping with all other cells in the same section
+                for (let r = 0; r < rows.length; r++) {
+                    const rCells = Array.from(rows[r].querySelectorAll('.editable-cell'));
+                    const rFirst = rCells[0].value.trim();
+                    
+                    // Only consider cells in the same section
+                    if (rFirst !== section) continue;
+                    
+                    for (let c = 1; c < COLUMNS.length; c++) {
+                        if (r === sourceRow && c === sourceCol) continue; // Skip self
+                        
+                        const targetValue = rCells[c].value;
+                        if (targetValue.trim() === '') continue; // Skip blank cells
+                        
+                        // Try exchange using conservative logic - only if clashes decrease
+                        if (tryExchangeCells(sourceRow, sourceCol, r, c, clash)) {
+                            // Check if clash is resolved
+                            if (!hasClash(clash)) {
+                                return true; // Success
+                            }
+                        }
+                    }
+                }
             }
-            return !hasClash(clash); // return true if clash is resolved
+
+            return false; // Could not resolve
         }
 
         function hasClash(clash) {
