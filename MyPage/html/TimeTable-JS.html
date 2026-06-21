@@ -132,7 +132,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             padding: 1rem;
             background-color: white;
             border-radius: 0.5rem;
@@ -143,7 +143,8 @@
             display: flex;
             gap: 1rem;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            width: 100%;
         }
         .input {
             padding: 0.5rem;
@@ -183,9 +184,30 @@
         }
         .button-row {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
             width: 100%;
             margin-bottom: 1rem;
+        }
+        .find-replace-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+        .find-replace-input {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            width: 8rem;
+            text-align: center;
+            text-transform: none;
+        }
+        .find-replace-input:focus {
+            outline: 2px solid #f97316;
         }
         .btn-green {
             background-color: #22c55e;
@@ -225,6 +247,19 @@
         }
         .btn-purple:hover {
             background-color: #9333ea;
+        }
+        .btn-orange {
+            background-color: #f59e0b;
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-orange:hover {
+            background-color: #d97706;
         }
         .center-buttons {
             display: flex;
@@ -291,6 +326,19 @@
         .btn-red:hover {
             background-color: #dc2626;
         }
+        .btn-help {
+            background-color: #6b7280;
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-help:hover {
+            background-color: #4b5563;
+        }
         .header-right {
             font-size: 1.25rem;
             font-weight: bold;
@@ -334,6 +382,34 @@
             border-radius: 0.5rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        .help-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(17, 24, 39, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .help-dialog {
+            background: white;
+            width: min(90vw, 42rem);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        .help-dialog h3 {
+            margin-top: 0;
+            color: #0f766e;
+        }
+        .help-dialog ul {
+            padding-left: 1.25rem;
+            line-height: 1.6;
+        }
+        .help-close {
+            margin-top: 0.75rem;
+            float: right;
+        }
 
     </style>
 </head>
@@ -343,6 +419,7 @@
 
         <div class="controls">
             <div class="input-row">
+                <button onclick="showHelp()" class="btn-help">Help</button>
                 <input type="text" id="teacherCodeInput" maxlength="2" placeholder="Enter Teacher Code (e.g., MO)" class="input-small">
                 <button id="generateBtn" class="btn-primary">
                     Generate Time Table
@@ -361,6 +438,12 @@
             <button onclick="printAllClasses()" class="btn-gray">Print All Classes</button>
             <button id="removeClashesBtn" onclick="removeClashes()" class="btn-red">Remove Clashes</button>
             <button id="optimizeBtn" onclick="toggleOptimization()" class="btn-green">Optimize</button>
+            <div class="find-replace-controls">
+                <button onclick="findNextInTable()" class="btn-orange">Find (Ctrl+Alt+F)</button>
+                <input type="text" id="findStringInput" class="find-replace-input" placeholder="Find">
+                <button onclick="replaceCurrentMatch()" class="btn-blue">Replace (Ctrl+Alt+R)</button>
+                <input type="text" id="replaceStringInput" class="find-replace-input" placeholder="Replace">
+            </div>
         </div>
 
         <div class="center-buttons">
@@ -403,12 +486,27 @@
         </div>
     </div>
 
+    <div id="helpOverlay" class="help-overlay" onclick="hideHelp(event)">
+        <div class="help-dialog" onclick="event.stopPropagation()">
+            <h3>How to use the Time Table App</h3>
+            <ul>
+                <li>Use the Master table to enter time slots, section names, and subject entries.</li>
+                <li>Click Generate Time Table after entering a teacher code to view that teacher's schedule.</li>
+                <li>Use Find and Replace to quickly update repeated text in the Master table.</li>
+                <li>Use Ctrl+Alt+F and Ctrl+Alt+R as keyboard shortcuts for Find and Replace.</li>
+                <li>Use Save Table and Load Table to keep your timetable data between sessions.</li>
+            </ul>
+            <button onclick="hideHelp()" class="btn-blue help-close">Close</button>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             loadDefaultData(); // Load sample data on startup
             document.getElementById('generateBtn').addEventListener('click', generateTeacherTimetable);
             addKeyboardNavigation(); // Add keyboard navigation to inputs
             addDividerDrag(); // Add divider drag functionality
+            addFindReplaceShortcuts(); // Add keyboard shortcuts for find/replace actions
         });
 
         const COLUMNS = ['Time', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -1033,6 +1131,130 @@
             }
         }
 
+        function showHelp() {
+            document.getElementById('helpOverlay').style.display = 'flex';
+        }
+
+        function hideHelp(event) {
+            if (!event || event.target.id === 'helpOverlay') {
+                document.getElementById('helpOverlay').style.display = 'none';
+            }
+        }
+
+        function addFindReplaceShortcuts() {
+            document.addEventListener('keydown', (event) => {
+                const usesModifier = (event.ctrlKey || event.metaKey) && event.altKey;
+                if (!usesModifier) {
+                    return;
+                }
+
+                const key = event.key.toLowerCase();
+                if (key === 'f') {
+                    event.preventDefault();
+                    const findInput = document.getElementById('findStringInput');
+                    findInput.focus();
+                    findInput.select();
+                    findNextInTable();
+                } else if (key === 'r') {
+                    event.preventDefault();
+                    replaceCurrentMatch();
+                }
+            });
+        }
+
+        function escapeRegExp(text) {
+            return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        let lastFindText = '';
+        let lastFocusedMatchCell = null;
+
+        function findNextMatchingCell(findText, startCell = null) {
+            const cells = Array.from(document.querySelectorAll('#masterTable .editable-cell'));
+            const regex = new RegExp(escapeRegExp(findText), 'i');
+            let startIndex = -1;
+
+            if (startCell) {
+                startIndex = cells.indexOf(startCell);
+            }
+
+            if (startIndex === -1) {
+                startIndex = -1;
+            }
+
+            for (let offset = 1; offset <= cells.length; offset += 1) {
+                const index = (startIndex + offset) % cells.length;
+                const cell = cells[index];
+                const value = (cell.value || '').toString();
+
+                if (regex.test(value)) {
+                    return cell;
+                }
+            }
+
+            return null;
+        }
+
+        function findNextInTable() {
+            const findText = document.getElementById('findStringInput').value.trim();
+
+            if (!findText) {
+                alert('Please enter a find string.');
+                return;
+            }
+
+            const startCell = lastFindText === findText ? lastFocusedMatchCell : null;
+            const nextCell = findNextMatchingCell(findText, startCell);
+
+            if (!nextCell) {
+                alert(`No matches found for "${findText}".`);
+                return;
+            }
+
+            lastFindText = findText;
+            lastFocusedMatchCell = nextCell;
+            nextCell.focus();
+            nextCell.select();
+            document.getElementById('messageDiv').textContent = `Found "${findText}".`;
+        }
+
+        function replaceCurrentMatch() {
+            const findText = document.getElementById('findStringInput').value.trim();
+            const replaceText = document.getElementById('replaceStringInput').value;
+
+            if (!findText) {
+                alert('Please enter a find string.');
+                return;
+            }
+
+            const activeCell = lastFindText === findText ? lastFocusedMatchCell : null;
+            const currentCell = activeCell || findNextMatchingCell(findText, null);
+
+            if (!currentCell) {
+                alert(`No matches found for "${findText}".`);
+                return;
+            }
+
+            const regex = new RegExp(escapeRegExp(findText), 'gi');
+            const currentValue = currentCell.value || '';
+            const updatedValue = currentValue.replace(regex, replaceText);
+            currentCell.value = updatedValue;
+            lastFindText = findText;
+            lastFocusedMatchCell = currentCell;
+            currentCell.focus();
+            currentCell.select();
+
+            const nextCell = findNextMatchingCell(findText, currentCell);
+            if (nextCell) {
+                lastFocusedMatchCell = nextCell;
+                nextCell.focus();
+                nextCell.select();
+                document.getElementById('messageDiv').textContent = `Replaced current match and moved to the next "${findText}".`;
+            } else {
+                lastFocusedMatchCell = null;
+                document.getElementById('messageDiv').textContent = `Replaced current match. No more matches found for "${findText}".`;
+            }
+        }
 
         // --- File I/O Functions (Simplified for Canvas) ---
 
