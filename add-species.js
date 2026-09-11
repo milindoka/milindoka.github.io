@@ -91,7 +91,8 @@ let modelContent = fs.readFileSync(modelPath, 'utf8');
         // Extract creation date from image EXIF
         let recordedDate = 'Unknown';
         try {
-            const exif = await exifr.parse(path.join(imagesDir, filename), { pick: ['DateTimeOriginal', 'CreateDate', 'ModifyDate'] });
+            const imageBuffer = fs.readFileSync(path.join(imagesDir, filename));
+            const exif = await exifr.parse(imageBuffer, { pick: ['DateTimeOriginal', 'CreateDate', 'ModifyDate'] });
             const dateValue = exif?.DateTimeOriginal || exif?.CreateDate || exif?.ModifyDate;
             if (dateValue) {
                 const date = new Date(dateValue);
