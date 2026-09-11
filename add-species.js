@@ -83,6 +83,8 @@ let modelContent = fs.readFileSync(modelPath, 'utf8');
 
 // Process each new image
 (async () => {
+    let newSpeciesCards = '';
+
     for (const filename of newImages) {
         const { latin, english, marathi } = parseFilename(filename);
         const displayName = getDisplayName(latin, english);
@@ -131,8 +133,13 @@ let modelContent = fs.readFileSync(modelPath, 'utf8');
                         </div>
                     </a>`;
 
-        registerContent = registerContent.replace(/(<section class="species-grid">[\s\S]*?)(\s*<\/section>)/, `$1${cardHTML}$2`);
+        newSpeciesCards += cardHTML;
     }
+
+    registerContent = registerContent.replace(
+        /(<section class="species-grid">\s*)([\s\S]*?)(\s*<\/section>)/,
+        (_, openingTag, existingCards, closingTag) => `${openingTag}${newSpeciesCards}${existingCards}${closingTag}`
+    );
 
     fs.writeFileSync(registerPath, registerContent);
 
